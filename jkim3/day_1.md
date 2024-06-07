@@ -126,7 +126,7 @@
         
         *MVC2
         
-        ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled.png)
+        ![MVC2](./img/MVC2.png)
         
         → 요청을 하나의 컨트롤러(Servlet)가 먼저 받는다.
         
@@ -180,4 +180,4 @@
         - 지속적 배포(Continuous Delivery/Deployment)
         - 지속적 배포의 경우, 코드 변경 사항의 병합부터 프로덕션에 적합한 빌드 제공에 이르는 모든 단계로, 테스트 자동화와 코드 배포 자동화가 포함
         
-        ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled%201.png)
+        ![CICD](./img/CICD.png)

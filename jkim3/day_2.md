@@ -21,11 +21,11 @@
         
         → RDB는 ACID와 Transaction을 보장하기 위해 수평적 확장이 쉽지가 않다. 또한, RDB의 경우 multiple server로 수평적 확장을 하게 되면 join을 하기 위해 상당히 복잡한 과정이 필요하다.
         
-        ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled%202.png)
+        ![RDB](./img/RDB.png)
         
     3. 테이블, 컬럼, 스키마, 엔티티
     
-    ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled%203.png)
+    ![table](./img/table.png)
     
     *테이블
     
