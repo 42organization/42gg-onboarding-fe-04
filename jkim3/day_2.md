@@ -127,13 +127,13 @@
         
         → DDL(Data Define Language, 데이터 정의어)
         
-        ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled%204.png)
+        ![DDL](./img/DDL.png)
         
         → DML(Data Manipulation Language, 데이터 조작어)
         
-        ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled%205.png)
+        ![DML](./img/DML.png)
         
         → DCL(Data Manipulation Language, 데이터 제어어)
         
-        ![Untitled](42gg%20%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC%20c2d0671cad7e45ddb6fa2187f058e49f/Untitled%206.png)
+        ![DCL](./img/DCL.png)
         
