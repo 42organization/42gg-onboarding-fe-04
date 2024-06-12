@@ -18,7 +18,9 @@ public class StudentPageRequestDto {
     @Min(1)
     private int size;
 
+    @NotNull
     private String sort;
 
+    @NotNull
     private String order;
 }

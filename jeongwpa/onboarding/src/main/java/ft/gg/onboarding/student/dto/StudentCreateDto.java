@@ -1,6 +1,7 @@
 package ft.gg.onboarding.student.dto;
 
 import ft.gg.onboarding.entity.Student;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.mapstruct.Mapper;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 public class StudentCreateDto {
 
     @NotNull
+    @NotEmpty
     private String name;
 
     @NotNull
