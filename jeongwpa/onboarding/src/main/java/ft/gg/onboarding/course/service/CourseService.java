@@ -1,16 +1,21 @@
 package ft.gg.onboarding.course.service;
 
 import ft.gg.onboarding.dto.course.CourseCreateDto;
+import ft.gg.onboarding.dto.course.CoursePageRequestDto;
+import ft.gg.onboarding.dto.course.CourseResponseDto;
 import ft.gg.onboarding.dto.course.CourseUpdateDto;
-import ft.gg.onboarding.course.repository.CourseRepository;
+import ft.gg.onboarding.repository.CourseRepository;
 import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.global.exception.custom.BusinessException;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,12 @@ public class CourseService {
     private static final String COURSE_NOT_FOUND = "Course not found";
 
     private final CourseRepository courseRepository;
+
+
+    public List<Course> getCourses(CoursePageRequestDto coursePageRequestDto) {
+        Sort sort = parseSort(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
+        return courseRepository.findCoursesByTrueIsTrueOrderByName(sort);
+    }
 
     @Transactional
     public void createCourse(CourseCreateDto courseCreateDto) {
@@ -78,5 +89,10 @@ public class CourseService {
         } catch (Exception e) {
             throw new BusinessException(COURSE_FINISH_FAILED);
         }
+    }
+
+    private Sort parseSort(String sort, String order) {
+        Sort sortObj = sort.equals("name") ? Sort.by("name") : Sort.by("id");
+        return order.equals("asc") ? sortObj.ascending() : sortObj.descending();
     }
 }

@@ -11,7 +11,7 @@ import ft.gg.onboarding.global.exception.custom.NotFoundException;
 import ft.gg.onboarding.dto.student.StudentCreateDto;
 import ft.gg.onboarding.dto.student.StudentPageRequestDto;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
-import ft.gg.onboarding.student.repository.StudentRepository;
+import ft.gg.onboarding.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

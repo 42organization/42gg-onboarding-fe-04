@@ -8,6 +8,7 @@ import ft.gg.onboarding.student.controller.StudentController;
 import ft.gg.onboarding.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class StudentControllerImpl implements StudentController {
     @PostMapping
     public ResponseEntity<Void> postStudent(@RequestBody StudentCreateDto studentCreateDto) {
         studentService.createStudent(studentCreateDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override

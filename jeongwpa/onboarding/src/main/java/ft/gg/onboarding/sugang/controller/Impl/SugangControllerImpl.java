@@ -5,10 +5,12 @@ import ft.gg.onboarding.dto.student.StudentRequestDto;
 import ft.gg.onboarding.sugang.controller.SugangController;
 import ft.gg.onboarding.sugang.service.SugangService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -27,7 +29,7 @@ public class SugangControllerImpl implements SugangController {
     @Override
     public ResponseEntity<Void> postSugangEnroll(int courseId, StudentRequestDto studentRequestDto) {
         sugangService.enrollCourse(courseId, studentRequestDto);
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ft.gg.onboarding.student.repository;
+package ft.gg.onboarding.repository;
 
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.entity.student.StudentStatus;
