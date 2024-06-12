@@ -38,7 +38,7 @@ public class CourseService {
 
     public List<Course> getCourses(CoursePageRequestDto coursePageRequestDto) {
         Sort sort = parseSort(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
-        return courseRepository.findCoursesByTrueIsTrueOrderByName(sort);
+        return courseRepository.findAll(sort);
     }
 
     @Transactional
