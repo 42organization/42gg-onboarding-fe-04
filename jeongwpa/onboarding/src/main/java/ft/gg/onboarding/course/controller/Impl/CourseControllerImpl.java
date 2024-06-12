@@ -1,9 +1,9 @@
 package ft.gg.onboarding.course.controller.Impl;
 
 import ft.gg.onboarding.course.controller.CourseController;
-import ft.gg.onboarding.course.dto.CourseCreateDto;
-import ft.gg.onboarding.course.dto.CourseResponseDto;
-import ft.gg.onboarding.course.dto.CourseUpdateDto;
+import ft.gg.onboarding.dto.course.CourseCreateDto;
+import ft.gg.onboarding.dto.course.CourseResponseDto;
+import ft.gg.onboarding.dto.course.CourseUpdateDto;
 import ft.gg.onboarding.course.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

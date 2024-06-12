@@ -1,6 +1,6 @@
 package ft.gg.onboarding.course.repository;
 
-import ft.gg.onboarding.entity.Course;
+import ft.gg.onboarding.entity.course.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package ft.gg.onboarding.student.dto;
+package ft.gg.onboarding.dto.student;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
-package ft.gg.onboarding.student.dto;
+package ft.gg.onboarding.dto.student;
 
-import ft.gg.onboarding.entity.Student;
-import ft.gg.onboarding.entity.Student.StudentStatus;
+import ft.gg.onboarding.entity.student.Student;
+import ft.gg.onboarding.entity.student.StudentStatus;
 import lombok.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

@@ -1,5 +1,6 @@
-package ft.gg.onboarding.entity;
+package ft.gg.onboarding.entity.student;
 
+import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -46,16 +47,5 @@ public class Student extends BaseEntity {
 
     public void dropout() {
         this.status = StudentStatus.DROP;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public enum StudentStatus {
-
-        ATTEND("attend"),
-        DROP("drop"),
-        GRADUATE("graduate");
-
-        private final String value;
     }
 }

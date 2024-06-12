@@ -1,16 +1,16 @@
 package ft.gg.onboarding.student.service;
 
-import ft.gg.onboarding.entity.Course;
-import ft.gg.onboarding.entity.Enrollment;
-import ft.gg.onboarding.entity.Enrollment.EnrollmentStatus;
-import ft.gg.onboarding.entity.Student;
-import ft.gg.onboarding.entity.Student.StudentStatus;
+import ft.gg.onboarding.entity.course.Course;
+import ft.gg.onboarding.entity.enrollment.Enrollment;
+import ft.gg.onboarding.entity.enrollment.EnrollmentStatus;
+import ft.gg.onboarding.entity.student.Student;
+import ft.gg.onboarding.entity.student.StudentStatus;
 import ft.gg.onboarding.global.exception.custom.BusinessException;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;
-import ft.gg.onboarding.student.dto.StudentCreateDto;
-import ft.gg.onboarding.student.dto.StudentPageRequestDto;
-import ft.gg.onboarding.student.dto.StudentRequestDto;
+import ft.gg.onboarding.dto.student.StudentCreateDto;
+import ft.gg.onboarding.dto.student.StudentPageRequestDto;
+import ft.gg.onboarding.dto.student.StudentRequestDto;
 import ft.gg.onboarding.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

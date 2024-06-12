@@ -1,4 +1,4 @@
-package ft.gg.onboarding.course.dto;
+package ft.gg.onboarding.dto.course;
 
 import lombok.AccessLevel;
 import lombok.Getter;

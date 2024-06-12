@@ -1,8 +1,8 @@
 package ft.gg.onboarding.course.controller;
 
-import ft.gg.onboarding.course.dto.CourseCreateDto;
-import ft.gg.onboarding.course.dto.CourseResponseDto;
-import ft.gg.onboarding.course.dto.CourseUpdateDto;
+import ft.gg.onboarding.dto.course.CourseCreateDto;
+import ft.gg.onboarding.dto.course.CourseResponseDto;
+import ft.gg.onboarding.dto.course.CourseUpdateDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

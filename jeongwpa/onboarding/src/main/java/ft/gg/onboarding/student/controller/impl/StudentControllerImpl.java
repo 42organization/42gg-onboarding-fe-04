@@ -1,10 +1,10 @@
 package ft.gg.onboarding.student.controller.impl;
 
-import ft.gg.onboarding.course.dto.CourseResponseDto;
-import ft.gg.onboarding.entity.Course;
-import ft.gg.onboarding.entity.Student;
+import ft.gg.onboarding.dto.course.CourseResponseDto;
+import ft.gg.onboarding.dto.student.*;
+import ft.gg.onboarding.entity.course.Course;
+import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.student.controller.StudentController;
-import ft.gg.onboarding.student.dto.*;
 import ft.gg.onboarding.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

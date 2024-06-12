@@ -1,10 +1,10 @@
 package ft.gg.onboarding.course.service;
 
-import ft.gg.onboarding.course.dto.CourseCreateDto;
-import ft.gg.onboarding.course.dto.CourseUpdateDto;
+import ft.gg.onboarding.dto.course.CourseCreateDto;
+import ft.gg.onboarding.dto.course.CourseUpdateDto;
 import ft.gg.onboarding.course.repository.CourseRepository;
-import ft.gg.onboarding.entity.Course;
-import ft.gg.onboarding.entity.Enrollment;
+import ft.gg.onboarding.entity.course.Course;
+import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.global.exception.custom.BusinessException;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;

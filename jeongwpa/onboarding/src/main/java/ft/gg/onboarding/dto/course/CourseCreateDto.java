@@ -1,6 +1,6 @@
-package ft.gg.onboarding.course.dto;
+package ft.gg.onboarding.dto.course;
 
-import ft.gg.onboarding.entity.Course;
+import ft.gg.onboarding.entity.course.Course;
 import lombok.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

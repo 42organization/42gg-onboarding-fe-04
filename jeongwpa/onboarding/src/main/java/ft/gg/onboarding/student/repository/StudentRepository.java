@@ -1,7 +1,7 @@
 package ft.gg.onboarding.student.repository;
 
-import ft.gg.onboarding.entity.Student;
-import ft.gg.onboarding.entity.Student.StudentStatus;
+import ft.gg.onboarding.entity.student.Student;
+import ft.gg.onboarding.entity.student.StudentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;

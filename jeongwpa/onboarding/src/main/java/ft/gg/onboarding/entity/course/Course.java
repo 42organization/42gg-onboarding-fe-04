@@ -1,6 +1,7 @@
-package ft.gg.onboarding.entity;
+package ft.gg.onboarding.entity.course;
 
 import ft.gg.onboarding.entity.base.BaseEntity;
+import ft.gg.onboarding.entity.enrollment.Enrollment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

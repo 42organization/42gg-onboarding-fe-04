@@ -1,6 +1,8 @@
-package ft.gg.onboarding.entity;
+package ft.gg.onboarding.entity.enrollment;
 
+import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.base.BaseEntity;
+import ft.gg.onboarding.entity.student.Student;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +35,5 @@ public class Enrollment extends BaseEntity {
 
     public void cancelEnrollment() {
         this.status = EnrollmentStatus.CANCEL;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public enum EnrollmentStatus {
-
-        ENROLL("enroll"),
-        CANCEL("drop"),
-        SUCCESS("success");
-
-        private final String value;
     }
 }

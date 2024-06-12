@@ -1,7 +1,7 @@
 package ft.gg.onboarding.student.controller;
 
-import ft.gg.onboarding.course.dto.CourseResponseDto;
-import ft.gg.onboarding.student.dto.*;
+import ft.gg.onboarding.dto.course.CourseResponseDto;
+import ft.gg.onboarding.dto.student.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
