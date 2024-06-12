@@ -1,6 +1,7 @@
 package ft.gg.onboarding.student.controller.impl;
 
 import ft.gg.onboarding.course.dto.CourseResponseDto;
+import ft.gg.onboarding.entity.Course;
 import ft.gg.onboarding.entity.Student;
 import ft.gg.onboarding.student.controller.StudentController;
 import ft.gg.onboarding.student.dto.*;
@@ -43,16 +44,24 @@ public class StudentControllerImpl implements StudentController {
 
     @Override
     public ResponseEntity<List<CourseResponseDto>> getStudentEnrolledCourses(StudentRequestDto studentRequestDto) {
-        return null;
+        List<Course> enrolledCourses = studentService.findStudentEnrolledCourses(studentRequestDto);
+        List<CourseResponseDto> enrolledCoursesDto = enrolledCourses.stream()
+                .map(CourseResponseDto.MapStruct.INSTANCE::toDto).toList();
+        return ResponseEntity.ok(enrolledCoursesDto);
+    }
+
+    @Override
+    public ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(StudentRequestDto studentRequestDto) {
+        List<Course> finishedCourses = studentService.findStudentFinishedCourses(studentRequestDto);
+        List<CourseResponseDto> finishedCoursesDto = finishedCourses.stream()
+                .map(CourseResponseDto.MapStruct.INSTANCE::toDto).toList();
+        return ResponseEntity.ok(finishedCoursesDto);
     }
 
     @Override
     public ResponseEntity<Void> patchStudentDrop(StudentRequestDto studentRequestDto) {
+        studentService.dropStudent(studentRequestDto);
         return ResponseEntity.noContent().build();
     }
 
-    @Override
-    public ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(int id) {
-        return null;
-    }
 }

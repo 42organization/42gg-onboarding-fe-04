@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +36,13 @@ public class Student extends BaseEntity {
 
     @Column(name = "enrolled_credit", nullable = false, columnDefinition = "INTEGER")
     private int enrolledCredit;
+
+    @OneToMany(mappedBy = "student")
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    public void dropout() {
+        this.status = StudentStatus.DROP;
+    }
 
     @Getter
     @RequiredArgsConstructor

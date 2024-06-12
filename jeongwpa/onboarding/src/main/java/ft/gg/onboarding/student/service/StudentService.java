@@ -1,5 +1,8 @@
 package ft.gg.onboarding.student.service;
 
+import ft.gg.onboarding.entity.Course;
+import ft.gg.onboarding.entity.Enrollment;
+import ft.gg.onboarding.entity.Enrollment.EnrollmentStatus;
 import ft.gg.onboarding.entity.Student;
 import ft.gg.onboarding.entity.Student.StudentStatus;
 import ft.gg.onboarding.global.exception.custom.BusinessException;
@@ -16,6 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StudentService {
@@ -27,6 +32,8 @@ public class StudentService {
     private static final String STUDENT_NOT_FOUND = "Student not found";
 
     private static final String STUDENT_GET_GRADUATES_FAILED = "Failed to get graduated students";
+
+    private static final String STUDENT_DROP_FAILED = "Failed to drop student";
 
     private final StudentRepository studentRepository;
 
@@ -61,6 +68,37 @@ public class StudentService {
             return studentRepository.findStudentsByStatusEqualsOrderByIdDesc(StudentStatus.GRADUATE, pageRequest);
         } catch (Exception e) {
             throw new BusinessException(STUDENT_GET_GRADUATES_FAILED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Course> findStudentEnrolledCourses(StudentRequestDto studentRequestDto) {
+        Student student = studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+                .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
+        List<Enrollment> enrollments = student.getEnrollments().stream()
+                .filter(enrollment -> enrollment.getStatus().equals(EnrollmentStatus.ENROLL))
+                .toList();
+        return enrollments.stream().map(Enrollment::getCourse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Course> findStudentFinishedCourses(StudentRequestDto studentRequestDto) {
+        Student student = studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+                .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
+        List<Enrollment> enrollments = student.getEnrollments().stream()
+                .filter(enrollment -> enrollment.getStatus().equals(EnrollmentStatus.SUCCESS))
+                .toList();
+        return enrollments.stream().map(Enrollment::getCourse).toList();
+    }
+
+    @Transactional
+    public void dropStudent(StudentRequestDto studentRequestDto) {
+        try {
+            Student student = studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+                    .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
+            student.dropout();
+        } catch (Exception e) {
+            throw new BusinessException(STUDENT_DROP_FAILED);
         }
     }
 

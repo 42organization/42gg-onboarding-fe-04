@@ -17,6 +17,5 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     @Query("SELECT s FROM Student s WHERE s.name = :name AND s.birthDate = :birthDate")
     Optional<Student> findByNameAndBirthDate(String name, LocalDate birthDate);
 
-    @Query("SELECT s FROM Student s WHERE s.status = 'graduate' ORDER BY s.id DESC")
     Page<Student> findStudentsByStatusEqualsOrderByIdDesc(StudentStatus status, PageRequest pageRequest);
 }

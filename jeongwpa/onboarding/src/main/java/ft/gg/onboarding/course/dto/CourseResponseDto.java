@@ -1,7 +1,16 @@
 package ft.gg.onboarding.course.dto;
 
+import ft.gg.onboarding.entity.Course;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class CourseResponseDto {
 
     private String name;
@@ -19,4 +28,24 @@ public class CourseResponseDto {
     private LocalDateTime createdBy;
 
     private LocalDateTime updatedBy;
+
+    @Builder
+    public CourseResponseDto(String name, String professorName, int credit, boolean isTrue, int maxStudentCount, int currentStudentCount, LocalDateTime createdBy, LocalDateTime updatedBy) {
+        this.name = name;
+        this.professorName = professorName;
+        this.credit = credit;
+        this.isTrue = isTrue;
+        this.maxStudentCount = maxStudentCount;
+        this.currentStudentCount = currentStudentCount;
+        this.createdBy = createdBy;
+        this.updatedBy = updatedBy;
+    }
+
+    @Mapper
+    public interface MapStruct {
+
+        CourseResponseDto.MapStruct INSTANCE = Mappers.getMapper(CourseResponseDto.MapStruct.class);
+
+        CourseResponseDto toDto(Course course);
+    }
 }

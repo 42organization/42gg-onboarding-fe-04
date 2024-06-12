@@ -21,5 +21,5 @@ public interface StudentController {
 
     ResponseEntity<Void> patchStudentDrop(StudentRequestDto studentRequestDto);
 
-    ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(int id);
+    ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(StudentRequestDto studentRequestDto);
 }

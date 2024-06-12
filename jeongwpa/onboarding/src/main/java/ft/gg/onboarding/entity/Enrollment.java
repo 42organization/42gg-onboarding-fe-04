@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Entity
-public class StudentCourse extends BaseEntity {
+@Table(name = "enrollment")
+@Getter
+public class Enrollment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +25,11 @@ public class StudentCourse extends BaseEntity {
 
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('enroll', 'cancel', 'success')")
     @Enumerated(EnumType.STRING)
-    private StudentCourseStatus status;
+    private EnrollmentStatus status;
 
     @Getter
     @RequiredArgsConstructor
-    public enum StudentCourseStatus {
+    public enum EnrollmentStatus {
 
         ENROLL("enroll"),
         CANCEL("drop"),

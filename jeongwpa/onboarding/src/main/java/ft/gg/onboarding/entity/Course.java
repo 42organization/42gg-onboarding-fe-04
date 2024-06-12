@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,4 +33,7 @@ public class Course extends BaseEntity {
 
     @Column(name = "current_student_count", nullable = false, columnDefinition = "INTEGER")
     private int currentStudentCount;
+
+    @OneToMany(mappedBy = "course")
+    private List<Enrollment> studentCourses = new ArrayList<>();
 }
