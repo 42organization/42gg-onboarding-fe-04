@@ -43,6 +43,7 @@ public class StudentControllerImpl implements StudentController {
     }
 
     @Override
+    @GetMapping("/enroll")
     public ResponseEntity<List<CourseResponseDto>> getStudentEnrolledCourses(StudentRequestDto studentRequestDto) {
         List<Course> enrolledCourses = studentService.findStudentEnrolledCourses(studentRequestDto);
         List<CourseResponseDto> enrolledCoursesDto = enrolledCourses.stream()
@@ -51,6 +52,7 @@ public class StudentControllerImpl implements StudentController {
     }
 
     @Override
+    @GetMapping("/finish")
     public ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(StudentRequestDto studentRequestDto) {
         List<Course> finishedCourses = studentService.findStudentFinishedCourses(studentRequestDto);
         List<CourseResponseDto> finishedCoursesDto = finishedCourses.stream()
@@ -59,6 +61,7 @@ public class StudentControllerImpl implements StudentController {
     }
 
     @Override
+    @PatchMapping("/drop")
     public ResponseEntity<Void> patchStudentDrop(StudentRequestDto studentRequestDto) {
         studentService.dropStudent(studentRequestDto);
         return ResponseEntity.noContent().build();
