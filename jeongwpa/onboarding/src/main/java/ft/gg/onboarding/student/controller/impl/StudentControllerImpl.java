@@ -60,7 +60,8 @@ public class StudentControllerImpl implements StudentController {
             @RequestBody StudentRequestDto studentRequestDto) {
         List<Course> finishedCourses = studentService.findStudentFinishedCourses(studentRequestDto);
         List<CourseResponseDto> finishedCoursesDto = finishedCourses.stream()
-                .map(CourseResponseDto.MapStruct.INSTANCE::toDto).toList();
+                .map(CourseResponseDto.MapStruct.INSTANCE::toDto)
+                .toList();
         return ResponseEntity.ok(finishedCoursesDto);
     }
 
