@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "student",
+        uniqueConstraints = @UniqueConstraint(name = "unique_student_name_birth_date", columnNames = {"name", "birth_date"}),
+        indexes = @Index(name = "index_student_name_birth_date", columnList = "name, birth_date", unique = true)
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Student extends BaseEntity {

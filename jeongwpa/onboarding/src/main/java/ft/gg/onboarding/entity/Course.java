@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "course",
+        uniqueConstraints = @UniqueConstraint(name = "unique_course_name_professor_name_credit", columnNames = {"name", "professor_name", "credit"})
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course extends BaseEntity {
