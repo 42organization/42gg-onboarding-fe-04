@@ -27,6 +27,14 @@ public class Enrollment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 
+    public void finishEnrollment() {
+        this.status = EnrollmentStatus.SUCCESS;
+    }
+
+    public void cancelEnrollment() {
+        this.status = EnrollmentStatus.CANCEL;
+    }
+
     @Getter
     @RequiredArgsConstructor
     public enum EnrollmentStatus {

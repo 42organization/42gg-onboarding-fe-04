@@ -1,9 +1,7 @@
 package ft.gg.onboarding.course.dto;
 
 import ft.gg.onboarding.entity.Course;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseResponseDto {
 
     private String name;

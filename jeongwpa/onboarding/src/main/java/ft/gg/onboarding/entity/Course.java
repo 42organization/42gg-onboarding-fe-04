@@ -31,6 +31,9 @@ public class Course extends BaseEntity {
     @Column(name = "credit", nullable = false, columnDefinition = "INTEGER")
     private int credit;
 
+    @Column(name = "is_true", nullable = false, columnDefinition = "BOOLEAN")
+    private boolean isTrue;
+
     @Column(name = "max_student_count", nullable = false, columnDefinition = "INTEGER")
     private int maxStudentCount;
 
@@ -38,5 +41,16 @@ public class Course extends BaseEntity {
     private int currentStudentCount;
 
     @OneToMany(mappedBy = "course")
-    private List<Enrollment> studentCourses = new ArrayList<>();
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    public void updateCourse(String name, String professorName, int credit, int maxStudentCount) {
+        this.name = name;
+        this.professorName = professorName;
+        this.credit = credit;
+        this.maxStudentCount = maxStudentCount;
+    }
+
+    public void deleteCourse() {
+        this.isTrue = false;
+    }
 }

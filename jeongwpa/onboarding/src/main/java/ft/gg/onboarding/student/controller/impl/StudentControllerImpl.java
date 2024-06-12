@@ -22,14 +22,15 @@ public class StudentControllerImpl implements StudentController {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> postStudent(@ModelAttribute StudentCreateDto studentCreateDto) {
+    public ResponseEntity<Void> postStudent(@RequestBody StudentCreateDto studentCreateDto) {
         studentService.createStudent(studentCreateDto);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<StudentResponseDto> getStudentByNameAndBirthDate(StudentRequestDto studentRequestDto) {
+    public ResponseEntity<StudentResponseDto> getStudentByNameAndBirthDate(
+            @RequestBody StudentRequestDto studentRequestDto) {
         Student findStudent = studentService.findStudentByNameAndBirthDate(studentRequestDto);
         return ResponseEntity.ok(StudentResponseDto.MapStruct.INSTANCE.toDto(findStudent));
     }
@@ -37,14 +38,15 @@ public class StudentControllerImpl implements StudentController {
     @Override
     @GetMapping("/graduate")
     public ResponseEntity<StudentPageResponseDto> getStudentGraduated(
-            StudentPageRequestDto studentPaginationRequestDto) {
+            @RequestBody StudentPageRequestDto studentPaginationRequestDto) {
         Page<Student> graduatedStudents = studentService.findGraduatedStudents(studentPaginationRequestDto);
         return ResponseEntity.ok(StudentPageResponseDto.MapStruct.INSTANCE.toDto(graduatedStudents));
     }
 
     @Override
     @GetMapping("/enroll")
-    public ResponseEntity<List<CourseResponseDto>> getStudentEnrolledCourses(StudentRequestDto studentRequestDto) {
+    public ResponseEntity<List<CourseResponseDto>> getStudentEnrolledCourses(
+            @RequestBody StudentRequestDto studentRequestDto) {
         List<Course> enrolledCourses = studentService.findStudentEnrolledCourses(studentRequestDto);
         List<CourseResponseDto> enrolledCoursesDto = enrolledCourses.stream()
                 .map(CourseResponseDto.MapStruct.INSTANCE::toDto).toList();
@@ -53,7 +55,8 @@ public class StudentControllerImpl implements StudentController {
 
     @Override
     @GetMapping("/finish")
-    public ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(StudentRequestDto studentRequestDto) {
+    public ResponseEntity<List<CourseResponseDto>> getStudentFinishedCourses(
+            @RequestBody StudentRequestDto studentRequestDto) {
         List<Course> finishedCourses = studentService.findStudentFinishedCourses(studentRequestDto);
         List<CourseResponseDto> finishedCoursesDto = finishedCourses.stream()
                 .map(CourseResponseDto.MapStruct.INSTANCE::toDto).toList();
@@ -62,7 +65,8 @@ public class StudentControllerImpl implements StudentController {
 
     @Override
     @PatchMapping("/drop")
-    public ResponseEntity<Void> patchStudentDrop(StudentRequestDto studentRequestDto) {
+    public ResponseEntity<Void> patchStudentDrop(
+            @RequestBody StudentRequestDto studentRequestDto) {
         studentService.dropStudent(studentRequestDto);
         return ResponseEntity.noContent().build();
     }

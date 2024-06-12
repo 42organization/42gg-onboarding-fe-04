@@ -78,7 +78,10 @@ public class StudentService {
         List<Enrollment> enrollments = student.getEnrollments().stream()
                 .filter(enrollment -> enrollment.getStatus().equals(EnrollmentStatus.ENROLL))
                 .toList();
-        return enrollments.stream().map(Enrollment::getCourse).toList();
+        return enrollments.stream()
+                .map(Enrollment::getCourse)
+                .filter(Course::isTrue)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -88,7 +91,9 @@ public class StudentService {
         List<Enrollment> enrollments = student.getEnrollments().stream()
                 .filter(enrollment -> enrollment.getStatus().equals(EnrollmentStatus.SUCCESS))
                 .toList();
-        return enrollments.stream().map(Enrollment::getCourse).toList();
+        return enrollments.stream().map(Enrollment::getCourse)
+                .filter(Course::isTrue)
+                .toList();
     }
 
     @Transactional

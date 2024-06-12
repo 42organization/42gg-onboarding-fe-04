@@ -1,9 +1,7 @@
 package ft.gg.onboarding.student.dto;
 
 import ft.gg.onboarding.entity.Student;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -13,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StudentPageResponseDto {
 
     private int page;
