@@ -57,7 +57,6 @@ public class StudentService {
                 .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
     }
 
-
     @Transactional(readOnly = true)
     public Page<Student> findGraduatedStudents(StudentPageRequestDto studentPageRequestDto) {
         try {
