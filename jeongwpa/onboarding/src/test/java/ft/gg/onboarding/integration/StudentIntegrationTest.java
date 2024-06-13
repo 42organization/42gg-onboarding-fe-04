@@ -39,7 +39,7 @@ public class StudentIntegrationTest {
     class PostStudent {
 
         @Test
-        @DisplayName("학생 등록에 성공하는 경우 200 코드를 반환합니다.")
+        @DisplayName("학생 등록에 성공하는 경우 - 200 코드를 반환합니다.")
         void returnStatusOkWhenSuccess() throws Exception {
             // given
             String name = "홍길동";
@@ -56,7 +56,7 @@ public class StudentIntegrationTest {
         }
 
         @Test
-        @DisplayName("등록하는 학생의 이름이 없는 경우 400 코드를 반환합니다.")
+        @DisplayName("등록하는 학생의 이름이 없는 경우 - 400 코드를 반환합니다.")
         void returnStatusBadRequestWhenNameIsNull() throws Exception {
             // given
             LocalDate birthDate = LocalDate.of(2000, 1, 1);
@@ -72,7 +72,7 @@ public class StudentIntegrationTest {
         }
 
         @Test
-        @DisplayName("등록하는 학생의 이름이 빈 문자열인 경우 400 코드를 반환합니다.")
+        @DisplayName("등록하는 학생의 이름이 빈 문자열인 경우 - 400 코드를 반환합니다.")
         void returnStatusBadRequestWhenNameIsEmpty() throws Exception {
             // given
             LocalDate birthDate = LocalDate.of(2000, 1, 1);
@@ -88,7 +88,7 @@ public class StudentIntegrationTest {
         }
 
         @Test
-        @DisplayName("등록하는 학생의 생년월일이 없는 경우 400 코드를 반환합니다.")
+        @DisplayName("등록하는 학생의 생년월일이 없는 경우 - 400 코드를 반환합니다.")
         void returnStatusBadRequestWhenBirthDateIsNull() throws Exception {
             // given
             String name = "홍길동";
@@ -104,7 +104,7 @@ public class StudentIntegrationTest {
         }
 
         @Test
-        @DisplayName("등록하는 학생의 생년월일이 유효하지 않은 경우 400 코드를 반환합니다.")
+        @DisplayName("등록하는 학생의 생년월일이 유효하지 않은 경우 - 400 코드를 반환합니다.")
         void returnStatusBadRequestWhenBirthDateIsInvalid() throws Exception {
             // given
             String request = "{\"name\":\"홍길동\",\"birthDate\":\"invalid\"}";
@@ -117,7 +117,7 @@ public class StudentIntegrationTest {
         }
 
         @Test
-        @DisplayName("등록하는 학생의 생년월일이 미래인 경우 400 코드를 반환합니다.")
+        @DisplayName("등록하는 학생의 생년월일이 미래인 경우 - 400 코드를 반환합니다.")
         void returnStatusBadRequestWhenBirthDateIsFuture() throws Exception {
             // given
             LocalDate birthDate = LocalDate.now().plusDays(1);
@@ -133,7 +133,7 @@ public class StudentIntegrationTest {
         }
 
         @Test
-        @DisplayName("이미 등록된 학생의 이름과 생년월일을 가진 학생을 등록하는 경우 409 코드를 반환합니다.")
+        @DisplayName("이미 등록된 학생의 이름과 생년월일을 가진 학생을 등록하는 경우 - 409 코드를 반환합니다.")
         void returnStatusConflictWhenStudentAlreadyExists() throws Exception {
             // given
             String name = "홍길동";
