@@ -1,9 +1,8 @@
 package ft.gg.onboarding.sugang.controller;
 
 import ft.gg.onboarding.dto.enrollment.EnrollmentResponseDto;
-import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
-import ft.gg.onboarding.entity.enrollment.Enrollment;
+import ft.gg.onboarding.entity.course.Course;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

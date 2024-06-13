@@ -36,7 +36,7 @@ public class SugangControllerImpl implements SugangController {
     }
 
     @Override
-    @PostMapping("/{courseId}")
+    @PatchMapping("/{courseId}")
     public ResponseEntity<Void> patchSugang(
             @PathVariable("courseId") int courseId, @RequestBody StudentRequestDto studentRequestDto) {
         sugangService.cancelCourse(courseId, studentRequestDto);
