@@ -192,5 +192,83 @@ public class StudentIntegrationTest {
             assertThat(studentResponseDto.getName()).isEqualTo(name);
             assertThat(studentResponseDto.getBirthDate()).isEqualTo(birthDate);
         }
+
+        @Test
+        @DisplayName("등록되지 않은 학생을 조회하는 경우 - 404 코드를 반환합니다.")
+        void returnStatusNotFoundWhenStudentNotFound() throws Exception {
+            // given
+            String name = "홍길동";
+            LocalDate birthDate = LocalDate.of(2000, 1, 1);
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name(name).birthDate(birthDate).build();
+            String request = objectMapper.writeValueAsString(studentRequestDto);
+
+            // expected
+            mockMvc.perform(get("/students")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @DisplayName("조회하는 학생의 이름이 없는 경우 - 400 코드를 반환합니다.")
+        void returnStatusBadRequestWhenNameIsNull() throws Exception {
+            // given
+            LocalDate birthDate = LocalDate.of(2000, 1, 1);
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name(null).birthDate(birthDate).build();
+            String request = objectMapper.writeValueAsString(studentRequestDto);
+
+            // expected
+            mockMvc.perform(get("/students")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("조회하는 학생의 이름이 빈 문자열인 경우 - 400 코드를 반환합니다.")
+        void returnStatusBadRequestWhenNameIsEmpty() throws Exception {
+            // given
+            LocalDate birthDate = LocalDate.of(2000, 1, 1);
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name("").birthDate(birthDate).build();
+            String request = objectMapper.writeValueAsString(studentRequestDto);
+
+            // expected
+            mockMvc.perform(get("/students")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("조회하는 학생의 생년월일이 없는 경우 - 400 코드를 반환합니다.")
+        void returnStatusBadRequestWhenBirthDateIsNull() throws Exception {
+            // given
+            String name = "홍길동";
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name(name).birthDate(null).build();
+            String request = objectMapper.writeValueAsString(studentRequestDto);
+
+            // expected
+            mockMvc.perform(get("/students")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("조회하는 학생의 생년월일이 유효하지 않은 경우 - 400 코드를 반환합니다.")
+        void returnStatusBadRequestWhenBirthDateIsInvalid() throws Exception {
+            // given
+            String request = "{\"name\":\"홍길동\",\"birthDate\":\"invalid\"}";
+
+            // expected
+            mockMvc.perform(get("/students")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest());
+        }
     }
 }
