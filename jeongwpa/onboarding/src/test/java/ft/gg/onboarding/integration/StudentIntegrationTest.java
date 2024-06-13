@@ -3,6 +3,8 @@ package ft.gg.onboarding.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ft.gg.onboarding.config.annotation.IntegrationTest;
 import ft.gg.onboarding.dto.student.StudentCreateDto;
+import ft.gg.onboarding.dto.student.StudentRequestDto;
+import ft.gg.onboarding.dto.student.StudentResponseDto;
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.entity.student.StudentStatus;
 import io.swagger.v3.core.util.ObjectMapperFactory;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -156,6 +160,40 @@ public class StudentIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(request))
                     .andExpect(status().isConflict());
+        }
+    }
+
+
+    @Nested
+    @DisplayName("GET /students")
+    class GetStudents {
+
+        @Test
+        @DisplayName("학생 단건 조회에 성공하는 경우 - 학생 정보와 함께 200 코드를 반환합니다.")
+        void returnStatusOkWhenSuccess() throws Exception {
+            // Given
+            String name = "홍길동";
+            LocalDate birthDate = LocalDate.of(2000, 1, 1);
+            Student student = Student.builder().name(name).birthDate(birthDate)
+                    .totalCredit(0).enrolledCredit(0).status(StudentStatus.ATTEND).build();
+            em.persist(student);
+            em.flush();
+            em.clear();
+
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder().
+                    name(name).birthDate(birthDate).build();
+            String request = objectMapper.writeValueAsString(studentRequestDto);
+
+            // When
+            String response = mockMvc.perform(get("/students")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+            StudentResponseDto studentResponseDto = objectMapper.readValue(response, StudentResponseDto.class);
+
+            // then
+            assertThat(studentResponseDto.getName()).isEqualTo(name);
+            assertThat(studentResponseDto.getBirthDate()).isEqualTo(birthDate);
         }
     }
 }

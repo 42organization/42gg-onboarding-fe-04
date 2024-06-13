@@ -6,6 +6,7 @@ import lombok.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,7 +16,7 @@ public class StudentResponseDto {
 
     private String name;
 
-    private String birthDate;
+    private LocalDate birthDate;
 
     private StudentStatus status;
 
@@ -28,7 +29,7 @@ public class StudentResponseDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    public StudentResponseDto(String name, String birthDate, StudentStatus status, int totalCredit, int enrolledCredit, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public StudentResponseDto(String name, LocalDate birthDate, StudentStatus status, int totalCredit, int enrolledCredit, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.name = name;
         this.birthDate = birthDate;
         this.status = status;
