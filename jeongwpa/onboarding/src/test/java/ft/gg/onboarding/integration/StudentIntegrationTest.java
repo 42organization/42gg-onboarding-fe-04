@@ -142,11 +142,8 @@ public class StudentIntegrationTest {
             // given
             String name = "홍길동";
             LocalDate birthDate = LocalDate.of(2000, 1, 1);
-            Student student = Student.builder()
-                    .name(name).birthDate(birthDate)
-                    .totalCredit(0).enrolledCredit(0)
-                    .status(StudentStatus.ATTEND)
-                    .build();
+            Student student = Student.builder().name(name).birthDate(birthDate)
+                    .totalCredit(0).enrolledCredit(0).status(StudentStatus.ATTEND).build();
             em.persist(student);
             em.flush();
             em.clear();
