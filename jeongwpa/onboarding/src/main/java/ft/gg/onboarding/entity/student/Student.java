@@ -29,7 +29,7 @@ public class Student extends BaseEntity {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
     private String name;
 
-    @Column(name = "birth_date", nullable = false, columnDefinition = "DATETIME")
+    @Column(name = "birth_date", nullable = false, columnDefinition = "DATE")
     private LocalDate birthDate;
 
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('ATTEND', 'DROP', 'GRADUATE')")
