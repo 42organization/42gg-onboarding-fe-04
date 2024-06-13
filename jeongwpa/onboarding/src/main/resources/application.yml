@@ -9,7 +9,7 @@ spring:
     active: main
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:8.0.35://localhost:3306/school
+    url: jdbc:mysql://localhost:3306/school
     username: root
     password: 1q2w3e4r!
 
