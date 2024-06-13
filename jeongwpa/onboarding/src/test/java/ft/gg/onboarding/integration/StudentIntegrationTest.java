@@ -1,6 +1,7 @@
 package ft.gg.onboarding.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ft.gg.onboarding.config.annotation.IntegrationTest;
 import ft.gg.onboarding.dto.student.StudentCreateDto;
 import io.swagger.v3.core.util.ObjectMapperFactory;
 import jakarta.persistence.EntityManager;
@@ -9,20 +10,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static ft.gg.onboarding.global.constant.ProfileConstant.TEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles(TEST)
-@SpringBootTest
+@IntegrationTest
 @AutoConfigureMockMvc
 @Transactional
 public class StudentIntegrationTest {
