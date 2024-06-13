@@ -69,4 +69,45 @@ class StudentServiceTest {
                     () -> studentService.createStudent(studentCreateDto));
         }
     }
+
+    @Nested
+    @DisplayName("학생 조회")
+    class FindStudent {
+
+        @Test
+        @DisplayName("성공하는 경우 학생을 반환합니다.")
+        void ReturnStudent() {
+            // given
+            String name = "홍길동";
+            LocalDate birthDate = LocalDate.of(2000, 1, 1);
+            Student student = Student.builder().name(name).birthDate(birthDate).build();
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name(name).birthDate(birthDate).build();
+            when(studentRepository.findByNameAndBirthDate(anyString(), any(LocalDate.class)))
+                    .thenReturn(Optional.of(student));
+
+            // when
+            Student response = studentService.findStudentByNameAndBirthDate(studentRequestDto);
+
+            // then
+            Assertions.assertEquals(student.getName(), response.getName());
+            Assertions.assertEquals(student.getBirthDate(), response.getBirthDate());
+        }
+
+        @Test
+        @DisplayName("학생을 찾을 수 없는 경우 NotFoundException을 던집니다.")
+        void ThrowsNotFoundExceptionWhenStudentNotFound() {
+            // given
+            String name = "홍길동";
+            LocalDate birthDate = LocalDate.of(2000, 1, 1);
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name(name).birthDate(birthDate).build();
+            when(studentRepository.findByNameAndBirthDate(anyString(), any(LocalDate.class)))
+                    .thenReturn(Optional.empty());
+
+            // expected
+            Assertions.assertThrows(NotFoundException.class,
+                    () -> studentService.findStudentByNameAndBirthDate(studentRequestDto));
+        }
+    }
 }
