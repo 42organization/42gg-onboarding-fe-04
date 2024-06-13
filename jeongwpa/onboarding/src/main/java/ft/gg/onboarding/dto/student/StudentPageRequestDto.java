@@ -2,10 +2,7 @@ package ft.gg.onboarding.dto.student;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -25,4 +22,12 @@ public class StudentPageRequestDto {
 
     @NotNull
     private String order;
+
+    @Builder
+    public StudentPageRequestDto(int page, int size, String sort, String order) {
+        this.page = page;
+        this.size = size;
+        this.sort = sort;
+        this.order = order;
+    }
 }
