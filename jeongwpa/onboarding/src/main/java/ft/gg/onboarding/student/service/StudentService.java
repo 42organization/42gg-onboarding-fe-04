@@ -52,7 +52,8 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public Student findStudentByNameAndBirthDate(StudentRequestDto studentRequestDto) {
-        return studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+        return studentRepository.findByNameAndBirthDate(
+                        studentRequestDto.getName(), studentRequestDto.getBirthDate())
                 .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
     }
 

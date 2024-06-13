@@ -34,7 +34,8 @@ public class SugangService {
 
     @Transactional(readOnly = true)
     public List<Course> findCurrentCourses(CoursePageRequestDto coursePageRequestDto) {
-        Sort sort = SortParserUtils.INSTANCE.parse(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
+        Sort sort = SortParserUtils.INSTANCE.parse(
+                coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
         return courseRepository.findCoursesByTrueIsTrue(sort);
     }
 
