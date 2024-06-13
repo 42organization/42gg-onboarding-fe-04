@@ -4,6 +4,7 @@ import ft.gg.onboarding.entity.base.BaseEntity;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,6 +44,18 @@ public class Course extends BaseEntity {
 
     @OneToMany(mappedBy = "course")
     private List<Enrollment> enrollments = new ArrayList<>();
+
+    @Builder
+    public Course(int id, String name, String professorName, int credit, boolean isTrue, int maxStudentCount, int currentStudentCount, List<Enrollment> enrollments) {
+        this.id = id;
+        this.name = name;
+        this.professorName = professorName;
+        this.credit = credit;
+        this.isTrue = isTrue;
+        this.maxStudentCount = maxStudentCount;
+        this.currentStudentCount = currentStudentCount;
+        this.enrollments = enrollments;
+    }
 
     public void updateCourse(String name, String professorName, int credit, int maxStudentCount) {
         this.name = name;

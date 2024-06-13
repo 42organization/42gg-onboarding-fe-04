@@ -2,8 +2,10 @@ package ft.gg.onboarding.dto.enrollment;
 
 import ft.gg.onboarding.dto.course.CourseResponseDto;
 import ft.gg.onboarding.dto.student.StudentResponseDto;
+import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.entity.enrollment.EnrollmentStatus;
+import ft.gg.onboarding.entity.student.Student;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,13 +41,13 @@ public class EnrollmentResponseDto {
         EnrollmentResponseDto toDto(Enrollment enrollment);
 
         @Named("studentToDto")
-        default StudentResponseDto studentToDto(Enrollment enrollment) {
-            return StudentResponseDto.MapStruct.INSTANCE.toDto(enrollment.getStudent());
+        default StudentResponseDto studentToDto(Student student) {
+            return StudentResponseDto.MapStruct.INSTANCE.toDto(student);
         }
 
         @Named("courseToDto")
-        default CourseResponseDto courseToDto(Enrollment enrollment) {
-            return CourseResponseDto.MapStruct.INSTANCE.toDto(enrollment.getCourse());
+        default CourseResponseDto courseToDto(Course course) {
+            return CourseResponseDto.MapStruct.INSTANCE.toDto(course);
         }
     }
 }

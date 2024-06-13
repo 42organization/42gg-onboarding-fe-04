@@ -36,9 +36,9 @@ public class StudentCreateDto {
         StudentCreateDto.MapStruct INSTANCE = Mappers.getMapper(StudentCreateDto.MapStruct.class);
 
         @Mapping(target = "id", ignore = true)
-        @Mapping(target = "status", defaultValue = "StudentStatus.ATTEND")
-        @Mapping(target = "totalCredit", defaultValue = "0")
-        @Mapping(target = "enrolledCredit", defaultValue = "0")
-        Student toEntity(StudentCreateDto stud1entCreateDto);
+        @Mapping(target = "status", constant = "ATTEND")
+        @Mapping(target = "totalCredit", constant = "0")
+        @Mapping(target = "enrolledCredit", constant = "0")
+        Student toEntity(StudentCreateDto studentCreateDto);
     }
 }
