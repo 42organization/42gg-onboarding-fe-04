@@ -6,6 +6,7 @@ import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.student.controller.StudentController;
 import ft.gg.onboarding.student.service.StudentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class StudentControllerImpl implements StudentController {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> postStudent(@RequestBody StudentCreateDto studentCreateDto) {
+    public ResponseEntity<Void> postStudent(@RequestBody @Valid StudentCreateDto studentCreateDto) {
         studentService.createStudent(studentCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -31,7 +32,7 @@ public class StudentControllerImpl implements StudentController {
     @Override
     @GetMapping
     public ResponseEntity<StudentResponseDto> getStudentByNameAndBirthDate(
-            @RequestBody StudentRequestDto studentRequestDto) {
+            @RequestBody @Valid StudentRequestDto studentRequestDto) {
         Student findStudent = studentService.findStudentByNameAndBirthDate(studentRequestDto);
         return ResponseEntity.ok(StudentResponseDto.MapStruct.INSTANCE.toDto(findStudent));
     }
@@ -39,7 +40,7 @@ public class StudentControllerImpl implements StudentController {
     @Override
     @GetMapping("/graduate")
     public ResponseEntity<StudentPageResponseDto> getStudentGraduated(
-            @RequestBody StudentPageRequestDto studentPaginationRequestDto) {
+            @RequestBody @Valid StudentPageRequestDto studentPaginationRequestDto) {
         Page<Student> graduatedStudents = studentService.findGraduatedStudents(studentPaginationRequestDto);
         return ResponseEntity.ok(StudentPageResponseDto.MapStruct.INSTANCE.toDto(graduatedStudents));
     }
@@ -47,7 +48,7 @@ public class StudentControllerImpl implements StudentController {
     @Override
     @GetMapping("/enroll")
     public ResponseEntity<List<CourseResponseDto>> getStudentEnrolledCourses(
-            @RequestBody StudentRequestDto studentRequestDto) {
+            @RequestBody @Valid StudentRequestDto studentRequestDto) {
         List<Course> enrolledCourses = studentService.findStudentEnrolledCourses(studentRequestDto);
         List<CourseResponseDto> enrolledCoursesDto = enrolledCourses.stream()
                 .map(CourseResponseDto.MapStruct.INSTANCE::toDto)

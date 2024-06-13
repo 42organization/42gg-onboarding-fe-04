@@ -25,7 +25,7 @@ public class CourseControllerImpl implements CourseController {
     @Override
     @GetMapping
     public ResponseEntity<List<CourseResponseDto>> getCourses(
-            @RequestBody CoursePageRequestDto coursePageRequestDto) {
+            @RequestBody @Valid CoursePageRequestDto coursePageRequestDto) {
         List<Course> courses = courseService.getCourses(coursePageRequestDto);
         List<CourseResponseDto> coursesDto = courses.stream()
                 .map(CourseResponseDto.MapStruct.INSTANCE::toDto)
@@ -35,7 +35,7 @@ public class CourseControllerImpl implements CourseController {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> postCourse(@RequestBody CourseCreateDto courseCreateDto) {
+    public ResponseEntity<Void> postCourse(@RequestBody @Valid CourseCreateDto courseCreateDto) {
         courseService.createCourse(courseCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -44,7 +44,7 @@ public class CourseControllerImpl implements CourseController {
     @PatchMapping("/{courseId}")
     public ResponseEntity<Void> patchCourseUpdate(
             @PathVariable("courseId") @Valid int courseId,
-            @RequestBody CourseUpdateDto courseUpdateDto) {
+            @RequestBody @Valid CourseUpdateDto courseUpdateDto) {
         courseService.updateCourse(courseId, courseUpdateDto);
         return ResponseEntity.noContent().build();
     }

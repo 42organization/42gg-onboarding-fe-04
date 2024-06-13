@@ -8,6 +8,7 @@ import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.sugang.controller.SugangController;
 import ft.gg.onboarding.sugang.service.SugangService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class SugangControllerImpl implements SugangController {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<CourseResponseDto>> getSugang(CoursePageRequestDto coursePageRequestDto) {
+    public ResponseEntity<List<CourseResponseDto>> getSugang(
+            @RequestBody @Valid CoursePageRequestDto coursePageRequestDto) {
         List<Course> courses = sugangService.findCurrentCourses(coursePageRequestDto);
         List<CourseResponseDto> coursesDto = courses.stream()
                 .map(CourseResponseDto.MapStruct.INSTANCE::toDto)
@@ -35,7 +37,8 @@ public class SugangControllerImpl implements SugangController {
     @Override
     @PostMapping("/{courseId}")
     public ResponseEntity<Void> postSugang(
-            @PathVariable("courseId") int courseId, @RequestBody StudentRequestDto studentRequestDto) {
+            @PathVariable("courseId") int courseId,
+            @RequestBody @Valid StudentRequestDto studentRequestDto) {
         sugangService.enrollCourse(courseId, studentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -43,7 +46,8 @@ public class SugangControllerImpl implements SugangController {
     @Override
     @PatchMapping("/{courseId}")
     public ResponseEntity<Void> patchSugang(
-            @PathVariable("courseId") int courseId, @RequestBody StudentRequestDto studentRequestDto) {
+            @PathVariable("courseId") int courseId,
+            @RequestBody @Valid StudentRequestDto studentRequestDto) {
         sugangService.cancelCourse(courseId, studentRequestDto);
         return ResponseEntity.noContent().build();
     }
@@ -51,7 +55,7 @@ public class SugangControllerImpl implements SugangController {
     @Override
     @GetMapping("/history")
     public ResponseEntity<List<EnrollmentResponseDto>> getSugangHistory(
-            @RequestBody StudentRequestDto studentRequestDto) {
+            @RequestBody @Valid StudentRequestDto studentRequestDto) {
         List<Enrollment> history = sugangService.findCourseHistory(studentRequestDto);
         List<EnrollmentResponseDto> historyDto = history.stream()
                 .map(EnrollmentResponseDto.MapStruct.INSTANCE::toDto)
