@@ -1,7 +1,6 @@
 package ft.gg.onboarding.student.service;
 
 import ft.gg.onboarding.dto.student.StudentCreateDto;
-import ft.gg.onboarding.dto.student.StudentPageRequestDto;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
@@ -38,7 +37,7 @@ class StudentServiceTest {
 
         @Test
         @DisplayName("성공하는 경우 아무것도 반환하지 않습니다.")
-        void DoesNotReturnAnything() {
+        void doesNotReturnAnything() {
             // given
             StudentCreateDto studentCreateDto = StudentCreateDto.builder()
                     .name("홍길동")
@@ -54,7 +53,7 @@ class StudentServiceTest {
 
         @Test
         @DisplayName("이미 등록된 학생인 경우 DuplicateException을 던집니다.")
-        void ThrowsDuplicateExceptionWhenStudentAlreadyExists() {
+        void throwsDuplicateExceptionWhenStudentAlreadyExists() {
             // given
             StudentCreateDto studentCreateDto = StudentCreateDto.builder()
                     .name("홍길동")
@@ -76,7 +75,7 @@ class StudentServiceTest {
 
         @Test
         @DisplayName("성공하는 경우 학생을 반환합니다.")
-        void ReturnStudent() {
+        void returnStudent() {
             // given
             String name = "홍길동";
             LocalDate birthDate = LocalDate.of(2000, 1, 1);
@@ -96,7 +95,7 @@ class StudentServiceTest {
 
         @Test
         @DisplayName("학생을 찾을 수 없는 경우 NotFoundException을 던집니다.")
-        void ThrowsNotFoundExceptionWhenStudentNotFound() {
+        void throwsNotFoundExceptionWhenStudentNotFound() {
             // given
             String name = "홍길동";
             LocalDate birthDate = LocalDate.of(2000, 1, 1);
