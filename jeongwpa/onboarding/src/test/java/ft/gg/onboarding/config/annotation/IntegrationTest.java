@@ -13,7 +13,7 @@ import static ft.gg.onboarding.global.constant.ProfileConstant.TEST;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest         // 테스트 환경에서 의존성 주입을 위한 설정, 의존성 주입을 위해서는 @WebMvcTest 혹은 @AutoConfigureMockMvc가 필요
+@SpringBootTest         // Spring Boot 전체 컨텍스트를 로드하고 테스트
 @ActiveProfiles(TEST)   // testcontainers를 위한 datasource 설정
 public @interface IntegrationTest {
 }

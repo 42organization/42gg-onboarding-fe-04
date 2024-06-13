@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc   // MockMvc 객체 자동 주입
 @Transactional
 public class StudentIntegrationTest {
 
