@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @UnitTest
-class StudentServiceTest {
+class StudentServiceUnitTest {
 
     @Mock
     private StudentRepository studentRepository;
