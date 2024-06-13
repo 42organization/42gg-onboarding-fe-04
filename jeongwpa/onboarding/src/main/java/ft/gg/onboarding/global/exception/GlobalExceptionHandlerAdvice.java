@@ -4,7 +4,7 @@ import ft.gg.onboarding.global.exception.custom.BusinessException;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
 import ft.gg.onboarding.global.exception.custom.IllegalArgumentException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;
-import ft.gg.onboarding.global.exception.dto.ErrorResponse;
+import ft.gg.onboarding.global.exception.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
