@@ -1,17 +1,20 @@
 package ft.gg.onboarding.sugang.service;
 
 import ft.gg.onboarding.course.service.CourseService;
+import ft.gg.onboarding.dto.course.CoursePageRequestDto;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
 import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.global.exception.custom.BusinessException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;
+import ft.gg.onboarding.global.utils.SortParserUtils;
 import ft.gg.onboarding.repository.CourseRepository;
 import ft.gg.onboarding.repository.EnrollmentRepository;
 import ft.gg.onboarding.repository.StudentRepository;
 import ft.gg.onboarding.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +32,10 @@ public class SugangService {
 
     private final EnrollmentRepository enrollmentRepository;
 
-    public List<Course> findCurrentCourses() {
-        // TODO: find current courses
-        return List.of();
+    @Transactional(readOnly = true)
+    public List<Course> findCurrentCourses(CoursePageRequestDto coursePageRequestDto) {
+        Sort sort = SortParserUtils.INSTANCE.parse(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
+        return courseRepository.findCoursesByTrueIsTrue(sort);
     }
 
     @Transactional
@@ -43,7 +47,6 @@ public class SugangService {
                 .orElseThrow(() -> new NotFoundException(CourseService.COURSE_NOT_FOUND));
         Enrollment newEnrollment = Enrollment.makeEnroll(findStudent, findCourse);
         try {
-            // TODO : total credit check??
             findStudent.addCredit(findCourse.getCredit());
             findCourse.addStudent();
             enrollmentRepository.save(newEnrollment);
@@ -52,6 +55,7 @@ public class SugangService {
         }
     }
 
+    @Transactional
     public void cancelCourse(int courseId, StudentRequestDto studentRequestDto) {
         Student findStudent = studentRepository.findByNameAndBirthDate(
                         studentRequestDto.getName(), studentRequestDto.getBirthDate())
@@ -65,7 +69,8 @@ public class SugangService {
         }
     }
 
-    public List<Enrollment> findCourseHistory(int courseId, StudentRequestDto studentRequestDto) {
+    @Transactional(readOnly = true)
+    public List<Enrollment> findCourseHistory(StudentRequestDto studentRequestDto) {
         Student findStudent = studentRepository.findByNameAndBirthDate(
                         studentRequestDto.getName(), studentRequestDto.getBirthDate())
                 .orElseThrow(() -> new NotFoundException(StudentService.STUDENT_NOT_FOUND));

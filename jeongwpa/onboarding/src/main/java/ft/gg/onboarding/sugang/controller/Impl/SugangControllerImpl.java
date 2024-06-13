@@ -1,5 +1,7 @@
 package ft.gg.onboarding.sugang.controller.Impl;
 
+import ft.gg.onboarding.dto.course.CoursePageRequestDto;
+import ft.gg.onboarding.dto.course.CourseResponseDto;
 import ft.gg.onboarding.dto.enrollment.EnrollmentResponseDto;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
 import ft.gg.onboarding.entity.course.Course;
@@ -22,9 +24,12 @@ public class SugangControllerImpl implements SugangController {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<Course>> getSugang() {
-        sugangService.findCurrentCourses();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<CourseResponseDto>> getSugang(CoursePageRequestDto coursePageRequestDto) {
+        List<Course> courses = sugangService.findCurrentCourses(coursePageRequestDto);
+        List<CourseResponseDto> coursesDto = courses.stream()
+                .map(CourseResponseDto.MapStruct.INSTANCE::toDto)
+                .toList();
+        return ResponseEntity.ok(coursesDto);
     }
 
     @Override
@@ -44,10 +49,10 @@ public class SugangControllerImpl implements SugangController {
     }
 
     @Override
-    @GetMapping("/{courseId}/history")
+    @GetMapping("/history")
     public ResponseEntity<List<EnrollmentResponseDto>> getSugangHistory(
-            @PathVariable("courseId") int courseId, @RequestBody StudentRequestDto studentRequestDto) {
-        List<Enrollment> history = sugangService.findCourseHistory(courseId, studentRequestDto);
+            @RequestBody StudentRequestDto studentRequestDto) {
+        List<Enrollment> history = sugangService.findCourseHistory(studentRequestDto);
         List<EnrollmentResponseDto> historyDto = history.stream()
                 .map(EnrollmentResponseDto.MapStruct.INSTANCE::toDto)
                 .toList();
