@@ -50,7 +50,8 @@ public class StudentControllerImpl implements StudentController {
             @RequestBody StudentRequestDto studentRequestDto) {
         List<Course> enrolledCourses = studentService.findStudentEnrolledCourses(studentRequestDto);
         List<CourseResponseDto> enrolledCoursesDto = enrolledCourses.stream()
-                .map(CourseResponseDto.MapStruct.INSTANCE::toDto).toList();
+                .map(CourseResponseDto.MapStruct.INSTANCE::toDto)
+                .toList();
         return ResponseEntity.ok(enrolledCoursesDto);
     }
 
@@ -67,10 +68,8 @@ public class StudentControllerImpl implements StudentController {
 
     @Override
     @PatchMapping("/drop")
-    public ResponseEntity<Void> patchStudentDrop(
-            @RequestBody StudentRequestDto studentRequestDto) {
+    public ResponseEntity<Void> patchStudentDrop(@RequestBody StudentRequestDto studentRequestDto) {
         studentService.dropStudent(studentRequestDto);
         return ResponseEntity.noContent().build();
     }
-
 }

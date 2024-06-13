@@ -41,3 +41,7 @@ CREATE TABLE IF NOT EXISTS `enrollment` (
     CONSTRAINT `fk_enrollment_student_id` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
     CONSTRAINT `fk_enrollment_course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
 );
+
+CREATE INDEX `index_enrollment_course_id` ON `enrollment` (`course_id`);
+CREATE INDEX `index_enrollment_student_id` ON `enrollment` (`student_id`);
+CREATE INDEX `index_enrollment_course_id_student_id` ON `enrollment` (`course_id`, `student_id`);

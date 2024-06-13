@@ -20,31 +20,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StudentService {
 
-    private static final String STUDENT_DUPLICATE_FAILED = "Student already exists";
-
-    private static final String STUDENT_CREATE_FAILED = "Failed to create student";
-
-    private static final String STUDENT_NOT_FOUND = "Student not found";
-
-    private static final String STUDENT_GET_GRADUATES_FAILED = "Failed to get graduated students";
-
-    private static final String STUDENT_DROP_FAILED = "Failed to drop student";
+    public static final String STUDENT_DUPLICATE_FAILED = "Student already exists";
+    public static final String STUDENT_CREATE_FAILED = "Failed to create student";
+    public static final String STUDENT_NOT_FOUND = "Student not found";
+    public static final String STUDENT_GET_GRADUATES_FAILED = "Failed to get graduated students";
+    public static final String STUDENT_DROP_FAILED = "Failed to drop student";
 
     private final StudentRepository studentRepository;
 
     @Transactional
     public void createStudent(StudentCreateDto studentCreateDto) {
-        studentRepository.findByNameAndBirthDate(studentCreateDto.getName(), studentCreateDto.getBirthDate())
-                .ifPresent(student -> {
-                    throw new DuplicateException(STUDENT_DUPLICATE_FAILED);
-                });
-        Student newStudent = StudentCreateDto.MapStruct.INSTANCE.toEntity(studentCreateDto);
+        Optional<Student> dupStudent = studentRepository.findByNameAndBirthDate(
+                studentCreateDto.getName(), studentCreateDto.getBirthDate());
+        if (dupStudent.isPresent()) {
+            throw new DuplicateException(STUDENT_DUPLICATE_FAILED);
+        }
         try {
+            Student newStudent = StudentCreateDto.MapStruct.INSTANCE.toEntity(studentCreateDto);
             studentRepository.save(newStudent);
         } catch (Exception e) {
             throw new BusinessException(STUDENT_CREATE_FAILED);
@@ -61,10 +59,9 @@ public class StudentService {
     @Transactional(readOnly = true)
     public Page<Student> findGraduatedStudents(StudentPageRequestDto studentPageRequestDto) {
         try {
+            Sort sort = parseSort(studentPageRequestDto.getSort(), studentPageRequestDto.getOrder());
             PageRequest pageRequest = PageRequest.of(
-                    studentPageRequestDto.getPage(),
-                    studentPageRequestDto.getSize(),
-                    parseSort(studentPageRequestDto.getSort(), studentPageRequestDto.getOrder()));
+                    studentPageRequestDto.getPage(), studentPageRequestDto.getSize(), sort);
             return studentRepository.findStudentsByStatusEqualsOrderByIdDesc(StudentStatus.GRADUATE, pageRequest);
         } catch (Exception e) {
             throw new BusinessException(STUDENT_GET_GRADUATES_FAILED);
@@ -73,7 +70,8 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public List<Course> findStudentEnrolledCourses(StudentRequestDto studentRequestDto) {
-        Student student = studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+        Student student = studentRepository.findByNameAndBirthDate(
+                        studentRequestDto.getName(), studentRequestDto.getBirthDate())
                 .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
         List<Enrollment> enrollments = student.getEnrollments().stream()
                 .filter(enrollment -> enrollment.getStatus().equals(EnrollmentStatus.ENROLL))
@@ -86,7 +84,8 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public List<Course> findStudentFinishedCourses(StudentRequestDto studentRequestDto) {
-        Student student = studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+        Student student = studentRepository.findByNameAndBirthDate(
+                        studentRequestDto.getName(), studentRequestDto.getBirthDate())
                 .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
         List<Enrollment> enrollments = student.getEnrollments().stream()
                 .filter(enrollment -> enrollment.getStatus().equals(EnrollmentStatus.SUCCESS))
@@ -99,7 +98,8 @@ public class StudentService {
     @Transactional
     public void dropStudent(StudentRequestDto studentRequestDto) {
         try {
-            Student student = studentRepository.findByNameAndBirthDate(studentRequestDto.getName(), studentRequestDto.getBirthDate())
+            Student student = studentRepository.findByNameAndBirthDate(
+                            studentRequestDto.getName(), studentRequestDto.getBirthDate())
                     .orElseThrow(() -> new NotFoundException(STUDENT_NOT_FOUND));
             student.dropout();
         } catch (Exception e) {

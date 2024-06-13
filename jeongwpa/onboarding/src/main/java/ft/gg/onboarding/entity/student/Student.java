@@ -1,12 +1,11 @@
 package ft.gg.onboarding.entity.student;
 
-import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.entity.base.BaseEntity;
+import ft.gg.onboarding.entity.enrollment.Enrollment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,5 +46,13 @@ public class Student extends BaseEntity {
 
     public void dropout() {
         this.status = StudentStatus.DROP;
+    }
+
+    public void graduate() {
+        this.status = StudentStatus.GRADUATE;
+    }
+
+    public void addCredit(int credit) {
+        this.enrolledCredit += credit;
     }
 }

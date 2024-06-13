@@ -54,4 +54,8 @@ public class Course extends BaseEntity {
     public void deleteCourse() {
         this.isTrue = false;
     }
+
+    public void addStudent() {
+        this.currentStudentCount++;
+    }
 }

@@ -16,22 +16,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CourseService {
 
-    private static final String COURSE_CREATE_FAILED = "Failed to create course";
-
-    private static final String COURSE_UPDATE_FAILED = "Failed to update course";
-
-    private static final String COURSE_DELETE_FAILED = "Failed to delete course";
-
-    private static final String COURSE_FINISH_FAILED = "Failed to finish course";
-
-    private static final String COURSE_DUPLICATE_FAILED = "Course already exists";
-
-    private static final String COURSE_NOT_FOUND = "Course not found";
+    public static final String COURSE_CREATE_FAILED = "Failed to create course";
+    public static final String COURSE_UPDATE_FAILED = "Failed to update course";
+    public static final String COURSE_DELETE_FAILED = "Failed to delete course";
+    public static final String COURSE_FINISH_FAILED = "Failed to finish course";
+    public static final String COURSE_DUPLICATE_FAILED = "Course already exists";
+    public static final String COURSE_NOT_FOUND = "Course not found";
 
     private final CourseRepository courseRepository;
 
@@ -43,12 +39,13 @@ public class CourseService {
 
     @Transactional
     public void createCourse(CourseCreateDto courseCreateDto) {
-        courseRepository.findByNameAndProfessorNameAndCredit(courseCreateDto.getName(), courseCreateDto.getProfessorName(), courseCreateDto.getCredit())
-                .ifPresent(course -> {
-                    throw new DuplicateException(COURSE_DUPLICATE_FAILED);
-                });
-        Course newCourse = CourseCreateDto.MapStruct.INSTANCE.toEntity(courseCreateDto);
+        Optional<Course> dupCourse = courseRepository.findByNameAndProfessorNameAndCredit(
+                courseCreateDto.getName(), courseCreateDto.getProfessorName(), courseCreateDto.getCredit());
+        if (dupCourse.isPresent()) {
+            throw new DuplicateException(COURSE_DUPLICATE_FAILED);
+        }
         try {
+            Course newCourse = CourseCreateDto.MapStruct.INSTANCE.toEntity(courseCreateDto);
             courseRepository.save(newCourse);
         } catch (Exception e) {
             throw new BusinessException(COURSE_CREATE_FAILED);
@@ -60,7 +57,8 @@ public class CourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException(COURSE_NOT_FOUND));
         try {
-            course.updateCourse(courseUpdateDto.getName(),
+            course.updateCourse(
+                    courseUpdateDto.getName(),
                     courseUpdateDto.getProfessorName(),
                     courseUpdateDto.getCredit(),
                     courseUpdateDto.getMaxStudentCount());
