@@ -11,6 +11,7 @@ import ft.gg.onboarding.global.exception.custom.NotFoundException;
 import ft.gg.onboarding.dto.student.StudentCreateDto;
 import ft.gg.onboarding.dto.student.StudentPageRequestDto;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
+import ft.gg.onboarding.global.utils.SortParserUtils;
 import ft.gg.onboarding.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -59,7 +60,8 @@ public class StudentService {
     @Transactional(readOnly = true)
     public Page<Student> findGraduatedStudents(StudentPageRequestDto studentPageRequestDto) {
         try {
-            Sort sort = parseSort(studentPageRequestDto.getSort(), studentPageRequestDto.getOrder());
+            Sort sort = SortParserUtils.INSTANCE.parse(
+                    studentPageRequestDto.getSort(), studentPageRequestDto.getOrder());
             PageRequest pageRequest = PageRequest.of(
                     studentPageRequestDto.getPage(), studentPageRequestDto.getSize(), sort);
             return studentRepository.findStudentsByStatusEqualsOrderByIdDesc(StudentStatus.GRADUATE, pageRequest);
@@ -105,11 +107,6 @@ public class StudentService {
         } catch (Exception e) {
             throw new BusinessException(STUDENT_DROP_FAILED);
         }
-    }
-
-    private Sort parseSort(String sort, String order) {
-        Sort sortObj = sort.equals("name") ? Sort.by("name") : Sort.by("id");
-        return order.equals("asc") ? sortObj.ascending() : sortObj.descending();
     }
 }
 

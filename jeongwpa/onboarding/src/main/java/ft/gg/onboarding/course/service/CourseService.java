@@ -2,14 +2,14 @@ package ft.gg.onboarding.course.service;
 
 import ft.gg.onboarding.dto.course.CourseCreateDto;
 import ft.gg.onboarding.dto.course.CoursePageRequestDto;
-import ft.gg.onboarding.dto.course.CourseResponseDto;
 import ft.gg.onboarding.dto.course.CourseUpdateDto;
-import ft.gg.onboarding.repository.CourseRepository;
 import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.global.exception.custom.BusinessException;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;
+import ft.gg.onboarding.global.utils.SortParserUtils;
+import ft.gg.onboarding.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,8 @@ public class CourseService {
 
 
     public List<Course> getCourses(CoursePageRequestDto coursePageRequestDto) {
-        Sort sort = parseSort(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
+        SortParserUtils.INSTANCE.parse(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
+        Sort sort = SortParserUtils.INSTANCE.parse(coursePageRequestDto.getSort(), coursePageRequestDto.getOrder());
         return courseRepository.findAll(sort);
     }
 
@@ -87,10 +88,5 @@ public class CourseService {
         } catch (Exception e) {
             throw new BusinessException(COURSE_FINISH_FAILED);
         }
-    }
-
-    private Sort parseSort(String sort, String order) {
-        Sort sortObj = sort.equals("name") ? Sort.by("name") : Sort.by("id");
-        return order.equals("asc") ? sortObj.ascending() : sortObj.descending();
     }
 }
