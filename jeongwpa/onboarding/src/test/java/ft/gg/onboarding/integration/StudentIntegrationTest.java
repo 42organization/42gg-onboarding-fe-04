@@ -9,6 +9,7 @@ import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.entity.student.StudentStatus;
 import io.swagger.v3.core.util.ObjectMapperFactory;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.N;
 
 import java.time.LocalDate;
 
@@ -269,6 +271,25 @@ public class StudentIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(request))
                     .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Disabled   // delete this line
+    @Nested
+    @DisplayName("GET /students/graduate")
+    class GetGraduateStudents {
+        // TODO
+    }
+
+    @Nested
+    @DisplayName("GET /students/enroll")
+    class GetStudentEnrollments {
+
+        @Disabled   // delete this line
+        @Test
+        @DisplayName("현재 시간표 조회에 성공하는 경우 - 학생의 수강 신청 목록과 함께 200 코드를 반환합니다.")
+        void returnStatusOkWhenSuccess() throws Exception {
+            // TODO
         }
     }
 }

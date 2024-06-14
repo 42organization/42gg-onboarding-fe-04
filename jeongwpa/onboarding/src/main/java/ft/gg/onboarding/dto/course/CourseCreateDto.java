@@ -34,8 +34,8 @@ public class CourseCreateDto {
 
         @Mapping(target = "id", ignore = true)
         @Mapping(target = "enrollments", ignore = true)
-        @Mapping(target = "isTrue", ignore = true)
-        @Mapping(target = "currentStudentCount", ignore = true)
+        @Mapping(target = "currentStudentCount", defaultValue = "0")
+        @Mapping(target = "isTrue", defaultValue = "true")
         Course toEntity(CourseCreateDto courseCreateDto);
     }
 }
