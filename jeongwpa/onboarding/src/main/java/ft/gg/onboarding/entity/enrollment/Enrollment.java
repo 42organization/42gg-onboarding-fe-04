@@ -21,11 +21,11 @@ public class Enrollment extends BaseEntity {
     @Column(name = "id", updatable = false, unique = true, nullable = false, columnDefinition = "INTEGER")
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 

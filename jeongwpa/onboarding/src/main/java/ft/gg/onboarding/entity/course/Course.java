@@ -42,7 +42,7 @@ public class Course extends BaseEntity {
     @Column(name = "current_student_count", nullable = false, columnDefinition = "INTEGER")
     private int currentStudentCount;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @Builder
