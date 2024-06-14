@@ -7,6 +7,7 @@ import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.student.controller.StudentController;
 import ft.gg.onboarding.student.service.StudentService;
 import ft.gg.onboarding.student.service.impl.StudentServiceV1;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/students")
 @RequiredArgsConstructor
+@Tag(name = "Student", description = "Student API")
 public class StudentControllerImpl implements StudentController {
 
     private final StudentService studentService;

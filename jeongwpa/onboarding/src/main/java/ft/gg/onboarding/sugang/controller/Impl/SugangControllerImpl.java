@@ -8,6 +8,7 @@ import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.enrollment.Enrollment;
 import ft.gg.onboarding.sugang.controller.SugangController;
 import ft.gg.onboarding.sugang.service.SugangService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sugang")
 @RequiredArgsConstructor
+@Tag(name = "Sugang", description = "Sugang API")
 public class SugangControllerImpl implements SugangController {
 
     private final SugangService sugangService;

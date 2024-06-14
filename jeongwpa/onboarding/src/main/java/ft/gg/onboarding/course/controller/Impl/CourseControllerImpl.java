@@ -7,6 +7,7 @@ import ft.gg.onboarding.dto.course.CourseResponseDto;
 import ft.gg.onboarding.dto.course.CourseUpdateDto;
 import ft.gg.onboarding.course.service.CourseService;
 import ft.gg.onboarding.entity.course.Course;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/courses")
 @RequiredArgsConstructor
+@Tag(name = "Course", description = "Course API")
 public class CourseControllerImpl implements CourseController {
 
     private final CourseService courseService;
