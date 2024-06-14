@@ -17,7 +17,6 @@ public interface StudentService {
     String STUDENT_GET_GRADUATES_FAILED = "Failed to get graduated students";
     String STUDENT_DROP_FAILED = "Failed to drop student";
 
-
     void createStudent(StudentCreateDto studentCreateDto);
 
     Student findStudentByNameAndBirthDate(StudentRequestDto studentRequestDto);
