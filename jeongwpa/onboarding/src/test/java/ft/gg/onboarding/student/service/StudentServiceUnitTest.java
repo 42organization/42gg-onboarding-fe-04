@@ -7,6 +7,7 @@ import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.global.exception.custom.DuplicateException;
 import ft.gg.onboarding.global.exception.custom.NotFoundException;
 import ft.gg.onboarding.repository.StudentRepository;
+import ft.gg.onboarding.student.service.impl.StudentServiceV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,7 +29,7 @@ class StudentServiceUnitTest {
     private StudentRepository studentRepository;
 
     @InjectMocks
-    private StudentService studentService;
+    private StudentServiceV2 studentService;
 
     @Nested
     @DisplayName("학생 등록")
