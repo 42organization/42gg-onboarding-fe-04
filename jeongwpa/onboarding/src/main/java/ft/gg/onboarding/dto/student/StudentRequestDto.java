@@ -25,6 +25,4 @@ public class StudentRequestDto {
         this.name = name;
         this.birthDate = birthDate;
     }
-
-
 }

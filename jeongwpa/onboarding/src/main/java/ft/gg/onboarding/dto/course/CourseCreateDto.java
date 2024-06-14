@@ -33,9 +33,9 @@ public class CourseCreateDto {
         CourseCreateDto.MapStruct INSTANCE = Mappers.getMapper(CourseCreateDto.MapStruct.class);
 
         @Mapping(target = "id", ignore = true)
+        @Mapping(target = "isTrue", constant = "true")
+        @Mapping(target = "currentStudentCount", constant = "0")
         @Mapping(target = "enrollments", ignore = true)
-        @Mapping(target = "isTrue", ignore = true)
-        @Mapping(target = "currentStudentCount", ignore = true)
         Course toEntity(CourseCreateDto courseCreateDto);
     }
 }
