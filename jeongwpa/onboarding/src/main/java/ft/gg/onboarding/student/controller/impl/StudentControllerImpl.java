@@ -6,6 +6,7 @@ import ft.gg.onboarding.entity.course.Course;
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.student.controller.StudentController;
 import ft.gg.onboarding.student.service.StudentService;
+import ft.gg.onboarding.student.service.impl.StudentServiceV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

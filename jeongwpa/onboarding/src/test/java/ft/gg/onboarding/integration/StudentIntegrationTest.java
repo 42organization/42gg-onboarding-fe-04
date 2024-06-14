@@ -5,6 +5,9 @@ import ft.gg.onboarding.config.annotation.IntegrationTest;
 import ft.gg.onboarding.dto.student.StudentCreateDto;
 import ft.gg.onboarding.dto.student.StudentRequestDto;
 import ft.gg.onboarding.dto.student.StudentResponseDto;
+import ft.gg.onboarding.entity.course.Course;
+import ft.gg.onboarding.entity.enrollment.Enrollment;
+import ft.gg.onboarding.entity.enrollment.EnrollmentStatus;
 import ft.gg.onboarding.entity.student.Student;
 import ft.gg.onboarding.entity.student.StudentStatus;
 import io.swagger.v3.core.util.ObjectMapperFactory;
@@ -284,11 +287,47 @@ public class StudentIntegrationTest {
     @DisplayName("GET /students/enroll")
     class GetStudentEnrollments {
 
-        @Disabled   // delete this line
         @Test
         @DisplayName("현재 시간표 조회에 성공하는 경우 - 학생의 수강 신청 목록과 함께 200 코드를 반환합니다.")
         void returnStatusOkWhenSuccess() throws Exception {
-            // TODO
+            // given
+            Student student = Student.builder().name("홍길동").birthDate(LocalDate.of(2000, 1, 1))
+                    .totalCredit(0).enrolledCredit(0).status(StudentStatus.ATTEND).build();
+            Course course1 = Course.builder().name("자바 프로그래밍").professorName("김철수").credit(3)
+                    .maxStudentCount(30).currentStudentCount(0).isTrue(true).build();
+            Course course2 = Course.builder().name("데이터베이스").professorName("이영희").credit(3)
+                    .maxStudentCount(30).currentStudentCount(0).isTrue(true).build();
+            Enrollment enrollment1 = Enrollment.builder()
+                    .student(student).course(course1).status(EnrollmentStatus.ENROLL).build();
+            Enrollment enrollment2 = Enrollment.builder()
+                    .student(student).course(course2).status(EnrollmentStatus.ENROLL).build();
+            em.persist(student);
+            em.persist(course1);
+            em.persist(course2);
+            em.persist(enrollment1);
+            em.persist(enrollment2);
+            em.flush();
+            em.clear();
+
+            StudentRequestDto studentRequestDto = StudentRequestDto.builder()
+                    .name("홍길동").birthDate(LocalDate.of(2000, 1, 1)).build();
+            String request = objectMapper.writeValueAsString(studentRequestDto);
+
+            // when
+            String response = mockMvc.perform(get("/students/enroll")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+            Course[] courses = objectMapper.readValue(response, Course[].class);
+
+            // then
+            assertThat(courses).hasSize(2);
+            assertThat(courses[0].getName()).isEqualTo("자바 프로그래밍");
+            assertThat(courses[0].getProfessorName()).isEqualTo("김철수");
+            assertThat(courses[0].getCredit()).isEqualTo(3);
+            assertThat(courses[1].getName()).isEqualTo("데이터베이스");
+            assertThat(courses[1].getProfessorName()).isEqualTo("이영희");
+            assertThat(courses[1].getCredit()).isEqualTo(3);
         }
     }
 }
