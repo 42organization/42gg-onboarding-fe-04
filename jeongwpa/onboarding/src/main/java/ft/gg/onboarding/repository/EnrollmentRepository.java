@@ -19,6 +19,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Integer>
     @Query("SELECT e FROM Enrollment e WHERE e.student.id = :studentId")
     List<Enrollment> findEnrollmentsByStudentId(int studentId);
 
+    /**
+     * TODO: Course 테이블 조인시 isTrue=true 인 것만 가져오도록 수정
+     */
     @EntityGraph(attributePaths = {"course"})
     @Query("SELECT e FROM Enrollment e WHERE e.student.id = :studentId AND e.status = :status")
     List<Enrollment> findEnrollmentsByStudentAndStatus(int studentId, EnrollmentStatus status);
