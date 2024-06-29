@@ -1,6 +1,7 @@
 package gg.onboarding.student.service;
 
 import static gg.onboarding.data.entity.custom.StudentStatus.*;
+import static org.springframework.data.repository.util.ClassUtils.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +14,8 @@ import gg.onboarding.data.dto.course.response.CourseResDto;
 import gg.onboarding.data.dto.student.response.StudentListResDto;
 import gg.onboarding.data.entity.Student;
 import gg.onboarding.data.entity.StudentCourse;
+import gg.onboarding.data.exception.CustomException;
+import gg.onboarding.data.exception.ErrorCode;
 import gg.onboarding.data.repository.StudentCourseRepository;
 import gg.onboarding.data.repository.StudentRepository;
 import gg.onboarding.data.dto.student.request.StudentReqDto;
@@ -27,13 +30,19 @@ public class StudentService {
 
 	@Transactional
 	public void createStudent(StudentReqDto studentReqDto) {
-		studentRepository.findByNameAndBirthDate(studentReqDto.getName(), studentReqDto.getBirthDate()).orElseThrow(() -> new IllegalArgumentException("Student already exists"));
+		studentRepository.findByNameAndBirthDate(studentReqDto.getName(), studentReqDto.getBirthDate())
+			.ifPresent(student -> {
+				throw new CustomException(ErrorCode.STUDENT_ALREADY_EXISTS);
+			});
+
 		studentRepository.save(Student.toEntity(studentReqDto));
 	}
 
 	@Transactional(readOnly = true)
 	public StudentResDto getStudent(StudentReqDto studentReqDto) {
-		Student student = studentRepository.findByNameAndBirthDate(studentReqDto.getName(), studentReqDto.getBirthDate()).orElseThrow(() -> new IllegalArgumentException("Student not found"));
+		Student student = studentRepository.findByNameAndBirthDate(studentReqDto.getName(), studentReqDto.getBirthDate())
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
+
 		return new StudentResDto(student);
 	}
 
@@ -48,8 +57,8 @@ public class StudentService {
 	@Transactional(readOnly = true)
 	public CourseListResDto getEnrollCourse(StudentReqDto studentReqDto)
 	{
-		Student student = studentRepository.findByNameAndBirthDate(studentReqDto.getName(), studentReqDto.getBirthDate()).orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
+		Student student = studentRepository.findByNameAndBirthDate(studentReqDto.getName(), studentReqDto.getBirthDate()).orElseThrow(()
+			-> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 		List<StudentCourse> studentCourseList = studentCourseRepository.findByStudentId(student.getId());
 
 		List<CourseResDto> courseListResDto = studentCourseList.stream()
