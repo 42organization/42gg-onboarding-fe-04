@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Onboarding
+  datasource:
+    url: jdbc:mysql://localhost:3306
+    username: root
+    password: Rlatpdus0917!
+  spring:
+    jpa:
+      hibernate:
+        ddl-auto: update
