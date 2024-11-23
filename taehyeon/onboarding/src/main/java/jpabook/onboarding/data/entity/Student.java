@@ -17,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jpabook.onboarding.data.status.StudentStatus;
+import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,4 +50,10 @@ public class Student {
 	@Column(nullable = false, length = 20)
 	@JdbcTypeCode(SqlTypes.VARCHAR)
 	private StudentStatus status;
+
+	public Student(StudentRequestDto requestDto) {
+		this.name = requestDto.getName();
+		this.birth = requestDto.getBirth();
+		this.status = StudentStatus.ENROLLED;
+	}
 }

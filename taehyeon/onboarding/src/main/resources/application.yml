@@ -3,4 +3,7 @@ spring:
     name: onboarding
   datasource:
     username: root
-    url: jdbc:mysql://localhost:3306
+    url: jdbc:mysql://localhost:3306/onboarding_db
+  jpa:
+    hibernate:
+      ddl-auto: create
