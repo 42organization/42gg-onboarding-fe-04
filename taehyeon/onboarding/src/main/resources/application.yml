@@ -6,7 +6,7 @@ spring:
     url: jdbc:mysql://localhost:3306/onboarding_db
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true

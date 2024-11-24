@@ -39,7 +39,7 @@ public class StudentController {
 	@GetMapping("/graduated")
 	public ResponseEntity<Page<StudentResponseDto>> getGraduates(@RequestParam(defaultValue = "0") final int page) {
 		final PageRequest pageRequest = PageRequest.of(page, 5);
-		final Page<StudentResponseDto> graduates = service.getGraduates(pageRequest);
-		return ResponseEntity.status(HttpStatus.OK).body(graduates);
+		final Page<StudentResponseDto> response = service.getGraduates(pageRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

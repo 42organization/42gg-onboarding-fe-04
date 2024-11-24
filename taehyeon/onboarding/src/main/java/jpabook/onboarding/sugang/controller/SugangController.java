@@ -2,6 +2,7 @@ package jpabook.onboarding.sugang.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,14 @@ public class SugangController {
 	@PostMapping("/{courseId}")
 	public ResponseEntity<SugangResponseDto> createSugang(@RequestBody final SugangRequestDto request,
 		@PathVariable final Long courseId) {
-		final SugangResponseDto sugang = service.createSugang(request, courseId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(sugang);
+		final SugangResponseDto response = service.createSugang(request, courseId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@PatchMapping("/{courseId}")
+	public ResponseEntity<SugangResponseDto> cancelSugang(@RequestBody final SugangRequestDto request,
+		@PathVariable final Long courseId) {
+		final SugangResponseDto response = service.cancelSugang(request, courseId);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }
