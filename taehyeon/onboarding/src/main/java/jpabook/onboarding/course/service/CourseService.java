@@ -5,4 +5,6 @@ import jpabook.onboarding.course.controller.dto.response.CourseResponseDto;
 
 public interface CourseService {
 	CourseResponseDto create(CourseRequestDto request);
+
+	CourseResponseDto delete(Long courseId);
 }

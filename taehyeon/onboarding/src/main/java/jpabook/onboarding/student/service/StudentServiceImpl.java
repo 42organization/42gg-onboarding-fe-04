@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jpabook.onboarding.data.entity.Student;
 import jpabook.onboarding.data.repository.StudentRepository;
@@ -24,6 +25,7 @@ public class StudentServiceImpl implements StudentService {
 		return new StudentResponseDto(student);
 	}
 
+	@Transactional
 	@Override
 	public StudentResponseDto drop(final StudentRequestDto request) {
 		final Optional<Student> student = repository.findByNameAndBirth(request.getName(), request.getBirth());
