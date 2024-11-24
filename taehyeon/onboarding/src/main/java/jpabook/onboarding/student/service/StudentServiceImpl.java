@@ -1,8 +1,11 @@
 package jpabook.onboarding.student.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,5 +37,11 @@ public class StudentServiceImpl implements StudentService {
 		}
 		student.get().setStatus(StudentStatus.DROP);
 		return new StudentResponseDto(student.get());
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Page<StudentResponseDto> getGraduates(final Pageable pageable) {
+		return repository.findAllByStatus(StudentStatus.GRADUATED, pageable).map(StudentResponseDto::new);
 	}
 }

@@ -1,11 +1,15 @@
 package jpabook.onboarding.student.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
@@ -28,7 +32,14 @@ public class StudentController {
 
 	@PatchMapping("/drop")
 	public ResponseEntity<StudentResponseDto> dropStudent(@RequestBody final StudentRequestDto request) {
-		StudentResponseDto response = service.drop(request);
+		final StudentResponseDto response = service.drop(request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@GetMapping("/graduated")
+	public ResponseEntity<Page<StudentResponseDto>> getGraduates(@RequestParam(defaultValue = "0") final int page) {
+		final PageRequest pageRequest = PageRequest.of(page, 5);
+		final Page<StudentResponseDto> graduates = service.getGraduates(pageRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(graduates);
 	}
 }
