@@ -4,5 +4,7 @@ import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
 
 public interface StudentService {
-	StudentResponseDto create(StudentRequestDto requestDto);
+	StudentResponseDto create(StudentRequestDto request);
+
+	StudentResponseDto drop(StudentRequestDto request);
 }

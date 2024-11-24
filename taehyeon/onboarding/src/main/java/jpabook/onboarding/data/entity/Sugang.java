@@ -24,15 +24,15 @@ import lombok.NoArgsConstructor;
 public class Sugang {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "SUGANG_ID")
+	@Column(name = "sugang_id")
 	private int id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "STUDENT_ID")
+	@JoinColumn(name = "student_id")
 	private Student student;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COURSE_ID")
+	@JoinColumn(name = "course_id")
 	private Course course;
 
 	@Enumerated(EnumType.STRING)

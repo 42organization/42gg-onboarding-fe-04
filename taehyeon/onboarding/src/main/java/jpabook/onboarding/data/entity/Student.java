@@ -21,14 +21,16 @@ import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "STUDENT_ID")
+	@Column(name = "student_id")
 	private Long id;
 
 	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
