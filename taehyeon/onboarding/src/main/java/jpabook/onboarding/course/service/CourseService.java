@@ -7,4 +7,6 @@ public interface CourseService {
 	CourseResponseDto create(CourseRequestDto request);
 
 	CourseResponseDto delete(Long courseId);
+
+	CourseResponseDto complete(Long courseId);
 }

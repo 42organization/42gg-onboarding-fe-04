@@ -19,15 +19,26 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public CourseResponseDto create(final CourseRequestDto request) {
-		Course course = new Course(request);
+		final Course course = new Course(request);
 		repository.save(course);
 		return new CourseResponseDto(course);
 	}
 
 	@Transactional
 	@Override
+	public CourseResponseDto complete(final Long courseId) {
+		final Optional<Course> course = repository.findById(courseId);
+		if (course.isEmpty()) {
+			return null;
+		}
+		course.get().setStatus(CourseStatus.COMPLETED);
+		return new CourseResponseDto(course.get());
+	}
+
+	@Transactional
+	@Override
 	public CourseResponseDto delete(final Long courseId) {
-		Optional<Course> course = repository.findById(courseId);
+		final Optional<Course> course = repository.findById(courseId);
 		if (course.isEmpty()) {
 			return null;
 		}
