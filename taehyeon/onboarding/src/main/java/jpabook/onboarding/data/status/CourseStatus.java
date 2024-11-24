@@ -1,8 +1,8 @@
 package jpabook.onboarding.data.status;
 
 public enum CourseStatus {
-	DELETED("삭제"),
 	REGISTERED("등록"),
+	DELETED("삭제"),
 	EXPIRED("만료");
 
 	private final String status;

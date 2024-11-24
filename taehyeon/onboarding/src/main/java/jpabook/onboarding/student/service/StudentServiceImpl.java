@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import jpabook.onboarding.data.entity.Student;
-import jpabook.onboarding.data.entity.Sugang;
 import jpabook.onboarding.data.repository.StudentRepository;
 import jpabook.onboarding.data.status.StudentStatus;
 import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
@@ -26,8 +25,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public StudentResponseDto drop(StudentRequestDto request) {
-		Optional<Student> student = repository.findByNameAndBirth(request.getName(), request.getBirth());
+	public StudentResponseDto drop(final StudentRequestDto request) {
+		final Optional<Student> student = repository.findByNameAndBirth(request.getName(), request.getBirth());
 		if (student.isEmpty()) {
 			return null;
 		}

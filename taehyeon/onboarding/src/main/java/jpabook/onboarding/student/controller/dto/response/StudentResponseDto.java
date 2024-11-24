@@ -13,10 +13,10 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class StudentResponseDto {
 
-	@NotBlank
+	@NotBlank(message = "이름은 필수 입니다.")
 	private final String name;
 
-	@NotBlank
+	@NotBlank(message = "생일은 필수 입니다.")
 	private final LocalDate birth;
 
 	private final int currentGrade;

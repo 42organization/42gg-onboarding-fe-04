@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
 import jpabook.onboarding.data.status.CourseStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,4 +44,12 @@ public class Course {
 	@Column(nullable = false, length = 20)
 	@JdbcTypeCode(SqlTypes.VARCHAR)
 	private CourseStatus status;
+
+	public Course(CourseRequestDto request) {
+		this.professorName = request.getProfessorName();
+		this.name = request.getName();
+		this.count = request.getCount();
+		this.grade = 3;
+		this.status = CourseStatus.REGISTERED;
+	}
 }

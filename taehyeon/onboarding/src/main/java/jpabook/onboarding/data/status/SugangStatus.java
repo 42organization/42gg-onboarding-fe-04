@@ -1,9 +1,9 @@
 package jpabook.onboarding.data.status;
 
 public enum SugangStatus {
+	ONGOING("진행중"),
 	CANCELED("취소"),
-	COMPLETED("완료"),
-	ONGOING("진행중");
+	COMPLETED("완료");
 
 	private final String status;
 

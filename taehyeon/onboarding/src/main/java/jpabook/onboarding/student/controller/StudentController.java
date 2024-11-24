@@ -21,13 +21,13 @@ public class StudentController {
 	private final StudentService service;
 
 	@PostMapping
-	public ResponseEntity<StudentResponseDto> createStudent(@RequestBody StudentRequestDto request) {
+	public ResponseEntity<StudentResponseDto> createStudent(@RequestBody final StudentRequestDto request) {
 		final StudentResponseDto response = service.create(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PatchMapping("/drop")
-	public ResponseEntity<StudentResponseDto> dropStudent(@RequestBody StudentRequestDto request) {
+	public ResponseEntity<StudentResponseDto> dropStudent(@RequestBody final StudentRequestDto request) {
 		StudentResponseDto response = service.drop(request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
