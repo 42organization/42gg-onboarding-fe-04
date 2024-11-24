@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
+import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
 import jpabook.onboarding.course.controller.dto.response.CourseResponseDto;
 import jpabook.onboarding.data.entity.Course;
 import jpabook.onboarding.data.repository.CourseRepository;
@@ -37,6 +38,21 @@ public class CourseServiceImpl implements CourseService {
 
 	@Transactional
 	@Override
+	public CourseResponseDto update(final Long courseId, final CourseUpdateRequestDto request) {
+		final Optional<Course> course = repository.findById(courseId);
+		if (course.isEmpty()) {
+			final Course newCourse = repository.save(new Course(request));
+			return new CourseResponseDto(newCourse);
+		}
+		course.get().setName(request.getName());
+		course.get().setProfessorName(request.getProfessorName());
+		course.get().setGrade(request.getGrade());
+		course.get().setStatus(request.getStatus());
+		return new CourseResponseDto(course.get());
+	}
+
+	@Transactional
+	@Override
 	public CourseResponseDto delete(final Long courseId) {
 		final Optional<Course> course = repository.findById(courseId);
 		if (course.isEmpty()) {
@@ -44,5 +60,6 @@ public class CourseServiceImpl implements CourseService {
 		}
 		course.get().setStatus(CourseStatus.DELETED);
 		return new CourseResponseDto(course.get());
+
 	}
 }

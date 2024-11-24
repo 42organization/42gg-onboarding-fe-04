@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
+import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
 import jpabook.onboarding.data.status.CourseStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -53,5 +54,13 @@ public class Course {
 		this.count = request.getCount();
 		this.grade = 3;
 		this.status = CourseStatus.REGISTERED;
+	}
+
+	public Course(CourseUpdateRequestDto request) {
+		this.professorName = request.getProfessorName();
+		this.name = request.getName();
+		this.count = 0;
+		this.grade = request.getGrade();
+		this.status = request.getStatus();
 	}
 }
