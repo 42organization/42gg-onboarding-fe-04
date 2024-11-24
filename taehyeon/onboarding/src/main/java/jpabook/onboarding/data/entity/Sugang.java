@@ -41,4 +41,11 @@ public class Sugang {
 	@Column(nullable = false, length = 20)
 	@JdbcTypeCode(SqlTypes.VARCHAR)
 	private SugangStatus status;
+
+	public Sugang(final Student student, final Course course) {
+		this.student = student;
+		student.getSugangs().add(this);
+		this.course = course;
+		this.status = SugangStatus.ONGOING;
+	}
 }

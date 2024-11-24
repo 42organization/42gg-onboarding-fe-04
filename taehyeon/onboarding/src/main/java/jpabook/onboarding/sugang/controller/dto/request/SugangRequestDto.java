@@ -1,4 +1,4 @@
-package jpabook.onboarding.student.controller.dto.request;
+package jpabook.onboarding.sugang.controller.dto.request;
 
 import java.time.LocalDate;
 
@@ -10,8 +10,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudentRequestDto {
-
+public class SugangRequestDto {
 	@NotBlank(message = "이름은 필수입니다.")
 	private final String name;
 
