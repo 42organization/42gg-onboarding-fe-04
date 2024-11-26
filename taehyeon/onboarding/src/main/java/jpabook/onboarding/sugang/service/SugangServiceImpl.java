@@ -32,7 +32,7 @@ public class SugangServiceImpl implements SugangService {
 			return null;
 		}
 		final Optional<Sugang> sugang = repository.findByStudentAndCourse(student.get(), course.get());
-		sugang.get().setStatus(SugangStatus.CANCELED);
+		sugang.get().updateStatus(SugangStatus.CANCELED);
 		return new SugangResponseDto(sugang.get());
 	}
 

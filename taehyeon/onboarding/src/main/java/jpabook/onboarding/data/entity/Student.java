@@ -21,11 +21,9 @@ import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Student {
 	@Id
@@ -57,5 +55,9 @@ public class Student {
 		this.name = request.getName();
 		this.birth = request.getBirth();
 		this.status = StudentStatus.ENROLLED;
+	}
+
+	public void updateStatus(final StudentStatus status) {
+		this.status = status;
 	}
 }

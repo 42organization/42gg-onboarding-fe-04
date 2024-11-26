@@ -1,5 +1,7 @@
 package jpabook.onboarding.student.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
+import jpabook.onboarding.student.controller.dto.response.StudentScheduleResponseDto;
+import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
 import jpabook.onboarding.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +44,12 @@ public class StudentController {
 	public ResponseEntity<Page<StudentResponseDto>> getGraduates(@RequestParam(defaultValue = "0") final int page) {
 		final PageRequest pageRequest = PageRequest.of(page, 5);
 		final Page<StudentResponseDto> response = service.getGraduates(pageRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@GetMapping("/schedule")
+	public ResponseEntity<StudentSchedulesResponseDto> getSchedule(@RequestBody final StudentRequestDto request) {
+		final StudentSchedulesResponseDto response = service.getSchedule(request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

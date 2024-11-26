@@ -1,6 +1,5 @@
-package jpabook.onboarding.sugang.controller.dto.response;
+package jpabook.onboarding.student.controller.dto.response;
 
-import jakarta.validation.constraints.NotBlank;
 import jpabook.onboarding.data.entity.Sugang;
 import jpabook.onboarding.data.status.SugangStatus;
 import lombok.AccessLevel;
@@ -9,15 +8,18 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class SugangResponseDto {
-	@NotBlank(message = "과목 이름은 필수입니다.")
+public class StudentScheduleResponseDto {
+	private final Long id;
+	private final String professorName;
 	private final String courseName;
-
-	@NotBlank(message = "수강 상태는 필수입니다.")
+	private final int grade;
 	private final SugangStatus status;
 
-	public SugangResponseDto(final Sugang sugang) {
+	public StudentScheduleResponseDto(final Sugang sugang) {
+		this.id = sugang.getId();
+		this.professorName = sugang.getCourse().getProfessorName();
 		this.courseName = sugang.getCourse().getName();
+		this.grade = sugang.getCourse().getGrade();
 		this.status = sugang.getStatus();
 	}
 }

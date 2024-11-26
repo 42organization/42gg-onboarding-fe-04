@@ -20,7 +20,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course {
 
@@ -29,7 +28,7 @@ public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "course_id")
-	private int id;
+	private Long id;
 
 	@Column(nullable = false)
 	private String professorName;
@@ -61,6 +60,17 @@ public class Course {
 		this.name = request.getName();
 		this.count = 0;
 		this.grade = request.getGrade();
+		this.status = request.getStatus();
+	}
+
+	public void updateStatus(final CourseStatus status) {
+		this.status = status;
+	}
+
+	public void update(final CourseUpdateRequestDto request) {
+		this.name = request.getName();
+		this.grade = request.getGrade();
+		this.professorName = request.getProfessorName();
 		this.status = request.getStatus();
 	}
 }

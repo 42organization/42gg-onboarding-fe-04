@@ -17,17 +17,15 @@ import jpabook.onboarding.data.status.SugangStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Sugang {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "sugang_id")
-	private int id;
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "student_id")
@@ -47,5 +45,9 @@ public class Sugang {
 		student.getSugangs().add(this);
 		this.course = course;
 		this.status = SugangStatus.ONGOING;
+	}
+
+	public void updateStatus(final SugangStatus status) {
+		this.status = status;
 	}
 }

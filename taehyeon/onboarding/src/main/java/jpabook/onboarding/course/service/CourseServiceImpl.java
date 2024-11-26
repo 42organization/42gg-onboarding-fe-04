@@ -32,7 +32,7 @@ public class CourseServiceImpl implements CourseService {
 		if (course.isEmpty()) {
 			return null;
 		}
-		course.get().setStatus(CourseStatus.COMPLETED);
+		course.get().updateStatus(CourseStatus.COMPLETED);
 		return new CourseResponseDto(course.get());
 	}
 
@@ -44,10 +44,7 @@ public class CourseServiceImpl implements CourseService {
 			final Course newCourse = repository.save(new Course(request));
 			return new CourseResponseDto(newCourse);
 		}
-		course.get().setName(request.getName());
-		course.get().setProfessorName(request.getProfessorName());
-		course.get().setGrade(request.getGrade());
-		course.get().setStatus(request.getStatus());
+		course.get().update(request);
 		return new CourseResponseDto(course.get());
 	}
 
@@ -58,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
 		if (course.isEmpty()) {
 			return null;
 		}
-		course.get().setStatus(CourseStatus.DELETED);
+		course.get().updateStatus(CourseStatus.DELETED);
 		return new CourseResponseDto(course.get());
 
 	}

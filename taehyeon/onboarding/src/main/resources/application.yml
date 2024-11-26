@@ -12,7 +12,4 @@ spring:
         show_sql: true
 logging:
   level:
-    org:
-      hibernate:
-        orm.jdbc.bind : trace
-
+    org.hibernate.orm.jdbc.bind: trace
