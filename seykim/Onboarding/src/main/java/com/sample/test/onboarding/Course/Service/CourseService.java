@@ -36,10 +36,12 @@ public class CourseService {
 
 	@Transactional
 	public void updateCourse(Long courseId, CourseReqDto courseReqDto) {
-		courseRepository.findById(courseId)
+		Course course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new CustomException(ErrorResponse.COURSE_NOT_FOUND));
-		courseRepository.save(courseReqDto.toEntity(courseReqDto.getProfessorName(), courseReqDto.getCourseName(),
-			courseReqDto.getCurCount(), courseReqDto.getGrade(), courseReqDto.getStatus()));
+
+		course.update(courseReqDto.getProfessorName(), courseReqDto.getCourseName(), courseReqDto.getCurCount(),
+			courseReqDto.getGrade(), courseReqDto.getStatus());
+
 	}
 
 	@Transactional
@@ -52,7 +54,9 @@ public class CourseService {
 
 	@Transactional
 	public void completeCourse(Long courseId) {
-		List<Student> students = studentCourseRepository.findByCourseId(courseId);
+		List<StudentCourse> studentCourses = studentCourseRepository.findByCourseId(courseId);
+		List<Student> students = studentCourses.stream().map(StudentCourse::getStudent).toList();
+
 		Course course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new CustomException(ErrorResponse.COURSE_NOT_FOUND));
 		course.complete();

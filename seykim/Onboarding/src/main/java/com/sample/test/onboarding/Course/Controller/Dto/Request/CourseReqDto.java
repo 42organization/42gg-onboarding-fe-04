@@ -1,22 +1,27 @@
 package com.sample.test.onboarding.Course.Controller.Dto.Request;
 
+import java.util.Optional;
+
 import com.sample.test.onboarding.Data.Entity.Course;
 import com.sample.test.onboarding.Data.Status.CourseStatus;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
 public class CourseReqDto {
 
+	@NotBlank
 	private String professorName;
 
+	@NotBlank
 	private String courseName;
 
-	private Integer curCount;
+	private Optional<Integer> curCount;
 
-	private Integer grade;
+	private Optional<Integer> grade;
 
-	private CourseStatus status;
+	private Optional<CourseStatus> status;
 
 	public Course toEntity(String professorName, String courseName) {
 		return new Course(professorName, courseName);

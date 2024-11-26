@@ -1,6 +1,7 @@
 package com.sample.test.onboarding.Student.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,8 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sample.test.onboarding.Course.Controller.Dto.Response.CourseListResDto;
-import com.sample.test.onboarding.Data.Entity.Course;
+import com.sample.test.onboarding.Course.Controller.Dto.Response.CourseResDto;
 import com.sample.test.onboarding.Data.Entity.Student;
+import com.sample.test.onboarding.Data.Entity.StudentCourse;
 import com.sample.test.onboarding.Data.Exception.CustomException;
 import com.sample.test.onboarding.Data.Exception.ErrorResponse;
 import com.sample.test.onboarding.Data.Repository.StudentCourseRepository;
@@ -19,6 +21,7 @@ import com.sample.test.onboarding.Data.Status.StudentCourseStatus;
 import com.sample.test.onboarding.Data.Status.StudentStatus;
 import com.sample.test.onboarding.Student.Controller.Dto.Request.StudentReqDto;
 import com.sample.test.onboarding.Student.Controller.Dto.Response.StudentListResDto;
+import com.sample.test.onboarding.Student.Controller.Dto.Response.StudentResDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,7 +58,8 @@ public class StudentService {
 	@Transactional(readOnly = true)
 	public StudentListResDto getGraduates() {
 		List<Student> students = studentRepository.findByStatus(StudentStatus.GRADUATED);
-		return new StudentListResDto(students);
+		List<StudentResDto> studentResDtoList = students.stream().map(StudentResDto::new).toList();
+		return new StudentListResDto(studentResDtoList);
 	}
 
 	@Transactional(readOnly = true)
@@ -64,7 +68,8 @@ public class StudentService {
 
 		Pageable pageable = PageRequest.of(page - 1, size);
 		Page<Student> studentsPage = studentRepository.findByStatus(StudentStatus.GRADUATED, pageable);
-		return new StudentListResDto(studentsPage.getContent(), page);
+		List<StudentResDto> studentResDtoList = studentsPage.getContent().stream().map(StudentResDto::new).toList();
+		return new StudentListResDto(studentResDtoList, page);
 	}
 
 	@Transactional(readOnly = true)
@@ -72,8 +77,12 @@ public class StudentService {
 		Student student = studentRepository.findByNameAndBirthDay(studentReqDto.getName(), studentReqDto.getBirthDay())
 			.orElseThrow(() -> new CustomException(ErrorResponse.STUDENT_NOT_FOUND));
 		// 현재 시간표 보기
-		List<Course> courses = studentCourseRepository.findByStudentIdAndStatus(student.getId(),
+		List<StudentCourse> studentCourses = studentCourseRepository.findByStudentIdAndStatus(student.getId(),
 			StudentCourseStatus.ONGOING);
-		return new CourseListResDto(courses);
+		List<CourseResDto> courseResDtoList = studentCourses.stream()
+			.map(StudentCourse::getCourse).map(CourseResDto::new)
+			.collect(Collectors.toList());
+
+		return new CourseListResDto(courseResDtoList);
 	}
 }

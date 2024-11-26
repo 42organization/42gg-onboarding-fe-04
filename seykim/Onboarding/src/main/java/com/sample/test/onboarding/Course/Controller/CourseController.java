@@ -29,7 +29,7 @@ public class CourseController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-	@PutMapping("{courseId}")
+	@PutMapping("/{courseId}")
 	public ResponseEntity<Void> updateCourse(@Valid @PathVariable Long courseId,
 		@RequestBody CourseReqDto courseReqDto) {
 		courseService.updateCourse(courseId, courseReqDto);
@@ -39,12 +39,12 @@ public class CourseController {
 	@PatchMapping("/delete/{courseId}")
 	public ResponseEntity<Void> deleteCourse(@Valid @PathVariable Long courseId) {
 		courseService.deleteCourse(courseId);
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@PatchMapping("/complete/{courseId}")
 	public ResponseEntity<Void> completeCourse(@Valid @PathVariable Long courseId) {
 		courseService.completeCourse(courseId);
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

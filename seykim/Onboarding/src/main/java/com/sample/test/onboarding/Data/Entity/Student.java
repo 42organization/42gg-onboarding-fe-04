@@ -2,9 +2,6 @@ package com.sample.test.onboarding.Data.Entity;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import com.sample.test.onboarding.Data.Exception.CustomException;
 import com.sample.test.onboarding.Data.Exception.ErrorResponse;
 import com.sample.test.onboarding.Data.Status.StudentStatus;
@@ -35,14 +32,13 @@ public class Student {
 	private LocalDateTime birthDay;
 
 	@Column
-	private int currentGrade;
+	private Integer currentGrade;
 
 	@Column
-	private int totalGrade;
+	private Integer totalGrade;
 
 	@Enumerated(EnumType.STRING)
-	@Column
-	@JdbcTypeCode(SqlTypes.VARCHAR)
+	@Column(nullable = false, length = 10)
 	private StudentStatus status;
 
 	public Student(String name, LocalDateTime birthDay) {
@@ -61,18 +57,18 @@ public class Student {
 		this.status = StudentStatus.GRADUATED;
 	}
 
-	public void enrollCourse(int grade) {
+	public void enrollCourse(Integer grade) {
 		if (this.currentGrade + grade > 15) {
 			throw new CustomException(ErrorResponse.STUDENT_MAXIMUM_ERROR);
 		}
 		this.currentGrade += grade;
 	}
 
-	public void cancelCourse(int grade) {
+	public void cancelCourse(Integer grade) {
 		this.currentGrade -= grade;
 	}
 
-	public void completeCourse(int grade) {
+	public void completeCourse(Integer grade) {
 		if (this.totalGrade > 60) {
 			throw new CustomException(ErrorResponse.STUDENT_ALREADY_GRADUATED);
 		} else if (this.totalGrade + grade >= 60) {

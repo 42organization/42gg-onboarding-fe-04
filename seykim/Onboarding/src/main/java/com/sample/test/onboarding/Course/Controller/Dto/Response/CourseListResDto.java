@@ -2,16 +2,14 @@ package com.sample.test.onboarding.Course.Controller.Dto.Response;
 
 import java.util.List;
 
-import com.sample.test.onboarding.Data.Entity.Course;
-
 import lombok.Getter;
 
 @Getter
 public class CourseListResDto {
 
-	private final List<Course> courses;
+	private final List<CourseResDto> courses;
 
-	public CourseListResDto(List<Course> courses) {
+	public CourseListResDto(List<CourseResDto> courses) {
 		this.courses = courses;
 	}
 }

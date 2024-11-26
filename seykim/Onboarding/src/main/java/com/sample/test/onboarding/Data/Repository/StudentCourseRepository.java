@@ -18,7 +18,7 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, Lo
 
 	// List<Course> findByStudentId(Long studentId);
 
-	List<Course> findByStudentIdAndStatus(Long studentId, StudentCourseStatus status);
+	List<StudentCourse> findByStudentIdAndStatus(Long studentId, StudentCourseStatus status);
 
-	List<Student> findByCourseId(Long courseId);
+	List<StudentCourse> findByCourseId(Long courseId);
 }

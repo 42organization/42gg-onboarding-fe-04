@@ -1,5 +1,7 @@
 package com.sample.test.onboarding.Data.Entity;
 
+import java.util.Optional;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -74,5 +76,47 @@ public class Course {
 			throw new CustomException(ErrorResponse.COURSE_ALREADY_COMPLETED_OR_DELETED);
 		}
 		this.status = CourseStatus.COMPLETED;
+	}
+
+	public void update(String professorName, String courseName, Optional<Integer> currentCount, Optional<Integer> grade,
+		Optional<CourseStatus> status) {
+		this.professorName = professorName;
+		this.courseName = courseName;
+
+		if (currentCount.isEmpty()) {
+			this.currentCount = 0;
+		} else if (currentCount.get() > maxCount) {
+			throw new CustomException(ErrorResponse.COURSE_MAX_COUNT);
+		} else if (currentCount.get() < 0) {
+			throw new CustomException(ErrorResponse.BAD_REQUEST);
+		} else {
+			this.currentCount = currentCount.get();
+		}
+
+		if (grade.isEmpty()) {
+			this.grade = 0;
+		} else if (grade.get() < 0) {
+			throw new CustomException(ErrorResponse.BAD_REQUEST);
+		} else {
+			this.grade = grade.get();
+		}
+
+		status.ifPresent(courseStatus -> this.status = courseStatus);
+	}
+
+	public void enroll() {
+		if (this.status == CourseStatus.COMPLETED) {
+			throw new CustomException(ErrorResponse.COURSE_ALREADY_COMPLETED_OR_DELETED);
+		} else if (this.currentCount + 1 >= maxCount) {
+			throw new CustomException(ErrorResponse.COURSE_MAX_COUNT);
+		}
+		this.currentCount++;
+	}
+
+	public void cancel() {
+		if (this.currentCount <= 0) {
+			throw new CustomException(ErrorResponse.BAD_REQUEST);
+		}
+		this.currentCount--;
 	}
 }

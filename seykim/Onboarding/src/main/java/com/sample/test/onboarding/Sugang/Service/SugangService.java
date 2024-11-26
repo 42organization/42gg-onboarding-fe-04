@@ -1,11 +1,14 @@
 package com.sample.test.onboarding.Sugang.Service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sample.test.onboarding.Course.Controller.Dto.Response.CourseResDto;
 import com.sample.test.onboarding.Data.Entity.Course;
 import com.sample.test.onboarding.Data.Entity.Student;
 import com.sample.test.onboarding.Data.Entity.StudentCourse;
@@ -37,16 +40,18 @@ public class SugangService {
 
 		Course course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new CustomException(ErrorResponse.COURSE_NOT_FOUND));
-		// 400 에러 처리
+
 		if (course.getStatus().equals(CourseStatus.COMPLETED) || course.getStatus().equals(CourseStatus.DELETE)) {
 			throw new CustomException(ErrorResponse.COURSE_ALREADY_COMPLETED_OR_DELETED);
 		}
-		// 409 에러 처리
+
 		studentCourseRepository.findByStudentAndCourse(student, course).ifPresent(studentCourse -> {
 			throw new CustomException(ErrorResponse.SUGANG_ALREADY_EXISTS);
 		});
 		student.enrollCourse(course.getGrade());
 		studentRepository.save(student);
+		course.enroll();
+		courseRepository.save(course);
 		studentCourseRepository.save(new StudentCourse(student, course, StudentCourseStatus.ONGOING));
 	}
 
@@ -65,6 +70,7 @@ public class SugangService {
 		student.cancelCourse(course.getGrade());
 		studentRepository.save(student);
 		studentCourse.cancel();
+		course.cancel();
 		studentCourseRepository.save(studentCourse);
 	}
 
@@ -74,6 +80,7 @@ public class SugangService {
 
 		Pageable pageable = PageRequest.of(page - 1, size);
 		Page<Course> coursePage = courseRepository.findByStatus(CourseStatus.ACTIVE, pageable);
-		return new SugangResDto(coursePage.getContent(), page);
+		List<CourseResDto> courseResListDto = coursePage.getContent().stream().map(CourseResDto::new).toList();
+		return new SugangResDto(courseResListDto, page);
 	}
 }
