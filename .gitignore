@@ -1,3 +1,3 @@
-resources/application.yml
+build/resources/main/application.yml
 .DS_Store
 application.yml
