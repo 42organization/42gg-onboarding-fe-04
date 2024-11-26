@@ -16,7 +16,6 @@ import jpabook.onboarding.data.status.CourseStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -47,7 +46,7 @@ public class Course {
 	@JdbcTypeCode(SqlTypes.VARCHAR)
 	private CourseStatus status;
 
-	public Course(CourseRequestDto request) {
+	public Course(final CourseRequestDto request) {
 		this.professorName = request.getProfessorName();
 		this.name = request.getName();
 		this.count = request.getCount();
@@ -55,7 +54,7 @@ public class Course {
 		this.status = CourseStatus.REGISTERED;
 	}
 
-	public Course(CourseUpdateRequestDto request) {
+	public Course(final CourseUpdateRequestDto request) {
 		this.professorName = request.getProfessorName();
 		this.name = request.getName();
 		this.count = 0;

@@ -2,6 +2,8 @@ package jpabook.onboarding.sugang.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import jpabook.onboarding.data.repository.StudentRepository;
 import jpabook.onboarding.data.repository.SugangRepository;
 import jpabook.onboarding.data.status.SugangStatus;
 import jpabook.onboarding.sugang.controller.dto.request.SugangRequestDto;
+import jpabook.onboarding.sugang.controller.dto.response.SugangCoursesResponseDto;
 import jpabook.onboarding.sugang.controller.dto.response.SugangResponseDto;
 import lombok.RequiredArgsConstructor;
 
@@ -46,5 +49,11 @@ public class SugangServiceImpl implements SugangService {
 		final Sugang sugang = new Sugang(student.get(), course.get());
 		repository.save(sugang);
 		return new SugangResponseDto(sugang);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Page<SugangCoursesResponseDto> getCourses(final Pageable pageable) {
+		return courseRepository.findAll(pageable).map(SugangCoursesResponseDto::new);
 	}
 }

@@ -7,7 +7,7 @@ public enum SugangStatus {
 
 	private final String status;
 
-	SugangStatus(String status) {
+	SugangStatus(final String status) {
 		this.status = status;
 	}
 

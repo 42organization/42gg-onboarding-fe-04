@@ -1,7 +1,5 @@
 package jpabook.onboarding.student.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
-import jpabook.onboarding.student.controller.dto.response.StudentScheduleResponseDto;
 import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
 import jpabook.onboarding.student.service.StudentService;
 import lombok.RequiredArgsConstructor;

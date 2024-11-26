@@ -51,7 +51,7 @@ public class Student {
 	@JdbcTypeCode(SqlTypes.VARCHAR)
 	private StudentStatus status;
 
-	public Student(StudentRequestDto request) {
+	public Student(final StudentRequestDto request) {
 		this.name = request.getName();
 		this.birth = request.getBirth();
 		this.status = StudentStatus.ENROLLED;

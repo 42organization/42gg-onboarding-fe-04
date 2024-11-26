@@ -7,7 +7,7 @@ public enum StudentStatus {
 
 	private final String status;
 
-	StudentStatus(String status) {
+	StudentStatus(final String status) {
 		this.status = status;
 	}
 
