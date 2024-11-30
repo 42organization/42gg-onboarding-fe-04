@@ -24,30 +24,30 @@ public class SugangService {
 	private final SugangRepository sugangRepository;
 	private final CourseRepository courseRepository;
 
-	public Sugang applySugang(SugangReqDto req, Integer courseId)
-	{
-		Student studentInfo = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow();
-		// Student student = sugangRepository.findById(studentId).orElseThrow().getStudent();
-		Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("course not find with id"));
+	// public Sugang applySugang(SugangReqDto req, Integer courseId)
+	// {
+	// 	Student studentInfo = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow();
+	// 	// Student student = sugangRepository.findById(studentId).orElseThrow().getStudent();
+	// 	Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("course not find with id"));
+	//
+	// 	Sugang sugang = new Sugang(studentInfo, course);
+	// 	return sugangRepository.save(sugang);
+	// }
+	//
+	// public void cancleSugang(SugangReqDto req, Integer courseId)
+	// {
+	// 	Student studentInfo = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow();
+	// 	Course course = courseRepository.findById(courseId).orElseThrow();
+	//
+	// 	Sugang sugang = sugangRepository.findByStudentAndCourse(studentInfo, course).orElseThrow();
+	// 	// sugang.updateSugangStatus(SugangStatus.Completed);
+	// }
 
-		Sugang sugang = new Sugang(studentInfo, course);
-		return sugangRepository.save(sugang);
-	}
-
-	public void cancleSugang(SugangReqDto req, Integer courseId)
-	{
-		Student studentInfo = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow();
-		Course course = courseRepository.findById(courseId).orElseThrow();
-
-		Sugang sugang = sugangRepository.findByStudentAndCourse(studentInfo, course).orElseThrow();
-		sugang.updateSugangStatus(SugangStatus.Completed);
-	}
-
-	public Page<Sugang> getSugangList(PageRequest pageRequest)
-	{
-		Page<Sugang> result = sugangRepository.findByStatus(SugangStatus.Completed, pageRequest);
-		System.out.println("조회된 데이터 수: " + result.getTotalElements());
-		return result;
-		// return sugangRepository.findByStatus(SugangStatus.Completed, pageRequest);
-	}
+	// public Page<Sugang> getSugangList(PageRequest pageRequest)
+	// {
+	// 	Page<Sugang> result = sugangRepository.findByStatus(SugangStatus.Completed, pageRequest);
+	// 	System.out.println("조회된 데이터 수: " + result.getTotalElements());
+	// 	return result;
+	// 	// return sugangRepository.findByStatus(SugangStatus.Completed, pageRequest);
+	// }
 }

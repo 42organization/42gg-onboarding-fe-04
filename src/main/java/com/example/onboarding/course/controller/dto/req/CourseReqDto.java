@@ -1,5 +1,9 @@
 package com.example.onboarding.course.controller.dto.req;
 
+import com.example.onboarding.alldata.entity.Course;
+import com.example.onboarding.alldata.status.CourseStatus;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +12,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseReqDto {
+	@NotBlank
 	private String professorName;
+	@NotBlank
 	private String courseTitle;
+
+	private Integer currentCount;
+	private Integer courseGrade;
+	private CourseStatus status;
+
+
+	public Course toEntity()
+	{
+		if (currentCount == null && courseGrade == null && status == null)
+		{
+			return new Course(professorName, courseTitle);
+		}
+		return new Course(professorName, courseTitle,
+			currentCount != null ? currentCount : 0,
+			courseGrade != null ? courseGrade : 3,
+			status != null ? status : CourseStatus.REGISTERED);
+	}
 }

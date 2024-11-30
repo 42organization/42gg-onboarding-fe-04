@@ -3,6 +3,8 @@ package com.example.onboarding.student.service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.example.onboarding.alldata.exception.CustomException;
+import com.example.onboarding.alldata.exception.ErrorCode;
 import com.example.onboarding.student.controller.dto.req.StudentReqDto;
 import com.example.onboarding.alldata.status.StudentStatus;
 import com.example.onboarding.alldata.entity.Student;
@@ -18,27 +20,28 @@ import org.springframework.data.domain.Page;
 public class StudentService {
 	private final StudentRepository studentRepository;
 
-	public Student createStudent(StudentReqDto req) {
-		System.out.println("Received request " + req);
-		Student student = new Student(
+	public Student create(StudentReqDto req)
+	{
+		if (studentRepository.existsByStudentNameAndStudentBirth(
 			req.getStudentName(),
-			req.getStudentBirth()
-		);
+			req.getStudentBirth())) {
+			throw new CustomException(ErrorCode.STUDENT_DUPLICATE);
+		}
+		Student student = req.toEntity();
 		return studentRepository.save(student);
 	}
 
-	public void dropStudent(StudentReqDto req)
+	public void drop(StudentReqDto req)
 	{
 		Student student = studentRepository.findByStudentNameAndStudentBirth(
 			req.getStudentName(),
 			req.getStudentBirth()
-		).get();
-		student.setStatus(StudentStatus.DROPOUT);
+		).orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
+		student.drop();
 	}
 
 	public Page<Student> bringGraduated(PageRequest pageRequest)
 	{
-		return studentRepository.findByStatus(StudentStatus.GRADUATE, pageRequest);
+		return studentRepository.findByStudentStatus(StudentStatus.GRADUATED, pageRequest);
 	}
-
 }

@@ -31,40 +31,40 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SugangController {
 	private final SugangService sugangService;
-
-	@PostMapping("/{course_id}")
-	public ResponseEntity<SugangResDto> applySugang(@RequestBody @Valid SugangReqDto request, @PathVariable Integer course_id)
-	{
-		sugangService.applySugang(request, course_id);
-		SugangResDto body = new SugangResDto(HttpStatus.OK.value());
-
-		return ResponseEntity.status(HttpStatus.OK).body(body);
-	}
-
-	@PatchMapping("/{course_id}")
-	public ResponseEntity<SugangResDto> cancleSugang(@RequestBody SugangReqDto request, @PathVariable Integer course_id)
-	{
-		sugangService.cancleSugang(request, course_id);
-		SugangResDto body = new SugangResDto(HttpStatus.OK.value());
-		return ResponseEntity.status(HttpStatus.OK).body(body);
-	}
-
-	// @GetMapping
-	// public ResponseEntity<SugangResDto> sugangList(@RequestParam(defaultValue = "0") int page){
-	// 	PageRequest pageRequest = PageRequest.of(page, 5);
-	// 	Page<Sugang> sugangList = sugangService.sugangList(pageRequest);
 	//
-	// 	return ResponseEntity.ok(new SugangResDto(sugangList));
+	// @PostMapping("/{course_id}")
+	// public ResponseEntity<SugangResDto> applySugang(@RequestBody @Valid SugangReqDto request, @PathVariable Integer course_id)
+	// {
+	// 	sugangService.applySugang(request, course_id);
+	// 	SugangResDto body = new SugangResDto(HttpStatus.OK.value());
+	//
+	// 	return ResponseEntity.status(HttpStatus.OK).body(body);
 	// }
-	@GetMapping("/page")
-	public ResponseEntity<List<SugangPageResDto>> getSugangList(@RequestParam(defaultValue = "0") int page)
-	{
-		PageRequest pageRequest = PageRequest.of(page, 5);
-		Page<Sugang> sugangPage = sugangService.getSugangList(pageRequest);
-		// List<SugangPageResDto> sugangList = sugangPage.getContent().stream().map(sugang->SugangPageResDto(sugang)).toList();
-		List<SugangPageResDto> sugangList = sugangPage.getContent().stream()
-			.map(SugangPageResDto::new)
-			.toList();
-		return ResponseEntity.ok(sugangList);
-	}
+	//
+	// @PatchMapping("/{course_id}")
+	// public ResponseEntity<SugangResDto> cancleSugang(@RequestBody SugangReqDto request, @PathVariable Integer course_id)
+	// {
+	// 	sugangService.cancleSugang(request, course_id);
+	// 	SugangResDto body = new SugangResDto(HttpStatus.OK.value());
+	// 	return ResponseEntity.status(HttpStatus.OK).body(body);
+	// }
+	//
+	// // @GetMapping
+	// // public ResponseEntity<SugangResDto> sugangList(@RequestParam(defaultValue = "0") int page){
+	// // 	PageRequest pageRequest = PageRequest.of(page, 5);
+	// // 	Page<Sugang> sugangList = sugangService.sugangList(pageRequest);
+	// //
+	// // 	return ResponseEntity.ok(new SugangResDto(sugangList));
+	// // }
+	// @GetMapping("/page")
+	// public ResponseEntity<List<SugangPageResDto>> getSugangList(@RequestParam(defaultValue = "0") int page)
+	// {
+	// 	PageRequest pageRequest = PageRequest.of(page, 5);
+	// 	Page<Sugang> sugangPage = sugangService.getSugangList(pageRequest);
+	// 	// List<SugangPageResDto> sugangList = sugangPage.getContent().stream().map(sugang->SugangPageResDto(sugang)).toList();
+	// 	List<SugangPageResDto> sugangList = sugangPage.getContent().stream()
+	// 		.map(SugangPageResDto::new)
+	// 		.toList();
+	// 	return ResponseEntity.ok(sugangList);
+	// }
 }

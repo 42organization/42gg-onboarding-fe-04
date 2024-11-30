@@ -14,7 +14,7 @@ import com.example.onboarding.alldata.entity.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
-
-	Optional<Student> findByStudentNameAndStudentBirth(String studentName, int studentBirth);
-	Page<Student> findByStatus(StudentStatus status, Pageable pageable);
+	boolean existsByStudentNameAndStudentBirth(String studentName, Integer studentBirth);
+	Optional<Student> findByStudentNameAndStudentBirth(String studentName, Integer studentBirth);
+	Page<Student> findByStudentStatus(StudentStatus studentStatus, Pageable pageable);
 }

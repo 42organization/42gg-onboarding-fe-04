@@ -22,21 +22,21 @@ public class SugangPageResDto {
 	private Integer grade;
 	private CourseStatus courseStatus;
 
-
-	public SugangPageResDto(Sugang sugang)
-	{
-		this.sugangId = sugang.getId();
-		this.sugangStatus = sugang.getStatus();
-
-		Course course = sugang.getCourse();
-		this.courseId = course.getId();
-		this.courseTitle = course.getCourseTitle();
-		this.professorName = course.getProfessorName();
-		this.currentCount = course.getCurrentCount();
-		this.maxCount = course.getMaxCount();
-		this.grade = course.getGrade();
-		this.courseStatus = course.getIsActive();
-
-	}
+	//
+	// public SugangPageResDto(Sugang sugang)
+	// {
+	// 	this.sugangId = sugang.getId();
+	// 	this.sugangStatus = sugang.getStatus();
+	//
+	// 	Course course = sugang.getCourse();
+	// 	this.courseId = course.getId();
+	// 	this.courseTitle = course.getCourseTitle();
+	// 	this.professorName = course.getProfessorName();
+	// 	this.currentCount = course.getCurrentCount();
+	// 	this.maxCount = course.getMaxCount();
+	// 	this.grade = course.getGrade();
+	// 	this.courseStatus = course.getIsActive();
+	//
+	// }
 }
 

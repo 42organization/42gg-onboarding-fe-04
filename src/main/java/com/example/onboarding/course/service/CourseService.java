@@ -1,12 +1,10 @@
 package com.example.onboarding.course.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
+import com.example.onboarding.alldata.exception.CustomException;
+import com.example.onboarding.alldata.exception.ErrorCode;
 import com.example.onboarding.course.controller.dto.req.CourseReqDto;
-import com.example.onboarding.course.controller.dto.req.CourseUpdateReqDto;
-import com.example.onboarding.alldata.status.CourseStatus;
 import com.example.onboarding.alldata.repository.CourseRepository;
 import com.example.onboarding.alldata.entity.Course;
 
@@ -19,48 +17,34 @@ import lombok.RequiredArgsConstructor;
 public class CourseService {
 	private final CourseRepository courseRepository;
 
-	public Course createCourse(CourseReqDto req)
+	public Course create(CourseReqDto req)
 	{
-		Course course = new Course(
-			req.getProfessorName(),
-			req.getCourseTitle(),
-			req.getCurrentCount()
-		);
+		Course course = req.toEntity();
 		return courseRepository.save(course);
 	}
 
-	public Course updateCourse(int id, CourseUpdateReqDto request) {
-		Course course = courseRepository.findById(id).orElseThrow();
-
-		course.setCourseTitle(request.getCourseTitle());
-		course.setProfessorName(request.getProfessorName());
-		course.setGrade(request.getGrade());
-
-		CourseStatus updatedCourseStatus = null;
-		switch (request.getIsActive()){
-			case "완료됨" -> updatedCourseStatus = CourseStatus.EXPIRED;
-			case "삭제됨"-> updatedCourseStatus = CourseStatus.DELETE;
-			case "등록됨"-> updatedCourseStatus = CourseStatus.REGISTERED;
+	public void update(Integer id, CourseReqDto req)
+	{
+		Course course = courseRepository.findById(id)
+			.orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_EXIST));
+		if (courseRepository.existsByProfessorNameAndCourseTitleAndIdNot(
+			req.getProfessorName(), req.getCourseTitle(), id)) {
+			throw new CustomException(ErrorCode.COURSE_DUPLICATE);
 		}
-		course.setIsActive(updatedCourseStatus);
-		return course;
+		course.update(req);
 	}
 
-	public void deleteCourse(Integer id) {
-		Optional<Course> optionalCourse = courseRepository.findById(id);
-		Course course = optionalCourse.get();
-		course.setIsActive(CourseStatus.DELETE);
-
-		// if (course.getIsActive() == CourseStatus.DELETE) {
-		// 	throw new IllegalStateException("강의가 이미 삭제되었습니다");
-		// }
-		// course.setIsActive(CourseStatus.DELETE);
-		// courseRepository.save(course);
+	public void delete(Integer id)
+	{
+		Course course = courseRepository.findById(id)
+			.orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_EXIST));
+		course.delete();
 	}
 
-	public void completeCourse(Integer id) {
-		Optional<Course> optionalCourse = courseRepository.findById(id);
-		Course course = optionalCourse.get();
-		course.setIsActive(CourseStatus.EXPIRED);
+	public void complete(Integer id)
+	{
+		Course course = courseRepository.findById(id)
+			.orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_EXIST));
+		course.complete();
 	}
 }

@@ -9,5 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
-	List<Course> findByCourseStatus(String status);
+	boolean existsByProfessorNameAndCourseTitleAndIdNot(
+		String professorName,
+		String courseTitle,
+		Integer id
+	);
 }
