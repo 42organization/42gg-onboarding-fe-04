@@ -68,6 +68,30 @@ public class Student {
 	{
 		if (getStudentStatus() != StudentStatus.ACTIVE)
 			throw new CustomException(ErrorCode.STUDENT_NOT_CHANGE);
-		this.studentStatus = StudentStatus.GRADUATED;
+		this.studentStatus = StudentStatus.DROPOUT;
 	}
+
+	public boolean isGraduated()
+	{
+		return getTotalGrade() >= 60;
+	}
+
+	public void getGradeCredit(int credit)
+	{
+		if (this.currentGrade + credit > 15)
+			throw new IllegalStateException("한 학기 최대 수강가능 학점을 초과했습니다");
+		if (this.currentGrade + this.totalGrade + credit > 60)
+			throw new IllegalStateException("총 이수 가능 학점을 초과했습니다");
+		this.currentGrade += credit;
+		this.totalGrade += credit;
+		if (totalGrade == 60)
+			this.studentStatus = StudentStatus.GRADUATED;
+	}
+
+	public void removeGradeCredit(int credit)
+	{
+		if  (this.currentGrade >= credit)
+			currentGrade -= credit;
+	}
+
 }

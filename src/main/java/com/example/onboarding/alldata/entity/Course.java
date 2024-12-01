@@ -106,5 +106,26 @@ public class Course {
 		this.courseStatus = CourseStatus.COMPLETED;
 	}
 
+	public boolean exceedCapacity()
+	{
+		return currentCount >= 10;
+	}
+
+	public void plusCurrentGrade()
+	{
+		if (currentCount >= 10)
+		{
+			throw new IllegalStateException("강의 정원이 초과되었습니다.");
+		}
+		this.currentCount++;
+		if (currentCount >= 10)
+			this.courseStatus = CourseStatus.COMPLETED;
+	}
+
+	public void minusCurrentGrade()
+	{
+		if (currentCount > 0)
+			this.currentCount--;
+	}
 
 }

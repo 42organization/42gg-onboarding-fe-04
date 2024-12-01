@@ -25,6 +25,11 @@ public class StudentReqDto {
 
 	public Student toEntity()
 	{
-		return new Student(studentName, studentBirth);
+		if (currentGrade == null && totalGrade == null && studentStatus == null)
+			return new Student(studentName, studentBirth);
+		return new Student(studentName, studentBirth,
+			currentGrade != null ? currentGrade : 0,
+			totalGrade != null ? totalGrade : 0,
+			studentStatus != null ? studentStatus : StudentStatus.ACTIVE);
 	}
 }

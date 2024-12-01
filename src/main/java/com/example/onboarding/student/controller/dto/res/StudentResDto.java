@@ -15,3 +15,13 @@ public class StudentResDto {
 	private StudentStatus studentStatus;
 
 }
+
+
+/*
+궁금한 점 1)
+- MessageResDTO처럼 세분화되게 쓰는 게 좋을 지?
+public class StudentMessageResDto {
+	private Integer status;
+	private String msg;
+}
+ */

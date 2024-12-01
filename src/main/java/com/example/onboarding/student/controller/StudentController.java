@@ -1,7 +1,5 @@
 package com.example.onboarding.student.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -15,12 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.onboarding.student.controller.dto.req.StudentReqDto;
-import com.example.onboarding.student.controller.dto.res.StudentMessageResDto;
-import com.example.onboarding.student.controller.dto.res.StudentPageResDto;
 import com.example.onboarding.student.controller.dto.res.StudentResDto;
-import com.example.onboarding.student.controller.dto.res.StudentStatusResDto;
 import com.example.onboarding.student.service.StudentService;
 import com.example.onboarding.alldata.entity.Student;
+import com.example.onboarding.sugang.controller.dto.res.SugangResDto;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +46,6 @@ public class StudentController {
 	public ResponseEntity<Page<StudentResDto>> bringGraduated(@Valid @RequestParam(defaultValue = "0") int page)
 	{
 		PageRequest pageRequest = PageRequest.of(page, 5);
-		// Page<Student> graduated = studentService.bringGraduated(pageRequest);
 		Page<Student> graduatedStudents = studentService.bringGraduated(pageRequest);
 
 		Page<StudentResDto> studentDtoPage = graduatedStudents.map(student ->
@@ -62,25 +57,15 @@ public class StudentController {
 				student.getStudentStatus()
 			)
 		);
-
 		return ResponseEntity.ok(studentDtoPage);
 	}
-	//
-	//
-	// @GetMapping("/graduated")
-	// public ResponseEntity<StudentPageResDto> bringGraduated(@RequestParam(defaultValue = "0") int page) {
-	// 	System.out.println("---page----");
-	// 	System.out.println(page);
-	//
-	// 	PageRequest pageRequest = PageRequest.of(page, 5);
-	// 	Page<Student> graduated = studentService.bringGraduated(pageRequest);
-	// 	Page<StudentStatusResDto> graduatedStudentPage = graduated.map(student ->
-	// 		new StudentStatusResDto(student.getStudentBirth(), student.getStudentName(), student.getStatus())
-	// 	);
-	//
-	// 	// StudentPageResDto responseDto = new StudentPageResDto(graduatedStudentList);
-	// 	StudentPageResDto responseDto = new StudentPageResDto(graduatedStudentPage.getContent().stream().toList());
-	// 	return ResponseEntity.ok(responseDto);
-	// }
+
+	@GetMapping("/schedule")
+	public ResponseEntity<SugangResDto> currentSchedule(@RequestBody @Valid StudentResDto req)
+	{
+		studentService.schedule(req);
+
+	}
+
 }
 

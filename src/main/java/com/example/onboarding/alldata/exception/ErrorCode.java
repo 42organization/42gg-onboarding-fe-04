@@ -16,7 +16,9 @@ public enum ErrorCode {
 	COURSE_NOT_FOUND("강의를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 	COURSE_NOT_CHANGE("강의 변경을 할 수 없습니다.", HttpStatus.NOT_FOUND),
 	COURSE_MAX_OVER("수강 가능 인원이 초과되었습니다.", HttpStatus.NOT_FOUND),
-	COURSE_NOT_EXIST("존재하지 않는 강의입니다", HttpStatus.NOT_FOUND);
+	COURSE_NOT_EXIST("존재하지 않는 강의입니다", HttpStatus.NOT_FOUND),
+	SUGANG_NOT_REGISTERD("수강신청할 수 없습니다", HttpStatus.NOT_ACCEPTABLE),
+	SUGANG_NOT_FOUND("수강신청 내역이 없습니다.", HttpStatus.NOT_FOUND);
 	private final String message;
 	private final HttpStatus status;
 }

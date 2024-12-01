@@ -9,6 +9,7 @@ import com.example.onboarding.student.controller.dto.req.StudentReqDto;
 import com.example.onboarding.alldata.status.StudentStatus;
 import com.example.onboarding.alldata.entity.Student;
 import com.example.onboarding.alldata.repository.StudentRepository;
+import com.example.onboarding.sugang.controller.dto.res.SugangResDto;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,4 +45,10 @@ public class StudentService {
 	{
 		return studentRepository.findByStudentStatus(StudentStatus.GRADUATED, pageRequest);
 	}
+
+	public SugangResDto schedule(StudentReqDto req)
+	{
+
+	}
+
 }

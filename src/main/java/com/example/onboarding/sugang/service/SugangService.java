@@ -4,6 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.example.onboarding.alldata.exception.CustomException;
+import com.example.onboarding.alldata.exception.ErrorCode;
+import com.example.onboarding.alldata.status.CourseStatus;
+import com.example.onboarding.course.controller.dto.res.CourseResDto;
 import com.example.onboarding.sugang.controller.dto.req.SugangReqDto;
 import com.example.onboarding.alldata.status.SugangStatus;
 import com.example.onboarding.alldata.entity.Course;
@@ -24,24 +28,39 @@ public class SugangService {
 	private final SugangRepository sugangRepository;
 	private final CourseRepository courseRepository;
 
-	// public Sugang applySugang(SugangReqDto req, Integer courseId)
-	// {
-	// 	Student studentInfo = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow();
-	// 	// Student student = sugangRepository.findById(studentId).orElseThrow().getStudent();
-	// 	Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("course not find with id"));
-	//
-	// 	Sugang sugang = new Sugang(studentInfo, course);
-	// 	return sugangRepository.save(sugang);
-	// }
-	//
-	// public void cancleSugang(SugangReqDto req, Integer courseId)
-	// {
-	// 	Student studentInfo = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow();
-	// 	Course course = courseRepository.findById(courseId).orElseThrow();
-	//
-	// 	Sugang sugang = sugangRepository.findByStudentAndCourse(studentInfo, course).orElseThrow();
-	// 	// sugang.updateSugangStatus(SugangStatus.Completed);
-	// }
+	public void enroll(SugangReqDto req, int courseId)
+	{
+		Student student = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow(()->
+			new CustomException(ErrorCode.STUDENT_NOT_FOUND));
+		Course course = courseRepository.findById(courseId).orElseThrow(()->new CustomException(ErrorCode.COURSE_NOT_FOUND));
+		Sugang sugang = new Sugang(student, course);
+		sugangRepository.save(sugang);
+	}
+
+	public void cancel(SugangReqDto req, int courseId)
+	{
+		Student student = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow(()->
+			new CustomException(ErrorCode.STUDENT_NOT_FOUND));
+		Course course = courseRepository.findById(courseId).orElseThrow(()->new CustomException(ErrorCode.COURSE_NOT_FOUND));
+		Sugang sugang = sugangRepository.findByStudentAndCourse(student, course).orElseThrow(() -> new CustomException(ErrorCode.SUGANG_NOT_FOUND));
+		sugang.updateSugangStatus(SugangStatus.CANCELED);
+		course.minusCurrentGrade();
+	}
+
+
+	public Page<CourseResDto> getCourseList(PageRequest pageRequest)
+	{
+		Page<Course> courseList = courseRepository.findByCourseStatus(CourseStatus.REGISTERED, pageRequest);
+		return courseList.map(course -> new CourseResDto(
+			course.getId(),
+			course.getProfessorName(),
+			course.getCourseTitle(),
+			course.getCurrentCount(),
+			course.getCourseGrade(),
+			course.getMaxCourseCount(),
+			course.getCourseStatus()
+		));
+	}
 
 	// public Page<Sugang> getSugangList(PageRequest pageRequest)
 	// {
