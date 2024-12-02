@@ -16,7 +16,6 @@ public class CourseReqDto {
 	private String professorName;
 	@NotBlank
 	private String courseTitle;
-
 	private Integer currentCount;
 	private Integer courseGrade;
 	private CourseStatus courseStatus;
@@ -25,3 +24,5 @@ public class CourseReqDto {
 		return Course.of(professorName, courseTitle, currentCount, courseGrade, courseStatus);
 	}
 }
+
+/*Valid pattern이 뭘까?*/

@@ -38,9 +38,7 @@ public class Sugang {
 	@Column(nullable = false)
 	private SugangStatus status;
 
-
-	public Sugang(Student student, Course course)
-	{
+	public Sugang(Student student, Course course) {
 		this.status = SugangStatus.REQUESTING;
 		validEnroll(student, course);
 		this.student = student;
@@ -48,21 +46,19 @@ public class Sugang {
 		this.status = SugangStatus.ENROLLED;
 	}
 
-	public void updateSugangStatus(SugangStatus status)
-	{
+	public void updateSugangStatus(SugangStatus status) {
 
 		if (this.status == SugangStatus.CANCELED)
 			throw new CustomException(ErrorCode.SUGANG_NOT_FOUND);
 		this.status = status;
 	}
 
-	private void validEnroll(Student student, Course course)
-	{
+	private void validEnroll(Student student, Course course) {
 		if (student.isGraduated())
 			throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
 		if (course.exceedCapacity())
 			throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
 		student.getGradeCredit(course.getCourseGrade());
-		course.plusCurrentGrade();
+		course.plusCurrentGrade(); // TODO: valid는 valid만 ! -  따로 기능 쓰기
 	}
 }

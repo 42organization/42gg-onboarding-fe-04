@@ -6,16 +6,19 @@ import org.hibernate.type.SqlTypes;
 import com.example.onboarding.alldata.exception.CustomException;
 import com.example.onboarding.alldata.exception.ErrorCode;
 import com.example.onboarding.alldata.status.StudentStatus;
-import com.example.onboarding.student.controller.dto.req.StudentReqDto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -25,12 +28,12 @@ public class Student {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name ="student_name", nullable = false, length = 50)
-	@NotBlank(message = "학생 이름은 필수입니다")
-	@Pattern(regexp = "^[가-힣a-zA-Z\\s]+$", message = "학생 이름은 한글과 영문만 가능합니다")	// TODO: 수정!
+	@Column(name = "student_name", nullable = false, length = 50)
+	@NotBlank(message = "학생 이름은 필수입니다") // 데이터베이스에 접근
+	@Pattern(regexp = "^[가-힣a-zA-Z\\s]+$", message = "학생 이름은 한글과 영문만 가능합니다")    // TODO: 수정!
 	private String studentName;
 
-	@Column(name="student_birth", nullable = false)
+	@Column(name = "student_birth", nullable = false)
 	@NotNull(message = "학생 생년월일은 필수입니다") // TODO: Integer -> Date로 바꾸기
 	private Integer studentBirth;
 
@@ -47,14 +50,14 @@ public class Student {
 
 	/*private*/
 	private Student(String studentName, Integer studentBirth,
-		Integer currentGrade, Integer totalGrade, StudentStatus studentStatus)
-	{
+		Integer currentGrade, Integer totalGrade, StudentStatus studentStatus) {
 		this.studentName = studentName;
 		this.studentBirth = studentBirth;
 		this.currentGrade = currentGrade;
 		this.totalGrade = totalGrade;
 		this.studentStatus = studentStatus;
 	}
+
 	/**
 	 * new Student(sn, sb);
 	 * Student.of(sn,sb);
@@ -79,20 +82,17 @@ public class Student {
 		return Student.of(studentName, studentBirth, null, null, null);
 	}
 
-	public void drop()
-	{
+	public void drop() {
 		if (getStudentStatus() != StudentStatus.ACTIVE)
 			throw new CustomException(ErrorCode.STUDENT_NOT_CHANGE);
 		this.studentStatus = StudentStatus.DROPOUT;
 	}
 
-	public boolean isGraduated()
-	{
+	public boolean isGraduated() {
 		return getTotalGrade() >= 60;
 	}
 
-	public void getGradeCredit(int credit)
-	{
+	public void getGradeCredit(int credit) {
 		if (this.currentGrade + credit > 15)
 			throw new IllegalStateException("한 학기 최대 수강가능 학점을 초과했습니다");
 		if (this.currentGrade + this.totalGrade + credit > 60)
@@ -103,9 +103,8 @@ public class Student {
 			this.studentStatus = StudentStatus.GRADUATED;
 	}
 
-	public void removeGradeCredit(int credit)
-	{
-		if  (this.currentGrade >= credit)
+	public void removeGradeCredit(int credit) {
+		if (this.currentGrade >= credit)
 			currentGrade -= credit;
 	}
 }

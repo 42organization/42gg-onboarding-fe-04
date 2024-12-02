@@ -1,12 +1,5 @@
 package com.example.onboarding.course.controller;
 
-
-import com.example.onboarding.course.controller.dto.req.CourseReqDto;
-import com.example.onboarding.course.service.CourseService;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.onboarding.course.controller.dto.req.CourseReqDto;
+import com.example.onboarding.course.service.CourseService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/course")
@@ -32,15 +30,13 @@ public class CourseController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateCourse(@PathVariable Integer id, @RequestBody @Valid CourseReqDto req)
-	{
+	public ResponseEntity<Void> updateCourse(@PathVariable Integer id, @RequestBody @Valid CourseReqDto req) {
 		courseService.update(id, req);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@PatchMapping("/delete/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Integer id)
-	{
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		courseService.delete(id);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

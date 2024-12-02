@@ -1,5 +1,10 @@
 package com.example.onboarding.alldata.entity;
 
+import com.example.onboarding.alldata.exception.CustomException;
+import com.example.onboarding.alldata.exception.ErrorCode;
+import com.example.onboarding.alldata.status.CourseStatus;
+import com.example.onboarding.course.controller.dto.req.CourseReqDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,89 +12,112 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-import com.example.onboarding.alldata.exception.CustomException;
-import com.example.onboarding.alldata.exception.ErrorCode;
-import com.example.onboarding.alldata.status.CourseStatus;
-import com.example.onboarding.course.controller.dto.req.CourseReqDto;
-
-import jakarta.validation.constraints.Max;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class Course {
+	private static final int MAX_COURSE_COUNT = 10;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	//TODO: pattern 보이는 곳 체크
-	@Column(name = "professor_name", nullable = false, length = 50)
-	@Pattern(regexp = "^[가-힣a-zA-Z\\s]+$", message = "교수 이름은 한글과 영문만 가능합니다")
-	@NotBlank(message = "교수 이름은 필수입니다")
+	@Column
+	@NotBlank
 	private String professorName;
 
-	@Column(name = "course_title", nullable = false)
-	@Pattern(regexp = "^[가-힣a-zA-Z\\s]+$", message = "강의 이름은 한글과 영문만 가능합니다")
-	@Size(max = 50, message = "강의 이름은 50자를 초과할 수 없습니다")
-	@NotBlank(message = "강의명은 필수입니다")
+	@Column
+	@NotBlank
 	private String courseTitle;
 
-	@Column(name = "current_count", nullable = false)
-	// @Max(value = 10, message = "수강신청 인원은 10명을 초과할 수 없습니다")
+	@Column
 	private int currentCount;
 
 	@Column
 	private int courseGrade;
 
-	@Column(name = "max_course_count")
+	@Column
 	private int maxCourseCount;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "course_status")
+	@Column
 	private CourseStatus courseStatus;
 
-
-	private Course(String professorName, String courseTitle, int currentCount, int courseGrade, CourseStatus courseStatus)
-	{
+	private Course(String professorName, String courseTitle, int currentCount, int courseGrade,
+		CourseStatus courseStatus) {
 		this.professorName = professorName;
 		this.courseTitle = courseTitle;
 		this.currentCount = currentCount;
 		this.courseGrade = courseGrade;
-		this.maxCourseCount = 10;
+		this.maxCourseCount = MAX_COURSE_COUNT;
 		this.courseStatus = courseStatus;
 	}
 
-	public static Course of(String professorName,
-		String courseTitle,
-		Integer currentCount,
-		Integer courseGrade,
-		CourseStatus courseStatus
-	)
-	{
-		return new Course(
-				professorName,
-				courseTitle,
-				currentCount != null ? currentCount : 0,
-				courseGrade != null ? courseGrade : 3,
-				courseStatus != null ? courseStatus : CourseStatus.REGISTERED
-		);
+	public static Course of(String professorName, String courseTitle, Integer currentCount, Integer courseGrade,
+		CourseStatus courseStatus) {
+		return new Course(professorName, courseTitle, currentCount != null ? currentCount : 0,
+			courseGrade != null ? courseGrade : 3, courseStatus != null ? courseStatus : CourseStatus.REGISTERED);
 	}
 
-	public static Course of(String professorName, String courseTitle)
-	{
-		return Course.of(professorName, courseTitle, null, null, null);
+	private class StatusManager {
+		private void updateStatus(CourseStatus newStatus) {
+			if (courseStatus != newStatus) {
+				validateStatus();
+				courseStatus = newStatus;
+			}
+		}
+
+		private void validateStatus() {
+			if (!isStatusRegistered())
+				throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
+		}
+
+		private boolean isStatusRegistered() {
+			return CourseStatus.REGISTERED == courseStatus;
+		}
 	}
+
+	private class EnrollmentManager {
+		void addStudent() {
+			if (exceedCapacity())
+				throw new CustomException(ErrorCode.COURSE_MAX_OVER);
+			currentCount++;
+			if (exceedCapacity())
+				new StatusManager().updateStatus(CourseStatus.COMPLETED);
+		}
+
+		void removeStudent() {
+			if (currentCount > 0)
+				currentCount--;
+		}
+
+		boolean exceedCapacity() {
+			return currentCount >= MAX_COURSE_COUNT;
+		}
+	}
+
+	@Transient
+	private final StatusManager statusManager = new StatusManager();
+	@Transient
+	private final EnrollmentManager enrollmentManager = new EnrollmentManager();
 
 	public void update(CourseReqDto req) {
 		validate(req);
+		updateInfo(req);
+	}
+
+	public void validate(CourseReqDto req) {
+		if (!statusManager.isStatusRegistered())
+			throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
+		if (req.getCurrentCount() > getMaxCourseCount())
+			throw new CustomException(ErrorCode.COURSE_MAX_OVER);
+	}
+
+	public void updateInfo(CourseReqDto req) {
 		this.professorName = req.getProfessorName();
 		this.courseTitle = req.getCourseTitle();
 		this.currentCount = req.getCurrentCount();
@@ -97,47 +125,23 @@ public class Course {
 		this.courseStatus = req.getCourseStatus();
 	}
 
-	public void validate(CourseReqDto req)
-	{
-		if (getCourseStatus() != (CourseStatus.REGISTERED))
-			throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
-		if (req.getCurrentCount() > getMaxCourseCount())
-			throw new CustomException(ErrorCode.COURSE_MAX_OVER);
+	public void delete() {
+		statusManager.updateStatus(CourseStatus.DELETED);
 	}
 
-	public void delete()
-	{
-		if (getCourseStatus() != CourseStatus.REGISTERED)
-			throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
-		this.courseStatus = CourseStatus.DELETED;
+	public void complete() {
+		statusManager.updateStatus(CourseStatus.COMPLETED);
 	}
 
-	public void complete()
-	{
-		if (getCourseStatus() != CourseStatus.REGISTERED)
-			throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
-		this.courseStatus = CourseStatus.COMPLETED;
+	public boolean exceedCapacity() {
+		return enrollmentManager.exceedCapacity();
 	}
 
-	public boolean exceedCapacity()
-	{
-		return currentCount >= 10;
+	public void plusCurrentGrade() {
+		enrollmentManager.addStudent();
 	}
 
-	public void plusCurrentGrade()
-	{
-		if (currentCount >= 10)
-		{
-			throw new IllegalStateException("강의 정원이 초과되었습니다.");
-		}
-		this.currentCount++;
-		if (currentCount >= 10)
-			this.courseStatus = CourseStatus.COMPLETED;
-	}
-
-	public void minusCurrentGrade()
-	{
-		if (currentCount > 0)
-			this.currentCount--;
+	public void minusCurrentGrade() {
+		enrollmentManager.removeStudent();
 	}
 }
