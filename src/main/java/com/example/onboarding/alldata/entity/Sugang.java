@@ -46,7 +46,6 @@ public class Sugang {
 		this.student = student;
 		this.course = course;
 		this.status = SugangStatus.ENROLLED;
-
 	}
 
 	public void updateSugangStatus(SugangStatus status)
