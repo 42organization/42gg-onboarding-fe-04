@@ -26,6 +26,7 @@ public class CourseController {
 	@PostMapping
 	public ResponseEntity<CourseResponseDto> createCourse(@Valid @RequestBody final CourseRequestDto request) {
 		final CourseResponseDto response = courseService.create(request);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
