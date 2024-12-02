@@ -60,21 +60,10 @@ public class StudentService {
 			req.getStudentName(),
 			req.getStudentBirth()
 		).orElseThrow(() -> new CustomException(ErrorCode.SUGANG_NOT_FOUND));
-		// List<Sugang> sugangs = sugangRepository.findByStudent(student);
-		// List<Course> courseList = sugangs.stream()
-		// 	.map(sugang -> new Course(
-		// 		sugang.getCourse().getCourseTitle(),
-		// 		sugang.getCourse().getProfessorName(),
-		// 		sugang.getCourse().getCourseGrade(),
-		// 		sugang.getCourse().getMaxCourseCount(),
-		// 		sugang.getCourse().getCourseStatus()
-		// 	)).toList();
 		List<Sugang> sugangs = sugangRepository.findByStudent(student);
 		List<Course> courseList = sugangs.stream()
 			.map(Sugang::getCourse)
 			.toList();
-		// 학생 정보와 수강 목록을 포함한 응답 DTO 생성
-
 		return new SugangResDto(
 			student.getStudentName(),
 			student.getStudentBirth(),

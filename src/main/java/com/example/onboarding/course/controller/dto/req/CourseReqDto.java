@@ -21,9 +21,7 @@ public class CourseReqDto {
 	private Integer courseGrade;
 	private CourseStatus courseStatus;
 
-
-	public Course toCourse()
-	{
+	public Course toCourse() {
 		return Course.of(professorName, courseTitle, currentCount, courseGrade, courseStatus);
 	}
 }

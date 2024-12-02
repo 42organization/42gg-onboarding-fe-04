@@ -49,10 +49,6 @@ public class StudentController {
 	{
 		PageRequest pageRequest = PageRequest.of(page, 5);
 		Page<Student> graduatedStudents = studentService.bringGraduated(pageRequest);
-
-		// Page<StudentResDto> studentDtoPage = graduatedStudents.map(student ->
-		// 	StudentResDto.from(student)
-		// );
 		Page<StudentResDto> studentDtoPage = graduatedStudents.map(StudentResDto::from);
 		return ResponseEntity.ok(studentDtoPage);
 	}
