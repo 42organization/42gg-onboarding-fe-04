@@ -19,18 +19,11 @@ public class CourseReqDto {
 
 	private Integer currentCount;
 	private Integer courseGrade;
-	private CourseStatus status;
+	private CourseStatus courseStatus;
 
 
-	public Course toEntity()
+	public Course toCourse()
 	{
-		if (currentCount == null && courseGrade == null && status == null)
-		{
-			return new Course(professorName, courseTitle);
-		}
-		return new Course(professorName, courseTitle,
-			currentCount != null ? currentCount : 0,
-			courseGrade != null ? courseGrade : 3,
-			status != null ? status : CourseStatus.REGISTERED);
+		return Course.of(professorName, courseTitle, currentCount, courseGrade, courseStatus);
 	}
 }

@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,9 +30,9 @@ public class Course {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "professor_name", nullable = false)
+	//TODO: pattern 보이는 곳 체크
+	@Column(name = "professor_name", nullable = false, length = 50)
 	@Pattern(regexp = "^[가-힣a-zA-Z\\s]+$", message = "교수 이름은 한글과 영문만 가능합니다")
-	@Size(max = 50, message = "교수 이름은 50자를 초과할 수 없습니다")
 	@NotBlank(message = "교수 이름은 필수입니다")
 	private String professorName;
 
@@ -42,7 +43,7 @@ public class Course {
 	private String courseTitle;
 
 	@Column(name = "current_count", nullable = false)
-	@Max(value = 10, message = "수강신청 인원은 10명을 초과할 수 없습니다")
+	// @Max(value = 10, message = "수강신청 인원은 10명을 초과할 수 없습니다")
 	private int currentCount;
 
 	@Column
@@ -55,17 +56,8 @@ public class Course {
 	@Column(name = "course_status")
 	private CourseStatus courseStatus;
 
-	public Course(String professorName, String courseTitle)
-	{
-		this.professorName = professorName;
-		this.courseTitle = courseTitle;
-		this.currentCount = 0;
-		this.courseGrade = 0;
-		this.maxCourseCount = 10;
-		this.courseStatus = CourseStatus.REGISTERED;
-	}
 
-	public Course(String professorName, String courseTitle, int currentCount, int courseGrade, CourseStatus courseStatus)
+	private Course(String professorName, String courseTitle, int currentCount, int courseGrade, CourseStatus courseStatus)
 	{
 		this.professorName = professorName;
 		this.courseTitle = courseTitle;
@@ -75,13 +67,34 @@ public class Course {
 		this.courseStatus = courseStatus;
 	}
 
+	public static Course of(String professorName,
+		String courseTitle,
+		Integer currentCount,
+		Integer courseGrade,
+		CourseStatus courseStatus
+	)
+	{
+		return new Course(
+				professorName,
+				courseTitle,
+				currentCount != null ? currentCount : 0,
+				courseGrade != null ? courseGrade : 3,
+				courseStatus != null ? courseStatus : CourseStatus.REGISTERED
+		);
+	}
+
+	public static Course of(String professorName, String courseTitle)
+	{
+		return Course.of(professorName, courseTitle, null, null, null);
+	}
+
 	public void update(CourseReqDto req) {
 		validate(req);
 		this.professorName = req.getProfessorName();
 		this.courseTitle = req.getCourseTitle();
 		this.currentCount = req.getCurrentCount();
 		this.courseGrade = req.getCourseGrade();
-		this.courseStatus = req.getStatus();
+		this.courseStatus = req.getCourseStatus();
 	}
 
 	public void validate(CourseReqDto req)
@@ -127,5 +140,4 @@ public class Course {
 		if (currentCount > 0)
 			this.currentCount--;
 	}
-
 }

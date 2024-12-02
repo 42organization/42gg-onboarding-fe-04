@@ -1,5 +1,6 @@
 package com.example.onboarding.student.controller;
 
+import org.springframework.boot.autoconfigure.batch.BatchTransactionManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import com.example.onboarding.student.controller.dto.req.StudentReqDto;
 import com.example.onboarding.student.controller.dto.res.StudentResDto;
 import com.example.onboarding.student.service.StudentService;
 import com.example.onboarding.alldata.entity.Student;
+import com.example.onboarding.sugang.controller.dto.req.SugangReqDto;
 import com.example.onboarding.sugang.controller.dto.res.SugangResDto;
 
 import jakarta.validation.Valid;
@@ -48,24 +50,18 @@ public class StudentController {
 		PageRequest pageRequest = PageRequest.of(page, 5);
 		Page<Student> graduatedStudents = studentService.bringGraduated(pageRequest);
 
-		Page<StudentResDto> studentDtoPage = graduatedStudents.map(student ->
-			new StudentResDto(
-				student.getStudentName(),
-				student.getStudentBirth(),
-				student.getCurrentGrade(),
-				student.getTotalGrade(),
-				student.getStudentStatus()
-			)
-		);
+		// Page<StudentResDto> studentDtoPage = graduatedStudents.map(student ->
+		// 	StudentResDto.from(student)
+		// );
+		Page<StudentResDto> studentDtoPage = graduatedStudents.map(StudentResDto::from);
 		return ResponseEntity.ok(studentDtoPage);
 	}
 
 	@GetMapping("/schedule")
-	public ResponseEntity<SugangResDto> currentSchedule(@RequestBody @Valid StudentResDto req)
+	public ResponseEntity<SugangResDto> schedule(@RequestBody @Valid SugangReqDto req)
 	{
-		studentService.schedule(req);
-
+		SugangResDto schedules = studentService.schedule(req);
+		return ResponseEntity.ok(schedules);
 	}
 
 }
-

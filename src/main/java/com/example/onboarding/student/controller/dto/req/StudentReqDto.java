@@ -14,22 +14,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentReqDto {
-	@NotBlank
 	private String studentName;
-	@NotNull
 	private Integer studentBirth;
-
 	private Integer currentGrade;
 	private Integer totalGrade;
 	private StudentStatus studentStatus;
 
-	public Student toEntity()
+	public Student toStudent()
 	{
-		if (currentGrade == null && totalGrade == null && studentStatus == null)
-			return new Student(studentName, studentBirth);
-		return new Student(studentName, studentBirth,
-			currentGrade != null ? currentGrade : 0,
-			totalGrade != null ? totalGrade : 0,
-			studentStatus != null ? studentStatus : StudentStatus.ACTIVE);
+		return Student.of(studentName, studentBirth, currentGrade, totalGrade, studentStatus);
 	}
 }

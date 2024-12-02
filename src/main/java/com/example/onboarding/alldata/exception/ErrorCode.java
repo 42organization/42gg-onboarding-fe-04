@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-
 	STUDENT_NOT_FOUND("학생을 찾을 수 없습니다", HttpStatus.NOT_FOUND),
 	STUDENT_DUPLICATE("이미 존재하는 학생입니다.", HttpStatus.CONFLICT),
 	STUDENT_NOT_CHANGE("학생의 정보를 변경을 할 수 없습니다.", HttpStatus.NOT_FOUND),

@@ -33,6 +33,13 @@ public class SugangService {
 		Student student = studentRepository.findByStudentNameAndStudentBirth(req.getStudentName(), req.getStudentBirth()).orElseThrow(()->
 			new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 		Course course = courseRepository.findById(courseId).orElseThrow(()->new CustomException(ErrorCode.COURSE_NOT_FOUND));
+		if (sugangRepository.findByStudent(student).stream()
+			.map(Sugang::getCourse)
+			.anyMatch(courseTmp -> courseTmp.getId() == courseId && courseTmp.getCourseStatus() == CourseStatus.REGISTERED)
+		) {
+			throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
+		}
+
 		Sugang sugang = new Sugang(student, course);
 		sugangRepository.save(sugang);
 	}
@@ -51,22 +58,6 @@ public class SugangService {
 	public Page<CourseResDto> getCourseList(PageRequest pageRequest)
 	{
 		Page<Course> courseList = courseRepository.findByCourseStatus(CourseStatus.REGISTERED, pageRequest);
-		return courseList.map(course -> new CourseResDto(
-			course.getId(),
-			course.getProfessorName(),
-			course.getCourseTitle(),
-			course.getCurrentCount(),
-			course.getCourseGrade(),
-			course.getMaxCourseCount(),
-			course.getCourseStatus()
-		));
+		return courseList.map(CourseResDto::from);
 	}
-
-	// public Page<Sugang> getSugangList(PageRequest pageRequest)
-	// {
-	// 	Page<Sugang> result = sugangRepository.findByStatus(SugangStatus.Completed, pageRequest);
-	// 	System.out.println("조회된 데이터 수: " + result.getTotalElements());
-	// 	return result;
-	// 	// return sugangRepository.findByStatus(SugangStatus.Completed, pageRequest);
-	// }
 }

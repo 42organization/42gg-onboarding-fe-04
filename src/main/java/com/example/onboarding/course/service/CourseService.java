@@ -19,7 +19,7 @@ public class CourseService {
 
 	public Course create(CourseReqDto req)
 	{
-		Course course = req.toEntity();
+		Course course = req.toCourse();
 		return courseRepository.save(course);
 	}
 

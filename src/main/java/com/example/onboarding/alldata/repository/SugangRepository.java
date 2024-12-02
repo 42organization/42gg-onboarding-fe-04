@@ -1,5 +1,6 @@
 package com.example.onboarding.alldata.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -17,4 +18,5 @@ public interface SugangRepository extends JpaRepository<Sugang, Integer>
 {
 	Optional<Sugang> findByStudentAndCourse(Student student, Course course);
 	Page<Sugang> findByStatus(SugangStatus status, Pageable pageable);
+	List<Sugang> findByStudent(Student student);
 }

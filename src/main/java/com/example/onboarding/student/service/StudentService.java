@@ -1,14 +1,21 @@
 package com.example.onboarding.student.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.example.onboarding.alldata.entity.Course;
+import com.example.onboarding.alldata.entity.Sugang;
 import com.example.onboarding.alldata.exception.CustomException;
 import com.example.onboarding.alldata.exception.ErrorCode;
+import com.example.onboarding.alldata.repository.SugangRepository;
 import com.example.onboarding.student.controller.dto.req.StudentReqDto;
 import com.example.onboarding.alldata.status.StudentStatus;
 import com.example.onboarding.alldata.entity.Student;
 import com.example.onboarding.alldata.repository.StudentRepository;
+import com.example.onboarding.sugang.controller.dto.req.SugangReqDto;
 import com.example.onboarding.sugang.controller.dto.res.SugangResDto;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +27,7 @@ import org.springframework.data.domain.Page;
 @RequiredArgsConstructor
 public class StudentService {
 	private final StudentRepository studentRepository;
+	private final SugangRepository sugangRepository;
 
 	public Student create(StudentReqDto req)
 	{
@@ -28,7 +36,7 @@ public class StudentService {
 			req.getStudentBirth())) {
 			throw new CustomException(ErrorCode.STUDENT_DUPLICATE);
 		}
-		Student student = req.toEntity();
+		Student student = req.toStudent();
 		return studentRepository.save(student);
 	}
 
@@ -46,9 +54,35 @@ public class StudentService {
 		return studentRepository.findByStudentStatus(StudentStatus.GRADUATED, pageRequest);
 	}
 
-	public SugangResDto schedule(StudentReqDto req)
+	public SugangResDto schedule(SugangReqDto req)
 	{
+		Student student = studentRepository.findByStudentNameAndStudentBirth(
+			req.getStudentName(),
+			req.getStudentBirth()
+		).orElseThrow(() -> new CustomException(ErrorCode.SUGANG_NOT_FOUND));
+		// List<Sugang> sugangs = sugangRepository.findByStudent(student);
+		// List<Course> courseList = sugangs.stream()
+		// 	.map(sugang -> new Course(
+		// 		sugang.getCourse().getCourseTitle(),
+		// 		sugang.getCourse().getProfessorName(),
+		// 		sugang.getCourse().getCourseGrade(),
+		// 		sugang.getCourse().getMaxCourseCount(),
+		// 		sugang.getCourse().getCourseStatus()
+		// 	)).toList();
+		List<Sugang> sugangs = sugangRepository.findByStudent(student);
+		List<Course> courseList = sugangs.stream()
+			.map(Sugang::getCourse)
+			.toList();
+		// 학생 정보와 수강 목록을 포함한 응답 DTO 생성
 
+		return new SugangResDto(
+			student.getStudentName(),
+			student.getStudentBirth(),
+			student.getCurrentGrade(),
+			student.getTotalGrade(),
+			student.getStudentStatus(),
+			courseList
+		);
 	}
 
 }
