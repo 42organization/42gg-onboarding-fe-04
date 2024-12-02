@@ -15,5 +15,7 @@ import jpabook.onboarding.data.status.StudentStatus;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 	Optional<Student> findByNameAndBirth(String name, LocalDate birth);
 
+	Optional<Student> findByNameAndBirthAndStatus(String name, LocalDate birth, StudentStatus status);
+
 	Page<Student> findAllByStatus(StudentStatus status, Pageable pageable);
 }

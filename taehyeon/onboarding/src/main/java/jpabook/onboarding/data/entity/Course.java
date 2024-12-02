@@ -13,6 +13,8 @@ import jakarta.persistence.Id;
 import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
 import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
 import jpabook.onboarding.data.status.CourseStatus;
+import jpabook.onboarding.exception.CustomError;
+import jpabook.onboarding.exception.CustomException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -71,5 +73,12 @@ public class Course {
 		this.grade = request.getGrade();
 		this.professorName = request.getProfessorName();
 		this.status = request.getStatus();
+	}
+
+	public void addCount(final int count) {
+		if (this.count + count > MAX_COUNT) {
+			throw new CustomException(CustomError.BAD_REQUEST);
+		}
+		this.count += count;
 	}
 }

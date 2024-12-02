@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import jpabook.onboarding.data.status.StudentStatus;
 import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
 import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
@@ -32,7 +31,6 @@ public class StudentController {
 	public ResponseEntity<StudentResponseDto> createStudent(@Valid @RequestBody final StudentRequestDto request) {
 		final StudentResponseDto response = studentService.create(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
 	}
 
 	@PatchMapping("/drop")

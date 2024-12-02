@@ -12,6 +12,8 @@ import jpabook.onboarding.data.entity.Sugang;
 import jpabook.onboarding.data.repository.CourseRepository;
 import jpabook.onboarding.data.repository.StudentRepository;
 import jpabook.onboarding.data.repository.SugangRepository;
+import jpabook.onboarding.data.status.CourseStatus;
+import jpabook.onboarding.data.status.StudentStatus;
 import jpabook.onboarding.data.status.SugangStatus;
 import jpabook.onboarding.exception.CustomError;
 import jpabook.onboarding.exception.CustomException;
@@ -31,25 +33,32 @@ public class SugangServiceImpl implements SugangService {
 	@Transactional
 	@Override
 	public SugangResponseDto cancelSugang(final SugangRequestDto request, final Long courseId) {
-		final Student student = studentRepository.findByNameAndBirth(request.getName(), request.getBirth())
-			.orElseThrow();
-		final Course course = courseRepository.findById(courseId).orElseThrow();
-		final Sugang sugang = sugangRepository.findByStudentAndCourse(student, course).orElseThrow();
+		final Student student = studentRepository.findByNameAndBirthAndStatus(request.getName(), request.getBirth(),
+			StudentStatus.ENROLLED).orElseThrow(() -> new CustomException(CustomError.STUDENT_NOT_FOUND));
+		final Course course = courseRepository.findByIdAndStatus(courseId, CourseStatus.REGISTERED)
+			.orElseThrow(() -> new CustomException(CustomError.COURSE_NOT_FOUND));
+		final Sugang sugang = sugangRepository.findByStudentAndCourse(student, course)
+			.orElseThrow(() -> new CustomException(CustomError.SUGANG_NOT_FOUND));
 		if (sugang.getStatus() == SugangStatus.CANCELED) {
-			throw new CustomException(CustomError.CONFLICT);
+			throw new CustomException(CustomError.SUGANG_CANCEL);
 		}
+		student.addCurrentGrade(-course.getGrade());
+		course.addCount(-1);
 		sugang.updateStatus(SugangStatus.CANCELED);
 		return new SugangResponseDto(sugang);
 	}
 
 	@Override
 	public SugangResponseDto createSugang(final SugangRequestDto request, final Long courseId) {
-		final Student student = studentRepository.findByNameAndBirth(request.getName(), request.getBirth())
-			.orElseThrow();
-		final Course course = courseRepository.findById(courseId).orElseThrow();
+		final Student student = studentRepository.findByNameAndBirthAndStatus(request.getName(), request.getBirth(),
+			StudentStatus.ENROLLED).orElseThrow(() -> new CustomException(CustomError.STUDENT_NOT_FOUND));
+		final Course course = courseRepository.findByIdAndStatus(courseId, CourseStatus.REGISTERED)
+			.orElseThrow(() -> new CustomException(CustomError.COURSE_NOT_FOUND));
 		if (sugangRepository.findByStudentAndCourse(student, course).isPresent()) {
-			throw new CustomException(CustomError.CONFLICT);
+			throw new CustomException(CustomError.SUGANG_CREATE);
 		}
+		student.addCurrentGrade(course.getGrade());
+		course.addCount(1);
 		final Sugang sugang = new Sugang(student, course);
 		sugangRepository.save(sugang);
 		return new SugangResponseDto(sugang);
