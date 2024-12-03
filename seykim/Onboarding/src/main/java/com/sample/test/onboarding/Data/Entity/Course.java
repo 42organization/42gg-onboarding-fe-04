@@ -41,7 +41,7 @@ public class Course {
 	private int grade;
 
 	@Column
-	private static int maxCount = 10;
+	private static final int maxCount = 10;
 
 	@Enumerated(EnumType.STRING)
 	@Column

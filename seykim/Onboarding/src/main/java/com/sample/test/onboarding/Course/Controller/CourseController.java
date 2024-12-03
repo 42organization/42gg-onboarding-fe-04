@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sample.test.onboarding.Course.Controller.Dto.Request.CourseReqDto;
 import com.sample.test.onboarding.Course.Service.CourseService;
@@ -16,7 +17,7 @@ import com.sample.test.onboarding.Course.Service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
 @RequestMapping("/courses")
 @RequiredArgsConstructor
 public class CourseController {

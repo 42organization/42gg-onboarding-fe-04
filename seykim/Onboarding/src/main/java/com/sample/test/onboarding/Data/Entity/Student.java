@@ -37,6 +37,10 @@ public class Student {
 	@Column
 	private Integer totalGrade;
 
+	private static final int maxGrade = 15;
+
+	private static final int maxTotalGrade = 60;
+
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 10)
 	private StudentStatus status;
@@ -58,7 +62,7 @@ public class Student {
 	}
 
 	public void enrollCourse(Integer grade) {
-		if (this.currentGrade + grade > 15) {
+		if (this.currentGrade + grade > maxGrade) {
 			throw new CustomException(ErrorResponse.STUDENT_MAXIMUM_ERROR);
 		}
 		this.currentGrade += grade;
@@ -69,10 +73,10 @@ public class Student {
 	}
 
 	public void completeCourse(Integer grade) {
-		if (this.totalGrade > 60) {
+		if (this.totalGrade > maxTotalGrade) {
 			throw new CustomException(ErrorResponse.STUDENT_ALREADY_GRADUATED);
-		} else if (this.totalGrade + grade >= 60) {
-			this.totalGrade = 60;
+		} else if (this.totalGrade + grade >= maxTotalGrade) {
+			this.totalGrade = maxTotalGrade;
 			this.graduated();
 		} else {
 			this.totalGrade += grade;

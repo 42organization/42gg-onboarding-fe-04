@@ -40,7 +40,7 @@ public class SugangController {
 	}
 
 	@GetMapping("/page={page}")
-	public SugangResDto getCourseListPage(@Valid @PathVariable int page) {
-		return sugangService.getCourseListPage(page);
+	public ResponseEntity<SugangResDto> getCourseListPage(@Valid @PathVariable int page) {
+		return ResponseEntity.status(HttpStatus.OK).body(sugangService.getCourseListPage(page));
 	}
 }

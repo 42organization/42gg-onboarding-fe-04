@@ -39,28 +39,20 @@ public class StudentController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	// 졸업자 명단 가져오기
-	// @GetMapping("/graduated")
-	// public ResponseEntity<StudentListResDto> getGraduates() {
-	// 	StudentListResDto a = studentService.getGraduates();
-	// 	return ResponseEntity.status(HttpStatus.OK).body(a);
-	//
-	// }
-
 	@GetMapping("/graduated")
-	public StudentListResDto getGraduates() {
-		return studentService.getGraduates();
+	public ResponseEntity<StudentListResDto> getGraduates() {
+		return ResponseEntity.status(HttpStatus.OK).body(studentService.getGraduates());
 	}
 
 	// 졸업자 명단 페이지 네이션
 	@GetMapping("/graduated/page={page}")
-	public StudentListResDto getGraduatesPage(@Valid @PathVariable int page) {
-		return studentService.getGraduatesPage(page);
+	public ResponseEntity<StudentListResDto> getGraduatesPage(@Valid @PathVariable int page) {
+		return ResponseEntity.status(HttpStatus.OK).body(studentService.getGraduatesPage(page));
 	}
 
 	// 현재 시간표 보기
 	@GetMapping("/schedule")
-	public CourseListResDto getSchedule(@Valid @RequestBody StudentReqDto studentReqDto) {
-		return studentService.getSchedule(studentReqDto);
+	public ResponseEntity<CourseListResDto> getSchedule(@Valid @RequestBody StudentReqDto studentReqDto) {
+		return ResponseEntity.status(HttpStatus.OK).body(studentService.getSchedule(studentReqDto));
 	}
 }

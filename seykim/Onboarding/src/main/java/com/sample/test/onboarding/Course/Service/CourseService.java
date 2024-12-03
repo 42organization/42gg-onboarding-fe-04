@@ -61,16 +61,15 @@ public class CourseService {
 			.orElseThrow(() -> new CustomException(ErrorResponse.COURSE_NOT_FOUND));
 		course.complete();
 
-		for (Student student : students) {
-			student.completeCourse(course.getGrade());
-			studentRepository.save(student);
-		}
-		for (Student student : students) {
+		students.forEach(student -> {
 			StudentCourse studentCourse = studentCourseRepository.findByStudentAndCourse(student, course)
 				.orElseThrow(() -> new CustomException(ErrorResponse.SUGANG_NOT_FOUND));
+			student.completeCourse(course.getGrade());
 			studentCourse.completeStudentCourse();
+			studentRepository.save(student);
 			studentCourseRepository.save(studentCourse);
-		}
+		});
+		
 		courseRepository.save(course);
 	}
 }
