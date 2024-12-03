@@ -1,2 +1,4 @@
-#DS_Store
+build/resources/main/application.yml
 .DS_Store
+application.yml
+build
