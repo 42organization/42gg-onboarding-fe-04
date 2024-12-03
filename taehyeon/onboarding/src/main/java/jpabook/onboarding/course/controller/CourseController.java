@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
 import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
 import jpabook.onboarding.course.controller.dto.response.CourseResponseDto;
@@ -20,30 +21,31 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/courses")
 @RequiredArgsConstructor
 public class CourseController {
-	private final CourseService service;
+	private final CourseService courseService;
 
 	@PostMapping
-	public ResponseEntity<CourseResponseDto> createCourse(@RequestBody final CourseRequestDto request) {
-		final CourseResponseDto response = service.create(request);
+	public ResponseEntity<CourseResponseDto> createCourse(@Valid @RequestBody final CourseRequestDto request) {
+		final CourseResponseDto response = courseService.create(request);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping("/{courseId}")
 	public ResponseEntity<CourseResponseDto> updateCourse(@PathVariable final Long courseId,
-		@RequestBody final CourseUpdateRequestDto request) {
-		final CourseResponseDto response = service.update(courseId, request);
+		@Valid @RequestBody final CourseUpdateRequestDto request) {
+		final CourseResponseDto response = courseService.update(courseId, request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PatchMapping("/delete/{courseId}")
 	public ResponseEntity<CourseResponseDto> deleteCourse(@PathVariable final Long courseId) {
-		final CourseResponseDto response = service.delete(courseId);
+		final CourseResponseDto response = courseService.delete(courseId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PatchMapping("/complete/{courseId}")
 	public ResponseEntity<CourseResponseDto> completeCourse(@PathVariable final Long courseId) {
-		final CourseResponseDto response = service.complete(courseId);
+		final CourseResponseDto response = courseService.complete(courseId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }
