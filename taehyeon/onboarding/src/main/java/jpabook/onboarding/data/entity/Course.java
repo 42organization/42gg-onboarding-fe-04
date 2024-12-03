@@ -56,12 +56,12 @@ public class Course {
 		this.status = CourseStatus.REGISTERED;
 	}
 
-	public Course(final CourseUpdateRequestDto request) {
-		this.professorName = request.getProfessorName();
-		this.name = request.getName();
+	public Course(String professorName, String name) {
+		this.professorName = professorName;
+		this.name = name;
 		this.count = 0;
-		this.grade = request.getGrade();
-		this.status = request.getStatus();
+		this.grade = 3;
+		this.status = CourseStatus.REGISTERED;
 	}
 
 	public void updateStatus(final CourseStatus status) {

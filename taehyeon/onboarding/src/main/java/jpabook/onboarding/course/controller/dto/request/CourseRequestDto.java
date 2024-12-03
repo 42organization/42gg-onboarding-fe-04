@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CourseRequestDto {
 	@NotBlank(message = "교수 이름은 필수입니다.")
 	private final String professorName;
