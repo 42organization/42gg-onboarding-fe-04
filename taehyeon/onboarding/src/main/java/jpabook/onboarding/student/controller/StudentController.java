@@ -1,8 +1,5 @@
 package jpabook.onboarding.student.controller;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
 import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
-import jpabook.onboarding.student.controller.dto.response.StudentScheduleResponseDto;
 import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
 import jpabook.onboarding.student.service.StudentService;
+import jpabook.onboarding.util.PageConfig;
+import jpabook.onboarding.util.dto.response.PageResponseDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,30 +25,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentController {
 
-	private final StudentService service;
+	private final StudentService studentService;
 
 	@PostMapping
-	public ResponseEntity<StudentResponseDto> createStudent(@RequestBody final StudentRequestDto request) {
-		final StudentResponseDto response = service.create(request);
+	public ResponseEntity<StudentResponseDto> createStudent(@Valid @RequestBody final StudentRequestDto request) {
+		final StudentResponseDto response = studentService.create(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PatchMapping("/drop")
-	public ResponseEntity<StudentResponseDto> dropStudent(@RequestBody final StudentRequestDto request) {
-		final StudentResponseDto response = service.drop(request);
+	public ResponseEntity<StudentResponseDto> dropStudent(@Valid @RequestBody final StudentRequestDto request) {
+		final StudentResponseDto response = studentService.drop(request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/graduated")
-	public ResponseEntity<Page<StudentResponseDto>> getGraduates(@RequestParam(defaultValue = "0") final int page) {
-		final PageRequest pageRequest = PageRequest.of(page, 5);
-		final Page<StudentResponseDto> response = service.getGraduates(pageRequest);
+	public ResponseEntity<PageResponseDto<StudentResponseDto>> getGraduates(
+		@RequestParam(defaultValue = "0") final int page) {
+		final PageRequest pageRequest = PageRequest.of(page, PageConfig.SIZE.getSize());
+		final PageResponseDto<StudentResponseDto> response = studentService.getGraduates(pageRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/schedule")
-	public ResponseEntity<StudentSchedulesResponseDto> getSchedule(@RequestBody final StudentRequestDto request) {
-		final StudentSchedulesResponseDto response = service.getSchedule(request);
+	public ResponseEntity<StudentSchedulesResponseDto> getSchedule(
+		@Valid @RequestBody final StudentRequestDto request) {
+		final StudentSchedulesResponseDto response = studentService.getSchedule(request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

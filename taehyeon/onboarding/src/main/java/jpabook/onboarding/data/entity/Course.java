@@ -13,10 +13,11 @@ import jakarta.persistence.Id;
 import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
 import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
 import jpabook.onboarding.data.status.CourseStatus;
+import jpabook.onboarding.exception.CustomError;
+import jpabook.onboarding.exception.CustomException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -47,7 +48,7 @@ public class Course {
 	@JdbcTypeCode(SqlTypes.VARCHAR)
 	private CourseStatus status;
 
-	public Course(CourseRequestDto request) {
+	public Course(final CourseRequestDto request) {
 		this.professorName = request.getProfessorName();
 		this.name = request.getName();
 		this.count = request.getCount();
@@ -55,12 +56,12 @@ public class Course {
 		this.status = CourseStatus.REGISTERED;
 	}
 
-	public Course(CourseUpdateRequestDto request) {
-		this.professorName = request.getProfessorName();
-		this.name = request.getName();
+	public Course(String professorName, String name) {
+		this.professorName = professorName;
+		this.name = name;
 		this.count = 0;
-		this.grade = request.getGrade();
-		this.status = request.getStatus();
+		this.grade = 3;
+		this.status = CourseStatus.REGISTERED;
 	}
 
 	public void updateStatus(final CourseStatus status) {
@@ -72,5 +73,12 @@ public class Course {
 		this.grade = request.getGrade();
 		this.professorName = request.getProfessorName();
 		this.status = request.getStatus();
+	}
+
+	public void addCount(final int count) {
+		if (this.count + count > MAX_COUNT) {
+			throw new CustomException(CustomError.BAD_REQUEST);
+		}
+		this.count += count;
 	}
 }
