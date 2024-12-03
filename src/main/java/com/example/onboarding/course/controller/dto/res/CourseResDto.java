@@ -15,7 +15,7 @@ public class CourseResDto {
 	private Integer courseGrade;
 	private CourseStatus courseStatus;
 
-	public static CourseResDto from(Course course){
+	public static CourseResDto from(Course course) {
 		return new CourseResDto(
 			course.getProfessorName(),
 			course.getCourseTitle(),

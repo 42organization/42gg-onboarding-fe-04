@@ -113,16 +113,23 @@ public class Course {
 	public void validate(CourseReqDto req) {
 		if (!statusManager.isStatusRegistered())
 			throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
-		if (req.getCurrentCount() > getMaxCourseCount())
+		int currentCount = req.getCurrentCount() != null ? req.getCurrentCount() : this.currentCount;
+		if (currentCount > getMaxCourseCount())
 			throw new CustomException(ErrorCode.COURSE_MAX_OVER);
 	}
 
 	public void updateInfo(CourseReqDto req) {
 		this.professorName = req.getProfessorName();
 		this.courseTitle = req.getCourseTitle();
-		this.currentCount = req.getCurrentCount();
-		this.courseGrade = req.getCourseGrade();
-		this.courseStatus = req.getCourseStatus();
+		if (req.getCurrentCount() != null) {
+			this.currentCount = req.getCurrentCount();
+		}
+		if (req.getCourseGrade() != null) {
+			this.courseGrade = req.getCourseGrade();
+		}
+		if (req.getCourseStatus() != null) {
+			statusManager.updateStatus(req.getCourseStatus());
+		}
 	}
 
 	public void delete() {
@@ -137,11 +144,11 @@ public class Course {
 		return enrollmentManager.exceedCapacity();
 	}
 
-	public void plusCurrentGrade() {
+	public void plusCurrentCount() {
 		enrollmentManager.addStudent();
 	}
 
-	public void minusCurrentGrade() {
+	public void minusCurrentCount() {
 		enrollmentManager.removeStudent();
 	}
 }

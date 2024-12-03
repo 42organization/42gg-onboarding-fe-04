@@ -59,13 +59,6 @@ public class StudentService {
 		List<Course> courseList = sugangs.stream()
 			.map(Sugang::getCourse)
 			.toList();
-		return new SugangResDto(
-			student.getStudentName(),
-			student.getStudentBirth(),
-			student.getCurrentGrade(),
-			student.getTotalGrade(),
-			student.getStudentStatus(),
-			courseList
-		);
+		return SugangResDto.from(student, courseList);
 	}
 }

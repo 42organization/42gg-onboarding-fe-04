@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,22 +28,68 @@ public class Sugang {
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "student_id", nullable = false)
+	@JoinColumn
 	private Student student;
 
 	@ManyToOne
-	@JoinColumn(name = "course_id", nullable = false)
+	@JoinColumn
 	private Course course;
 
+	@Column
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private SugangStatus status;
 
-	public Sugang(Student student, Course course) {
+	private class StatusManager {
+		private void updateStatus(SugangStatus newStatus) {
+			if (status == SugangStatus.CANCELED) {
+				throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
+			}
+			status = newStatus;
+		}
+
+		private boolean isEnrolled() {
+			return status == SugangStatus.ENROLLED;
+		}
+	}
+
+	private class EnrollmentValidator {
+		void validateEnrollment() {
+			validStudentStatus();
+			validCourseStatus();
+		}
+
+		private void validStudentStatus() {
+			if (!(student.canRegister()))
+				throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
+		}
+
+		private void validCourseStatus() {
+			if (course.exceedCapacity())
+				throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
+		}
+	}
+
+	@Transient
+	private final StatusManager statusManager = new StatusManager();
+	@Transient
+	private final EnrollmentValidator enrollmentValidator = new EnrollmentValidator();
+
+	private Sugang(Student student, Course course) {
 		this.status = SugangStatus.REQUESTING;
-		validEnroll(student, course);
 		this.student = student;
 		this.course = course;
+		enrollmentValidator.validateEnrollment();
+		this.status = SugangStatus.ENROLLED;
+		processEnrollment();
+	}
+
+	public static Sugang of(Student student, Course course) {
+		return new Sugang(student, course);
+	}
+
+	private void processEnrollment() {
+		student.addCredit(course.getCourseGrade());
+		course.plusCurrentCount();
 		this.status = SugangStatus.ENROLLED;
 	}
 
@@ -53,12 +100,12 @@ public class Sugang {
 		this.status = status;
 	}
 
-	private void validEnroll(Student student, Course course) {
-		if (student.isGraduated())
+	public void cancel() {
+		if (!statusManager.isEnrolled())
 			throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
-		if (course.exceedCapacity())
-			throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
-		student.getGradeCredit(course.getCourseGrade());
-		course.plusCurrentGrade(); // TODO: valid는 valid만 ! -  따로 기능 쓰기
+		student.removeCredit(course.getCourseGrade());
+		course.minusCurrentCount();
+		this.status = SugangStatus.CANCELED;
 	}
+
 }

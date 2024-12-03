@@ -1,5 +1,9 @@
 package com.example.onboarding.sugang.controller.dto.req;
 
+import java.time.LocalDate;
+
+import com.example.onboarding.alldata.entity.Course;
+import com.example.onboarding.alldata.entity.Student;
 import com.example.onboarding.alldata.entity.Sugang;
 
 import jakarta.validation.constraints.NotBlank;
@@ -15,5 +19,9 @@ public class SugangReqDto {
 	@NotBlank
 	private String studentName;
 	@NotNull
-	private Integer studentBirth;
+	private LocalDate studentBirth;
+
+	public Sugang toSugang(Student student, Course course) {
+		return Sugang.of(student, course);
+	}
 }

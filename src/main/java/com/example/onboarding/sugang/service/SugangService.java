@@ -13,7 +13,6 @@ import com.example.onboarding.alldata.repository.CourseRepository;
 import com.example.onboarding.alldata.repository.StudentRepository;
 import com.example.onboarding.alldata.repository.SugangRepository;
 import com.example.onboarding.alldata.status.CourseStatus;
-import com.example.onboarding.alldata.status.SugangStatus;
 import com.example.onboarding.course.controller.dto.res.CourseResDto;
 import com.example.onboarding.sugang.controller.dto.req.SugangReqDto;
 
@@ -34,14 +33,19 @@ public class SugangService {
 			new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 		Course course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
-		if (sugangRepository.findByStudent(student).stream()
-			.map(Sugang::getCourse)
-			.anyMatch(
-				courseTmp -> courseTmp.getId() == courseId && courseTmp.getCourseStatus() == CourseStatus.REGISTERED)
-		) {
-			throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
-		}
-		Sugang sugang = new Sugang(student, course);
+		// if (sugangRepository.findByStudent(student).stream()
+		// 	.map(Sugang::getCourse)
+		// 	.anyMatch(
+		// 		courseTmp -> courseTmp.getId() == courseId && courseTmp.getCourseStatus() == CourseStatus.REGISTERED)
+		// ) {
+		// 	throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
+		// }
+		sugangRepository.findByStudentAndCourseAndCourse_CourseStatus(
+				student, course, CourseStatus.REGISTERED)
+			.ifPresent(sugang -> {
+				throw new CustomException(ErrorCode.SUGANG_NOT_REGISTERD);
+			});
+		Sugang sugang = req.toSugang(student, course);
 		sugangRepository.save(sugang);
 	}
 
@@ -53,8 +57,7 @@ public class SugangService {
 			.orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
 		Sugang sugang = sugangRepository.findByStudentAndCourse(student, course)
 			.orElseThrow(() -> new CustomException(ErrorCode.SUGANG_NOT_FOUND));
-		sugang.updateSugangStatus(SugangStatus.CANCELED);
-		course.minusCurrentGrade();
+		sugang.cancel();
 	}
 
 	public Page<CourseResDto> getCourseList(PageRequest pageRequest) {

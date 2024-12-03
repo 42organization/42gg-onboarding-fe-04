@@ -1,11 +1,14 @@
 package com.example.onboarding.alldata.entity;
 
+import java.time.LocalDate;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import com.example.onboarding.alldata.exception.CustomException;
 import com.example.onboarding.alldata.exception.ErrorCode;
 import com.example.onboarding.alldata.status.StudentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,9 +17,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,29 +31,29 @@ public class Student {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "student_name", nullable = false, length = 50)
-	@NotBlank(message = "학생 이름은 필수입니다") // 데이터베이스에 접근
-	@Pattern(regexp = "^[가-힣a-zA-Z\\s]+$", message = "학생 이름은 한글과 영문만 가능합니다")    // TODO: 수정!
+	@Column
+	@NotBlank
 	private String studentName;
 
-	@Column(name = "student_birth", nullable = false)
-	@NotNull(message = "학생 생년월일은 필수입니다") // TODO: Integer -> Date로 바꾸기
-	private Integer studentBirth;
+	@Column
+	@NotNull
+	@JsonFormat(pattern = "yyyyMMdd")
+	private LocalDate studentBirth;
 
-	@Column(name = "current_grade")
+	@Column
 	private int currentGrade;
 
-	@Column(name = "total_grade")
+	@Column
 	private int totalGrade;
 
-	@Column(name = "student_status")
-	@Enumerated(EnumType.STRING) // 값으로 string을 넣겠다
-	@JdbcTypeCode(SqlTypes.VARCHAR) // sql colume 값에 넣을 데이터가 varchar
-	private StudentStatus studentStatus; // 학생 상태
+	@Column
+	@Enumerated(EnumType.STRING)
+	@JdbcTypeCode(SqlTypes.VARCHAR)
+	private StudentStatus studentStatus;
 
 	/*private*/
-	private Student(String studentName, Integer studentBirth,
-		Integer currentGrade, Integer totalGrade, StudentStatus studentStatus) {
+	private Student(String studentName, LocalDate studentBirth, int currentGrade, int totalGrade,
+		StudentStatus studentStatus) {
 		this.studentName = studentName;
 		this.studentBirth = studentBirth;
 		this.currentGrade = currentGrade;
@@ -58,53 +61,73 @@ public class Student {
 		this.studentStatus = studentStatus;
 	}
 
-	/**
-	 * new Student(sn, sb);
-	 * Student.of(sn,sb);
-	 */
-	public static Student of(
-		String studentName,
-		Integer studentBirth,
-		Integer currentGrade,
-		Integer totalGrade,
-		StudentStatus studentStatus
-	) {
-		return new Student(
-			studentName,
-			studentBirth,
-			currentGrade != null ? currentGrade : 0,
-			totalGrade != null ? totalGrade : 0,
-			studentStatus != null ? studentStatus : StudentStatus.ACTIVE
-		);
+	public static Student of(String studentName, LocalDate studentBirth, Integer currentGrade, Integer totalGrade,
+		StudentStatus studentStatus) {
+		return new Student(studentName, studentBirth, currentGrade != null ? currentGrade : 0,
+			totalGrade != null ? totalGrade : 0, studentStatus != null ? studentStatus : StudentStatus.ACTIVE);
 	}
 
-	public static Student of(String studentName, Integer studentBirth) {
-		return Student.of(studentName, studentBirth, null, null, null);
+	private class StatusManager {
+		private void updateStatus(StudentStatus newStatus) {
+			if (studentStatus != newStatus) {
+				validateStatus();
+				studentStatus = newStatus;
+			}
+		}
+
+		private void validateStatus() {
+			if (!isStatusActive())
+				throw new CustomException(ErrorCode.STUDENT_NOT_FOUND);
+		}
+
+		private boolean isStatusActive() {
+			return studentStatus == StudentStatus.ACTIVE && totalGrade <= 60;
+		}
 	}
+
+	private class GradeManager {
+		void addCredit(int credit) {
+			validateCreditAdd(credit);
+			currentGrade += credit;
+			totalGrade += credit;
+			if (totalGrade >= 60) {
+				statusManager.updateStatus(StudentStatus.GRADUATED);
+			}
+		}
+
+		void removeCredit(int credit) {
+			if (currentGrade >= credit) {
+				currentGrade -= credit;
+				totalGrade -= credit;
+			}
+		}
+
+		void validateCreditAdd(int credit) {
+			if (currentGrade + credit > 15)
+				throw new CustomException(ErrorCode.STUDENT_OVER_GRADE);
+			if (totalGrade + credit > 60)
+				throw new CustomException(ErrorCode.STUDENT_OVER_TOTALGRADE);
+		}
+	}
+
+	@Transient
+	private final StatusManager statusManager = new StatusManager();
+	@Transient
+	private final GradeManager gradeManager = new GradeManager();
 
 	public void drop() {
-		if (getStudentStatus() != StudentStatus.ACTIVE)
-			throw new CustomException(ErrorCode.STUDENT_NOT_CHANGE);
-		this.studentStatus = StudentStatus.DROPOUT;
+		statusManager.updateStatus(StudentStatus.DROPOUT);
 	}
 
-	public boolean isGraduated() {
-		return getTotalGrade() >= 60;
+	public boolean canRegister() {
+		return statusManager.isStatusActive();
 	}
 
-	public void getGradeCredit(int credit) {
-		if (this.currentGrade + credit > 15)
-			throw new IllegalStateException("한 학기 최대 수강가능 학점을 초과했습니다");
-		if (this.currentGrade + this.totalGrade + credit > 60)
-			throw new IllegalStateException("총 이수 가능 학점을 초과했습니다");
-		this.currentGrade += credit;
-		this.totalGrade += credit;
-		if (totalGrade == 60)
-			this.studentStatus = StudentStatus.GRADUATED;
+	public void addCredit(int credit) {
+		gradeManager.addCredit(credit);
 	}
 
-	public void removeGradeCredit(int credit) {
-		if (this.currentGrade >= credit)
-			currentGrade -= credit;
+	public void removeCredit(int credit) {
+		gradeManager.removeCredit(credit);
 	}
 }

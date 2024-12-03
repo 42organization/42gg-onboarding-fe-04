@@ -1,8 +1,12 @@
 package com.example.onboarding.student.controller.dto.req;
 
+import java.time.LocalDate;
+
 import com.example.onboarding.alldata.entity.Student;
 import com.example.onboarding.alldata.status.StudentStatus;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentReqDto {
-	// TODO: valid 추가하기
+	@NotBlank
 	private String studentName;
-	private Integer studentBirth;
+	@NotNull
+	private LocalDate studentBirth;
 	private Integer currentGrade;
 	private Integer totalGrade;
 	private StudentStatus studentStatus;
