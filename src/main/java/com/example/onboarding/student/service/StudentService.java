@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.onboarding.alldata.entity.Course;
 import com.example.onboarding.alldata.entity.Student;
@@ -18,16 +19,16 @@ import com.example.onboarding.student.controller.dto.req.StudentReqDto;
 import com.example.onboarding.sugang.controller.dto.req.SugangReqDto;
 import com.example.onboarding.sugang.controller.dto.res.SugangResDto;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StudentService {
 	private final StudentRepository studentRepository;
 	private final SugangRepository sugangRepository;
 
+	@Transactional
 	public Student create(StudentReqDto req) {
 		if (studentRepository.existsByStudentNameAndStudentBirth(
 			req.getStudentName(),
@@ -38,6 +39,7 @@ public class StudentService {
 		return studentRepository.save(student);
 	}
 
+	@Transactional
 	public void drop(StudentReqDto req) {
 		Student student = studentRepository.findByStudentNameAndStudentBirth(
 			req.getStudentName(),

@@ -1,6 +1,7 @@
 package com.example.onboarding.course.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.onboarding.alldata.entity.Course;
 import com.example.onboarding.alldata.exception.CustomException;
@@ -8,11 +9,11 @@ import com.example.onboarding.alldata.exception.ErrorCode;
 import com.example.onboarding.alldata.repository.CourseRepository;
 import com.example.onboarding.course.controller.dto.req.CourseReqDto;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CourseService {
 	private final CourseRepository courseRepository;
 
