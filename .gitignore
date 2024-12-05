@@ -9,3 +9,5 @@ build.gradle
 .gradle
 *.md
 settings.gradle
+.build/
+build/
