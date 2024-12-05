@@ -59,8 +59,19 @@ public class Course {
 
 	public static Course of(String professorName, String courseTitle, Integer currentCount, Integer courseGrade,
 		CourseStatus courseStatus) {
-		return new Course(professorName, courseTitle, currentCount != null ? currentCount : 0,
-			courseGrade != null ? courseGrade : 3, courseStatus != null ? courseStatus : CourseStatus.REGISTERED);
+		int resolvedCount = currentCount;
+		if (currentCount == null) {
+			resolvedCount = 0;
+		}
+		int resolvedGrade = courseGrade;
+		if (courseGrade == null) {
+			resolvedGrade = 3;
+		}
+		CourseStatus resolvedStatus = courseStatus;
+		if (courseStatus == null) {
+			resolvedStatus = CourseStatus.REGISTERED;
+		}
+		return new Course(professorName, courseTitle, resolvedCount, resolvedGrade, resolvedStatus);
 	}
 
 	private class StatusManager {

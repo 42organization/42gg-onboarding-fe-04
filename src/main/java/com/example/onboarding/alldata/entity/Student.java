@@ -27,6 +27,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Student {
+	private static final int MAX_TATAL_GRADE = 60;
+	private static final int MAX_SEMESTER_GRADE = 15;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -37,7 +40,7 @@ public class Student {
 
 	@Column
 	@NotNull
-	@JsonFormat(pattern = "yyyyMMdd")
+	@JsonFormat(pattern = "yyyyMMdd") //TODO: 패턴말고 exceptionHandler로 오류잡기
 	private LocalDate studentBirth;
 
 	@Column
@@ -63,8 +66,22 @@ public class Student {
 
 	public static Student of(String studentName, LocalDate studentBirth, Integer currentGrade, Integer totalGrade,
 		StudentStatus studentStatus) {
-		return new Student(studentName, studentBirth, currentGrade != null ? currentGrade : 0,
-			totalGrade != null ? totalGrade : 0, studentStatus != null ? studentStatus : StudentStatus.ACTIVE);
+		int resolvedCurrentGrade = currentGrade;
+		if (currentGrade == null) {
+			resolvedCurrentGrade = 0;
+		}
+
+		int resolvedTotalGrade = totalGrade;
+		if (totalGrade == null) {
+			resolvedTotalGrade = 0;
+		}
+
+		StudentStatus resolvedStatus = studentStatus;
+		if (studentStatus == null) {
+			resolvedStatus = StudentStatus.ACTIVE;
+		}
+
+		return new Student(studentName, studentBirth, resolvedCurrentGrade, resolvedTotalGrade, resolvedStatus);
 	}
 
 	private class StatusManager {
@@ -81,7 +98,7 @@ public class Student {
 		}
 
 		private boolean isStatusActive() {
-			return studentStatus == StudentStatus.ACTIVE && totalGrade <= 60;
+			return studentStatus == StudentStatus.ACTIVE && totalGrade <= MAX_TATAL_GRADE;
 		}
 	}
 
@@ -90,7 +107,7 @@ public class Student {
 			validateCreditAdd(credit);
 			currentGrade += credit;
 			totalGrade += credit;
-			if (totalGrade >= 60) {
+			if (totalGrade >= MAX_TATAL_GRADE) {
 				statusManager.updateStatus(StudentStatus.GRADUATED);
 			}
 		}
@@ -103,9 +120,9 @@ public class Student {
 		}
 
 		void validateCreditAdd(int credit) {
-			if (currentGrade + credit > 15)
+			if (currentGrade + credit > MAX_SEMESTER_GRADE)
 				throw new CustomException(ErrorCode.STUDENT_OVER_GRADE);
-			if (totalGrade + credit > 60)
+			if (totalGrade + credit > MAX_TATAL_GRADE)
 				throw new CustomException(ErrorCode.STUDENT_OVER_TOTALGRADE);
 		}
 	}

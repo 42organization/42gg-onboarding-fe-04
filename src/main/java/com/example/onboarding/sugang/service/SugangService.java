@@ -60,8 +60,3 @@ public class SugangService {
 		return courseList.map(CourseResDto::from);
 	}
 }
-
-
-/*
- * if => ifPresent, isPresent
- * */

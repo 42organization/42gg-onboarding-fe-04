@@ -1,4 +1,7 @@
-build/resources/main/application.yml
+/build/
 .DS_Store
 application.yml
-build
+*.yml
+.gradle/
+/gradle/
+build.gradle
