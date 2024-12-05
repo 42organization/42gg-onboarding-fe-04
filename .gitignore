@@ -5,3 +5,7 @@ application.yml
 .gradle/
 /gradle/
 build.gradle
+.build
+.gradle
+*.md
+settings.gradle
