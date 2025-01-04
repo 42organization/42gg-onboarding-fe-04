@@ -55,5 +55,3 @@ public class StudentController {
 		return ResponseEntity.ok(schedules);
 	}
 }
-
-//TODO: error handler만들기!

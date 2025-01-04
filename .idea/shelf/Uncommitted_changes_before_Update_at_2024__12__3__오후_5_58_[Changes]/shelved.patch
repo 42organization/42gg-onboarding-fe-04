@@ -1,0 +1,4607 @@
+Index: taehyeon/1-2일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/1-2일차.md b/taehyeon/1-2일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138289)
++++ b/taehyeon/1-2일차.md	(date 1733216138289)
+@@ -0,0 +1,333 @@
++# 1일차 
++
++## HTTP METHOD
++
++### GET(read)
++
++- 리소스 조회 메서드
++- 쿼리스트링을 통해 데이터를 전달
++    - ex) localhost/members/1?username=inpa&height=200
++- 쿼리스트링 외에 메시지 바디를 사용해서 데이터를 전달할 수 있지만 서버에서 따로 구성해야 되기 때문에 지원하지않는 곳이 많아 권장하지 않음
++- POST를 사용해도 되지만 캐싱이 불가능해서 GET을 사용
++
++### POST(create)
++
++- 전달한 데이터 처리/생성 요청 메서드
++- 메시지 바디를 통해 데이터를 전달
++- 만약 데이터 조회를 위해 JSON으로 데이터를 넘겨야 하는 경우 POST 사용
++
++### PUT(update)
++
++- 리소스를 수정하는 메서드
++- 요청 메시지에 리소스가 있으면 덮어쓰고, 엎으면 새로 생성
++    - ex) /member/100
++- 데이터를 대체해야 하기 때문에, 리소스의 구체적인 경로를 보내줘야 함
++    - ex) POST /members 멥버 새로 추가 PUT /members/1 1번 멥버 수정
++
++### PATCH(update)
++
++- 리소스의 부분을 수정하는 메서드
++- 만약 PATCH를 지원하지 않는 서버라면 POST 사용
++
++### DELETE(delete)
++
++- 리소스를 제거하는 메서드
++
++### HEAD
++
++- GET과 동일하지만 서버에서 Body를 Return 하지 않음
++- 응답의 상태 코드만 확인하는 경우 Resource를 받지 않고 오직 찾기만 원할때 사용(검사용)
++- 서버의 응답 헤더를 확인해서 Resource가 수정 되었는지 확인 가능
++
++### TRACE
++
++- 검사용 메서드
++- 서버에 도달 했을 때의 최종 패킷의 요청 패킷 내용을 받을 수 있음
++- 요청의 최종 수신자는 반드시 송신자에게 수신한 메시지와 200을 Body로 보냄
++- 최초 Clinet의 요철에는 Body가 포함될 수 없음
++
++### OPTION
++
++- 예비 요청에 사용되는 메서드
++    - 예비 요청이란 본 요청을 하기 전에 안전한지 미리 검사하는 것
++- 서버의 지원 가능한 HTTP 메서드와 출처를 받아 CORS 정책을 검사함
++
++#### CORS(Cross Origin Resource Sharing)
++
++- 교차 출처 리소스 공유 정책으로 다른 출처의 리소스 공유에 대한 허용/비허용 정책
++- 출처는 프로토콜,도메인,포트만 비교
++- 기본 동작 과정
++    1. 클라이언트가 HTTP요청(예비 요청) 헤더에 Origin을 담아 서버에 전달
++    2. 서버가 응답헤더에 Access-Control-Allow-Origin을 담아 클라이언트에 전달
++    3. 클라이언트가 Origin과 Access-Control-Allow-Origin를 비교
++- 프록시 서버를 사용해서 해결 가능
++
++## HTTP 상태 코드
++
++### 1XX(정보 제공)
++
++- 임시 응답으로 현재 클라이언트의 요청까지는 처리되었으니 계속 진행하라는 의미(HTTP 1.1 버전부터 추가)
++
++### 2XX(성공)
++
++- 클라이언트의 요청이 서버에서 성공적으로 처리
++- *200 성공*
++- *201 요청이 처리되어 리소가 생성*
++- *202 요청은 접수하였지만, 처리가 완료되지 않음*
++
++### 3XX(리다이렉션)
++
++- 완전한 처리를 위해서 추가 동작이 필요한 경우
++- 주로 서버의 주소 또는 요청한 URL의 웹 문서가 이동되었으니 그 주소로 다시 시도하라는 의미
++- *301 새로운 URL로 영구 이동*
++- *303 다른 위치로 요청*
++- 304 마지막 요청이후 페이지가 수정되지 않음
++- *307 임시로 리다이렉션 요청*
++
++### 4XX(클라이언트 에러)
++
++- 없는 페이지를 요청하는 등 클라이언트의 요청 메시지 내용이 잘못된 경우를 의미
++- *400 잘못된 요청*
++- *401 지정한 리소스에 대한 권환이 없음*
++- *403 401 인증 처리 이외 엑세스가 금지됨*
++- *404 찾을 수 없음*
++
++### 5XX(서버 에러)
++
++- 서버 사정으로 메시지 처리에 문제가 발생한 경우
++- 서버의 부하, DB 처리 과정 오류, 서버에세 Exception이 발생하는 경우
++- *500 서버 내부 오류*
++- *501 구현되지 않음*
++- *502 게이트웨이 또는 프록시 서버가 잘못됨*
++
++## HTTP 헤더
++
++### 공통 헤더
++
++- 요청 및 응답 메시지 모두에서 사용 가능한 기본적인 헤더
++- Date HTTP 메시지를 생성한 일시
++- Connetion 클라언트와 서버 간 연결에 대한 옵션 설정
++- Cache-Control 쿠키 캐시 관련
++
++### 엔티티 관련 헤더
++
++- 요청 및 응답 메시지 모두에서 사용 가능한 Entity에 대한 설명 헤더
++- Content-Type 해당 개체에 포함되는 미디어 타입 정보
++- Content-Language 헤더 개체와 가장 잘 어울리는 언어
++- Content-Encoding 해당 개체 데이터의 압축 방식
++- Content-Length 해당 개체의 바이트 길이 또는 크기
++- Content-Location 해당 개체의 실제 위치
++- Content-Disposition 응답 Body를 브라우저가 어떻게 표시해야 하는지
++- Content-Disposition 외부 파일을 불러오는 경우, 차단할 소스와 불러올 소스 명시
++- Location 리다이렉트 된 때에 이동된 주소, 또는 새로 생성된 주소를 명시
++- Last-Modified 리소스를 마지막으로 갱신한 일시
++- Transfer-Encoding 동적으로 생서되어 Body의 길이를 모르는 경우 조금씩 전송 가능한 청크
++
++### 요청 헤더
++
++- Host 요청하는 호스트명과 포트번호(필수)
++- User-Agent 클라이언트 소프트웨어 정보
++- From 클라이언트 사용자 메일 주소
++- Cookie 서버에 의해 클라이언트에 설정된 쿠키 정보
++- Referer 바로 직전에 머물었던 링크 주소
++- If-Modified-Since 제시한 일시 이후로만 변경된 리소스 취득 요청
++- Authorization 인증 토큰을 서버로 보냄
++
++
++### 응답 헤더 캐시/쿠키 관련 헤더
++
++- 특정 유형의 HTTP 요청이나 특정 HTTP 헤더를 수신했을 때, 이에 응답
++- Server 서버 소프트웨어 정보
++- Set-Cookie 서버측에서 클라인어트에게 세션 쿠키 정보를 설정 (캐시/쿠키)
++- Expires 응답 컨텐츠가 언제 만료되는지 나타냄 (캐시/쿠키)
++- Age 캐시 응답. max-age 시간 내에서 얼마나 흘렀는지 초 단위로 알려줌 (캐시/쿠키)
++- ETag HTTP 컨텐츠가 바뀌었는지를 검사 (캐시/쿠키)
++- Allow 서버 측에서 지원 가능한 HTTP메서드의 리스트
++- Access-Control-Allow-Origin 요청을 보내는 프론트 주소와 받는 백엔드 주소가 다르면 CORS에러 발생
++
++## REST API
++
++- API 설계에 대한 표준이 없어서 구축과 디버깅이 어려워 개발됨
++- HTTP 프로토콜을 기반으로 하는 웹 통신을 위한 아키텍처 스타일 
++- REST(Representational State Transfer) 자원을 이름으로 구분하여 해당 자원의 상태를 주고 받는 모든 것을 의미
++
++### 주요 특징
++
++- 어떤 플랫폼이나 언어를 사용하더라도 HTTP 프로토콜을 통해 통신이 가능
++- API 메세지만으로도 의도를 명확하게 파악 가능
++- 서버가 클라이언트의 상태를 저장하지 않아 서버 확장이 용이하며 독립적인 개발 가능
++- 로드 밸런서, 캐시등의 중간 계층을 추가하여 시스템을 확장 가능
++- 필요한 리소스만 요청하고 응답받아 불필요한 데이터 전송 방지
++- HTTP 캐싱 기능을 활용하여 응답시간 개선과 서버 부하를 줄임
++- HTTP의 SSL/TLS를 통한 암호화 지원
++- 헤더나 토근을 통한 접근 제어 가능
++
++### 단점
++
++- HTTP 메서드에 제한적
++- 공식적인 표준의 부재로 인한 일광성 있는 API 설계 어려움
++
++### RESTFUL
++
++- REST의 특징을 따라가는 것(얼마나 REST API를 잘 지키냐)
++- 클라이언트와 서버가 분리되어 독립적으로 개발이 가능해야 함
++- 각 요청은 독립적으로 모든 요청에는 요청을 처리하는데 필요한 모든 정보가 포함되어야 함
++
++## 쿠키와 세션, JWT토큰
++
++### 쿠키
++
++- 서버가 클라이언트의 웹 브라우저에 저장하는 작은 데이터
++- 최대 4KB까지의 문자열 데이터 저장 가능
++- 클라이언트 측에 저장
++- 만료기간 설정 가능
++- 도메인 별로 저장됨
++- HTTP 헤더에 포함되어 전송
++
++### 세션
++
++- 서버 측에서 유지되는 사용자별 상태 정보
++- 세션 ID를 통해 클라이언트 식별
++- 서버 측에 저장
++- 브라우저 종료 시 삭제
++- 보안성이 쿠키보다 높음
++- 서버 리소스 사용
++
++### 쿠키와 세션 필요 이유
++
++- HTTP 프로토콜의 특성인 비연결성과 무상태성을 보안하기 위해 필요
++- 서버가 클라이언트를 식별하고 이전 요청과의 연속성을 유지할 수 있음
++- 사용자별 맞춤 서비스 제공이 가능
++- 로그인 상태 유지, 장바구니 등의 정보를 관리할 수 있음
++- 쿠키를 사용하면 클라이언트 측에서 정보를 저장하여 서버 부하를 줄일 수 있음
++- 세션을 통해 중요 정보를 서버에서 안전하게 관리
++
++### JWT(JSON Web Token)
++
++- 정보를 안전하게 JSON 객체로 전송하기 위한 독립적인 토큰
++
++#### 기존 세션 방식의 문제 해결
++
++- 별도의 세션 저장소가 필요 없어서 서버 확장이 쉬움
++- 사용자 인증을 위한 추가 리소스 비용 감소
++
++#### 구조
++
++- 헤더 : 토큰 유형과 사용된 암호화 알고리즘 정보 포함
++- 페이로드 : 사용자 정보 및 권한 정보 포함, 토큰 발급/만료 시간 등의 클레임 정보
++- 서명 : 토큰의 유효성을 검증하기 위한 서명
++
++#### 작동 방식
++
++1. 클라이언트가 로그인 요청
++2. 서버가 인증 정보를 확인
++3. 인증 성공시 JWT 토큰 생성
++4. 생성된 토큰을 클라이언트에게 반환
++5. 이후 클라이언트는 모든 API 요청시 JWT를 Authorization 헤더에 포함
++6. 서버는 JWT 검증 필터를 통해 토큰 유효성 검사
++7. 검증 성공 시 요청한 리소스에 접근 허용
++
++
++#### 단점
++
++- Base64 인코딩으로 인한 데이터 크기 증가
++- 토큰 탈취 시 만료 전까지 대체 어려움
++- 중요 정보를 페이로드에 저장할 수 없음
++
++## MVC, MVC2 (Mode View Controller)
++
++### MVC1 아키텍처
++
++- JSP 페이지가 Controller와 View 역활을 모두 담당
++- 하나의 JSP 페이지 내에서 비즈니스 로직과 화면 표시를 모두 처리
++- Model은 JavaBeans를 통해 데이터 처리
++
++#### 장점
++
++- 구현이 단순하고 빠른 개발 가능
++- 소규모 프로젝트에 적합
++
++#### 단점
++
++- 코드의 가독성이 떨어짐
++- 유지보수가 어려움
++- 컴포넌트 재사용성이 낮음
++
++### MVC2 아키텍처
++
++- Controller(Servlet), View, Model이 명확히 분리됨
++- Controller가 모든 요청을 처리하고 Model과 View를 조정
++- View는 순수하게 화면 표시만 담당
++- UI 와 비즈니스 로직이 완전히 분리
++- 각 계층이 독립적으로 개발/수정 가능
++- 컴포넌트의 재사용이 용이
++
++## HTTPS
++
++- HTTPS는 HTTP의 보안 확장 버전으로 SSL/TLS 프로토콜을 통해 암호환된 통신을 제공
++
++### 주요 기능
++
++- 모든 통신 내용을 SSL/TLS 프로토콜로 암호화
++- 전송 중에 데이터 변조 방지
++- SSL 인증서를 통한 서버 신원 확인
++
++### 작동 방식
++
++1. 초기 연결 설정 (HandShking)
++     - 클라이언트가 서버에 연결 시도
++     - 서버가 SSL 인증키 전달
++     - 클라이언트가 인증서 유효성 검증
++2. 세션키 교환
++    - 클라이언트가 세션키 생성
++    - 서버의 공개키로 세션키를 암호화하여 전송
++    - 서버가 개인키로 복호화하여 세션키 획득
++3. 데이터 통신
++    - 공유된 세션키를 사용하여 데이터 암호화/복호화
++    - 양방향 암호화된 통신 수행
++
++### HTTPS 적용을 위해 웹 서버를 사용하는 이유
++
++- 웹 서버를 사용하면 애플리케이션 서버는 비즈니스 로직에만 집중할 수 있고, 보안과 성능 최적화는 웹 서버가 전문적으로 처리할 수 있음 이로인해 전체 시스템의 효율성과 안정성을 높이는 결과를 가져옴
++
++## DNS(Domain Name System) 서버
++
++- DNS 서버는 도메인 이름을 IP주소로 변환해주는 인터넷의 전화번호후 역활을 하는 시스템
++    - ex) www.example.com -> 192.158.1.38
++
++### 필요 이유
++
++- 복잡한 IP주소 대신 기억하기 쉬운 도메인 사용
++- DNS 캐싱을 통한 빠른 웹사이트 접근
++- 서버 부하 분산
++- 네트워크 트래픽 최적화
++- IP 주소가 변경되어도 도메인 이름으로 유지 가능
++
++### DNS 서버 계층
++
++1. LOCAL DNS SERVER
++2. ROOT DNS SERVER
++3. TLD(Top Level Domain) SERVER
++4. Authoritative DNS Server
++
++### DNS 캐싱
++
++1. 브라우저 캐시
++2. 운영체제 캐시
++3. ISP 캐시
++
++## CI/CD (Continuous Integration/Continuous Delivery)
++
++- 애플리케이션의 개발 단계를 자동화하여 애플리케이션을 더욱 짧은 주기로 고객에게 제공하는 방법입니다.
++
++### CI
++
++- 개발자들이 코드 변경사항을 중앙 레포지토리에 자주 병합
++- 자동화된 빌드 및 테스트 수행
++- 코드 품질 유지 및 버그 조기 발견
++
++### CD
++
++- 테스트를 통과한 코드를 자동으로 배포 준비
++- 포로덕션 환경으로 자동 배포
++- 안정적이고 빠른 릴리스 가능
+\ No newline at end of file
+Index: taehyeon/2-3일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/2-3일차.md b/taehyeon/2-3일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138289)
++++ b/taehyeon/2-3일차.md	(date 1733216138289)
+@@ -0,0 +1,186 @@
++# 2일차
++
++## RDB (Relational Database)
++
++- 데이터를 2차원 테이블 형태로 표현하는 데이터베이스
++- 테이블 간의 관계를 통해 데이터를 구조화
++- 데이터 간의 상관관계에서 개체간의 관계를 표현
++
++### 주요 특징
++
++- 테이블은 행(records)과 열(columns)로 구성
++- 각 테이블은 고유한 기본키(Primary Key) 보유
++- 테이블 간 관계 설정 가능
++- 데이터의 독립성이 높음
++
++## RDBMS (Relational Database Management System)
++
++- RDB를 생성,수정,관리할 수 있는 소프트웨어 시스템
++- SQL을 사용하여 데이터 베이스와 상호작용
++
++### 주요 특징
++
++- 다중 사용자 지원
++- 데이터 무결성 (ACID)
++- 사용자 권한 관리, 데이터 접근 제어
++
++## RDB vs NoSQL
++
++### RDB
++
++- 미리 정의된 스키마가 필요
++- 테이블 형태의 정형화된 구조
++- 데이터 중복이 최소화된 구조
++- 테이블 간의 관계 정의
++- 수직정 확장 위주
++- 복잡한 쿼리와 조인 연산 가능
++- ACID 특성 보장
++- 데이터 일관성 강조
++
++#### 예시
++
++- 금융, 회계등 데이터 정확성이 중요한 시스템
++- 복잡한 트랜잭션이 필요한 경우
++- 데이터 구조가 명확하고 변경이 적은 경우
++
++### NoSQL
++
++- 유연한 스키마
++- 다양한 데이터 모델 지원(키-값)
++- 데이터 중복 허용
++- 테이블 간 관계 정의 없음
++- 수평적 확장 가능
++- 단순 쿼리에 최적화
++- 높은 처리량과 빠른 응답 속도
++- 유연성과 확장성 강조
++
++#### 예시
++
++- 대용량 데이터 처리
++- 빠른 읽기/쓰기가 필요한 실시간 애플리케이션
++- 확장성이 중요한 서비스
++
++## 테이블,컬럼,스키마
++
++### 테이블
++
++- 데이터를 저장하는 기본 단위
++- 행(Row)과 열(Column)로 구성된 2차원 구조
++
++#### 구성요소
++
++- 행 (Row)
++    - 하나의 완전한 데이터 레코드
++    - 엔티티의 특정 인스턴스를 표현
++- 열 (Column)
++    - 데이터의 속성을 정의
++    - 특정 데이터 타입과 제약 조건을 가짐
++
++### 스키마
++
++- 데이터 베이스의 구조와 제약 조건에 관한 전반적인 명세를 정의한 메타데이터의 집합
++
++#### 스키마 3계층
++
++- 외부 스키마
++    - 사용자 관점의 논리적 구조 정의
++    - 여러 개의 외부 스키마 존재 가능
++    - 동일 데이터에 대해 서로 다른 관점 제공
++- 개념 스키마
++    - 조직 전체 관점의 논리적 구조
++    - 데이터베이스당 하나만 존재
++    - 데이터베이스의 전체적인 논리 구조
++- 내부 스키마
++    - 물리적 저장 구조 정의
++    - 실제 데이터 저장 방법 기술
++    - 시스템 프로그래머나 설계자 관점의 스키마
++
++## 데이터 모델링
++
++- 데이터 베이스 설계의 핵심 과정
++
++### 단계
++
++1. 개념적 모델링
++    - 핵심 엔티티 식별
++    - 엔티티 간 관계 정의
++    - 비즈니스 규칙 정립
++2. 논리적 모델링 (정규화)
++    - 정규화 수행
++    - 스키마 정의
++    - 속성 정의
++3. 물리적 모델링 (역정규화)
++    - 데이터 베이스 특성 반영
++    - 인덱싱 전략 수립
++    - 파티셔닝 계획
++
++### 데이터 정규화
++
++- 데이터 무결성 확보
++    - 중복 제거
++    - 일관성 유지
++    - 데이터베이스 구조 개선
++
++#### 장점
++
++- 데이터 중복 감소
++- 데이터 베이스 성능 향상
++
++#### 단점
++
++- 복잡한 조인 쿼리
++- 성능 저하 가능성
++
++## 트랜잭션
++
++- 데이터베이스의 상태를 변화시키는 하나의 논리적 작업 단위
++
++### 트랜잭션의 특징 (ACID)
++
++1. 원자성 (Atomicity)
++    - 트랜잭션의 모든 연산이 완전히 수행되거나 전혀 수행되지 않아야 함
++2. 일관성 (Consistency)
++    - 트랜잭션 실행 전후의 데이터 베이스가 일관된 상태를 유지
++3. 격리성 (Isolation)
++    - 동시에 실행되는 트랜젹션들이 서로 영향을 미치지 않도록 보장
++4. 지속성 (Durability)
++    - 성공적으로 완료된 트랜잭션의 결과는 영구적으로 보존
++
++## 데이터 무결성
++
++- 엔티티 무결성
++    - 테이블의 각 행이 고유하게 식별되도록 보장
++    - 기본 키는 NULL값이나 중복값을 가질 수 없음
++- 도메인 무결성
++    - 특정 속성 값이 정의된 도메인에 속해야 함
++    - 데이터 형식, 값의 범위 등을 제한
++- 참조 무결성
++    - 외래 키는 참조하는 테이블의 기본키와 일치해야함
++    - 참조할 수 없는 값을 가질 수 없음
++- 사용자 정의 무결성
++    - 특정 열에 비즈니스 규칙 적용
++
++### 데이터 무결성의 중요성
++
++- 데이터 품질 보장
++    - 오류 데이터 방지
++    - 일관성 유지
++- 시스템 신뢰성
++    - 데이터 정확성 보장
++    - 비즈니스 로직 보호
++- 유지보수 용이성
++    - 데이터 관리 효율성
++    - 오류 추적 용이
++
++## SQL(Structured Query Language)
++
++- 관계형 데이터베이스 시스템과 상호작용하기 위해 표준화된 프로그래밍 언어
++
++### SQL 명령어 종류
++
++1. 데이터 구조 정의 언어 DDL (Data Definiton Language)
++    - ex) CREATE,DROP,ALTER
++2. 데이터 조작 언어 DML (Data Manipulation Language)
++    - ex) INSERT,UPDATE,DELETE,SELECT
++3. 데이터 접근 권한 제어 언어 DCL (Data Control Language)
++    - ex) GRANT,REVOKE
+\ No newline at end of file
+Index: wonhshin/1일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/wonhshin/1일차.md b/wonhshin/1일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138297)
++++ b/wonhshin/1일차.md	(date 1733216138297)
+@@ -0,0 +1,398 @@
++## HTTP
++
++  <hr/>
++- hypertext transfer protocol
++- 네트워크 장치 간의 정보를 전송하는데 사용되는 프로토콜
++  - 웹에서 클라이언트와 서버간의 데이터를 주고받기 위해 설계된 프로토콜
++- 클라이언트가 요청하기 위해 연결을 연 다음 응답을 받기 까지 대기하는 클라이언트-서버 모델을 따름
++
++### HTTP 메소드 종류
++
++<hr/>
++
++**중요메소드**
++
++| 메소드 | 설명                                                                              |
++| :----- | :-------------------------------------------------------------------------------- |
++| GET    | 리소스 조회 메소드                                                                |
++| POST   | 클라이언트가 서버로 데이터 전송을 하여 리소스 생성하거나 처리하도록 요청하는 과정 |
++| PUT    | 리소스를 대체하는 메소드, 일부 변경시에는 PATCH 사용                              |
++| PATCH  | 리소스 일부분을 변경하는 메소드                                                   |
++| DELETE | 리소스 제거 메소드                                                                |
++
++### 중요메소드 상세기술
++
++**GET**
++
++> 정적 데이터 조회과정
++
++1. 이미지, 정적 테스트 문서 get
++2. 쿼리 파라미터 없이 리소스 경로로 단순하게 조회 가능
++
++> 동적 데이터 조회과정
++>
++> 1. 쿼리 파라미터를 사용해 데이터 전달
++> 2. 쿼리 파라미터로 상세한 조회 데이터 얻을 수 있음
++
++**POST**
++
++> 동작 흐름
++
++1. 클라이언트의 요청 준비
++
++- 클라이언트는 데이터를 준비하고 POST요청 생성, 데이터는 본문에 포함됨
++
++2. 클라이언트가 서버로 요청 전송
++
++- 요청 본문에 포함된 데이터가 서버로 전달됨
++
++3. 서버가 요청 처리
++
++- 서버는 요청 데이터를 수신,파싱하여 비즈니스 로직 실행
++- 데이터 베이스에 리소스를 생성하거나 필요한 작업 수행
++
++4. 서버가 클라이언트로 응답
++
++- 요청 처리 결과를 HTTP응답으로 반환
++- 성공시 201, 실패시 400 상태 코드 변환
++
++5. 클라이언트의 응답처리
++
++** PUT**
++
++> 요청 메세지에 리소스가 있으면 덮어쓰고 생성함
++> PUT 요청에 일부 리소스만 변경하기 원한다면, 모든 데이터를 작성해서 보내야함
++
++**PATCH**
++
++> PATCH 지원이 안되면 대신 POST사용도 가능
++
++### 그 외 메소드
++
++| 메소드 | 설명                                                                          |
++| :----- | :---------------------------------------------------------------------------- |
++| HEAD   | 응답 상태 코드 확인 시 사용 BODY를 Return하지 않음                            |
++| TRACE  | 검사용 메소드, 서버에 도달했을 때 최종 패킷의 요청 패킷 내용 응답받을 수 있음 |
++| OPTION | 서버의 지원 가능한 HTTP메소드와 출처를 응답받아 CORS정책을 검색하기 위한 요청 |
++
++### HTTP 메서드와 멱등성
++
++---
++
++- **멱등성** | 같은 작업을 여러 번 반복해서 실행해도 결과가 변하지 않는 성질을 의미
++  > HTTP의 멱등성
++  > 요청을 몇 번 반복해도, 서버 상태와 응답이 동일해야함
++
++* **GET** | 데이터를 조회하는 요청이므로 반복 실행해도 서버의 상태가 변하지 않음
++* **PUT** | 자원을 특정 상태로 업데이트 하므로, 동일한 요청을 여러 번 보내도 상태가 바뀌지 않음
++* **DELETE** | 이미 삭제된 리소스에 대해 반복 호출해도 삭제됨으로 유지됨
++
++- 비멱등한 메서드
++- **POST** | 새 리소스를 생성하는 요청이므로, 동일한 요청을 반복하면 리소스가 여러개 생성되며 반복 호출 시 서버 상태가 변경됨
++
++## CORS
++
++<hr/>
++
++- 한 출처(origin)의 클라이언트(브라우저)가 다른 출처의 리소스에 접근할 수 있도록 허용하기 위한 HTTP기반 매커니즘
++- 프로토콜, 호스트, 포트로 구성
++- 기본적으로 브라우저는 같은 출처에서만 리소스를 요청하고 응답을 허용하기에, 다른 출처에 요청을 보낼 경우 서버가 **명시적으로 허용하지 않으면 <span style="color:red">CORS에러 발생**
++
++### CORS 에러 해결 방법
++
++1. 서버에 CORS 허용 설정
++2. Spring에서 허용
++3. 프록시 서버 사용
++
++## HTTP 상태 코드표
++
++---
++
++서버에서의 처리결과는 응답 메세지의 상태라인에 있는 상태 코드를 보고 파악할 수 있음
++
++** 1xx: 정보제공 **
++
++| 상태코드 | 텍스트      | 의미                                            |
++| :------- | :---------- | :---------------------------------------------- |
++| 1xx      | information | 클라이언트의 요청을 받았으며 작업을 계송 진행함 |
++
++** 2xx: 성공 **
++
++| 상태코드 | 텍스트   | 의미                                                                    |
++| :------- | :------- | :---------------------------------------------------------------------- |
++| 2xx      | success  | 클라이언트가 요청한 동작을 수신하여 이해했고 승낙하여 성공적으로 처리함 |
++| 200      | OK       | 서버가 요청을 성공적으로 처리함                                         |
++| 201      | Creatd   | 요청이 처리되어 새로운 리소스 생성                                      |
++| 202      | Accepted | 요청은 접수하였지만, 처리가 완료되지 않음                               |
++
++** 3xx: 리다이렉션 **
++
++| 상태코드 | 텍스트              | 의미                                               |
++| :------- | :------------------ | :------------------------------------------------- |
++| 3xx      | Redirection         | 클라이언트는 요청을 마치기 위해 추가 동작을 해야함 |
++| 300      | Multiple permanetly | 선택항목이 여러개 있음                             |
++| 301      | Moved Permanently   | 지정한 리소스가 새로운 URL로 이동함                |
++| 303      | See Other           | 다른 위치로 요청함                                 |
++| 304      | Not Modified        | 마지막 요청 후 요청 페이지는 수정되지 않음         |
++| 307      | Temporary Redirect  | 임시로 리다이렉션 요청이 필요함                    |
++
++** 4xx: 클라이언트 에러 **
++
++| 상태코드 | 텍스트       | 의미                                    |
++| :------- | :----------- | :-------------------------------------- |
++| 4xx      | Client Error | 클라이언트는 요청에 에러가 있음         |
++| 401      | Unauthorized | 지정한 리소스에 대한 액세스 권한이 없음 |
++| 403      | Forbidden    | 지정한 리소스에 액세스 금지되었음       |
++| 404      | Not Found    | 지정한 리소스를 찾을 수 없음            |
++
++** 5xx: Server Error **
++
++| 상태코드 | 텍스트              | 의미                                                                                 |
++| :------- | :------------------ | :----------------------------------------------------------------------------------- |
++| 5xx      | Server Error        | 클라이언트의 요청은 유효한데 서버가 처리를 실패함                                    |
++| 501      | Not implemented     | 요청한 URI 메소드에 대해 서버가 구현하고 있지 않음                                   |
++| 502      | Bad Gateway         | 게이트웨이 또는 프록시 역할을 하는 서버가 뒷단의 서버로부터 잘못된 응답을 받음       |
++| 503      | Service Unavailable | 현재 서버에서 서비스를 제공할 수 없음                                                |
++| 504      | Gateway Timeout     | 게이트웨이 또는 프록시 역할을 하는 서버가 서버로부터 응답을 기다리다가 타임아웃 발생 |
++
++</br>
++
++## HTTP 헤더
++
++---
++
++**공통헤더**
++
++- DATE: 메세지 생성 시간 제공
++
++- Connection: 연결 유지 여부 제어
++
++- Cache-Control: 캐싱정책제어
++
++- Pragma: 캐싱관련지시
++
++- Trailer: 청크 인코딩 시 본문 이후 제공될 추가 헤더 정의
++
++** Cache-control ** - cache-control : no-store
++
++- 아무 것도 캐싱하지 않음
++  - cache-control : no-cache
++    - 모든 캐시를 쓰기 전에 서버에 해당 캐시를 사용해도 되는 지 확인
++  - cache-control : must-revalidate
++    - 만료된 캐시만 서버에 확인을 받음
++  - cache-control: public
++    - 공유 캐시에 저장해도 되는 것을 의미
++  - cache-control : private
++    - 브라우저 같은 특정사용자 환경에만 저장
++  - cache-control : max-age
++    - 캐시 유효시간을 명시
++
++* expires
++  - 리소스가 지정된 일시까지 캐시로써 유효함을 나타냄. 즉, 응답 컨텐츠가 언제 만료되는 지 나타냄
++
++## 쿠키🍪와 세션
++
++---
++
++> HTTP 프로토콜의 특징
++
++- 비연결 지향
++- 상태정보 유지 안함
++
++- 쿠키와 세션은 HTTP의 요청 간 **의존관계가 없기 때문에**, 현재 접속한 사용자가 이전에 접속한 사용자와 같은 사용자인 지 알 수가 없음
++- 계속해서 연결을 유지하지 않기 때문에 통신할 때마다 새로 연결하기 때문에, 클라이언트는 매 요청마다 인증해야함6bt6tb
++- 이전 요청과 현재 요청이 같은 사용자의 요청인 지 알기 위해 상태를 유지해야함
++
++### 쿠키
++
++- 개념
++  - **클라이언트 로컬**에 저장되는 키와 값이 들어있는 파일
++  - 이름, 값, 유효시간, 경로 포함
++  - 클라이언트의 상태 정보를 브라우저에 저장하여 참조
++- 동작방식
++  - 웹 브라우저가 서버에 요청
++  - 상태를 유지하고 싶은 값을 쿠키로 생성
++  - 서버 응답시 HTTP헤더(set-cookie)에 쿠키 포함하여 전송
++  - 전달받은 쿠키는 웹 브라우저에서 관리하다가, 다음 요청 때 쿠키를 HTTP헤더에 넣어 전송
++
++### 세션
++
++- 개념
++  - 일정 시간 동안 같은 브라우저로 들어오는 요청을 하나의 상태로 보고 그 상태를 유지하는 기술
++  - 즉, 웹 브라우저를 통해 서버에 접속한 이후부터 브라우저를 종료할 때 까지 유지하는 상태
++  - **서버가 데이터 저장**하고 있음
++- 동작방식
++  - 웹 브라우저가 서버에 요청
++  - 서버가 해당 웹 브라우저에 ID부여
++  - 서버가 응답할 때 HTTP헤더에 session ID포함하여 전송
++  - 웹 브라우저는 창을 닫기까지 다음 요청 때 부여된 session ID가 담겨있는 쿠키를 HTTP헤더에 넣어서 전송
++  - 서버는 세션id 확인 후 응답
++  - 서버도 쿠키를 사용하여 값을 주고 받음
++- 특징
++  - 서버를 데이터에 저장하기 때문에 클라이언트가 직접 데이터를 조작할 수는 없지만, 서버 자원의 한계가 있으므로 메모리 사용 시 속도저하가 올 수 있다
++
++### 브라우저 저장소
++
++---
++
++- Local Storage
++- Session Storage
++- Cookie
++
++> 쿠키는 브라우저에 사용자 정보가 기록되기에 위변조의 가능성이 높아 보안에 취약하며, 세션은 서버의 메모리를 차지하기에 서버 과부하의 원인이 된다.
++> 이와 같은 이유로, 보호할 데이터를 토큰으로 치환하는 <span style="red">**토큰 기반의 인증방식**</span>이 도입된다.
++
++## JWT
++
++###### JSON Web Token
++
++---
++
++인증 및 정보 전달을 위해 클라이언트와 서버 간에 안전하게 데이터를 교환하는 서명된 토큰
++
++- 정보가 담긴 데이터를 암호화하여, HTTP헤더에 추가함 => 보안성 증가
++- 권한에 부여하기 위한 필요 데이터가 JWT안에 있으므로, OAuth처럼 인증 서버에서 토큰에 대한 정보를 찾을 필요가 없음
++
++> OAuth란?
++> 다른 웹 서비스의 계정으로 사용자 인증을 대신하는 토큰 기반의 사용자 인증 기술
++
++### JWT 구조 및 생성
++
++---
++
++> header + payload + signature
++
++![](https://velog.velcdn.com/images/wondi/post/c7054a78-39f4-4f4f-9dd4-d4b4490e79e0/image.png)
++
++헤더
++
++- type: 토큰 타입 명시
++- algo: 해싱 알고리즘
++  내용
++- 토큰에 대한 정보 작성
++- 정보는 속성, 값으로 표현함(claim)
++  - registered claim: iss, exp, sub, aud
++    서명
++- 헤더의 인코딩 값과 내용의 인코딩값을 "."로 연결하여 합친 후 비밀키로 해싱
++
++![](https://velog.velcdn.com/images/wondi/post/819e4faf-b3bb-4f3a-85f4-dde3a41a8e57/image.png)
++
++### 쿠키기반과 JWT 동작방식
++
++![](https://velog.velcdn.com/images/wondi/post/831468fb-7c5a-4eb2-81ad-e606a6a4e15d/image.png)
++
++- 쿠키 기반 동작
++
++![](https://velog.velcdn.com/images/wondi/post/cf0c22a6-e60b-46dc-ab91-0e947de5894a/image.png)
++
++- JWT 동작
++
++## MVC & MVC2
++
++---
++
++> MVC란 model, view, controller의 약자이며 각 레이어간의 기능을 구분하는데 중점을 둔 디자인 패턴
++
++- **model** : 데이터 관리, 비즈니스 로직을 처리하는 부분(DAO, DTO, Service)
++- **view** :비즈니스 로직의 처리 결과를 통해 유저 인터페이스가 표현되는 구간(html, jsp, tymeleaf)
++- **Controller** : 사용자의 요청을 처리하고 model과 view를 중개하는 역할
++  - mvc 패턴에서는 view와 model이 직접적인 상호소통을 하지 않도록 관리함
++
++### MVC1
++
++![](https://velog.velcdn.com/images/wondi/post/75826814-e519-4a3b-b841-2b2cf55671f0/image.png)
++
++- mvc1패턴은 view, controller 역할을 모두 JSP가 담당함
++  - JSP가 중심으로 요청을 받고, 비즈니스 로직 처리 결과를 사용자에게 출력하는 역할(view)과 요청을 처리하는 역할(Controller) 모두 수행
++  - 분리 부족: model, view, controller의 역할이 구분되지 않아 코드가 복잡해지고 유지보수가 어려움
++
++> 클라이언트 요청 -> JSP가 직접 데이터베이스 접근, 비즈니스 로직처리 -> 결과를 JSP내부에서 출력
++
++### MVC2
++
++![](https://velog.velcdn.com/images/wondi/post/9d800cff-9d06-4a5f-b9c1-78a8c9f9f0f4/image.png)
++
++- mvc2 패턴은 요청을 컨트롤러(Servlet)가 먼저 받음
++  - 즉, Controller와 View가 분리됨
++- DispatcherServlet = Front Controller가 우선적으로 유저의 요청을 받고, 요청을 분석하여 세부 컨트롤러들에게 필요한 작업 나눠줌
++- 요청에 매핑되는 컨트롤러 검색 요청
++- 컨트롤러에 처리 요청
++- 컨트롤러의 처리 결과를 생성할 뷰를 결정
++- 결과 화면 리턴
++
++> 작동방식 1. 클라이언트는 URL을 통해 요청을 전송함 2. 디스패처 서블릿은 핸들러 매핑을 통해 해당 요청이 어느 컨트롤러에 온것인지 온 건지 확인함 3. 디스패처 서블릿은 핸들러 어댑터에게 요청의 전달을 맡김 4. 핸들러 어댑터는 해당 컨트롤러에 요청 전달 5. 컨트롤러는 비즈니스 로직을 처리한 후 반환할 뷰의 이름 반환 6. 디스패처 서블릿은 뷰 리졸버를 통해 반환 뷰를 찾음 7. 디스패처 서블릿은 컨트롤러에서 뷰에 전달할 데이터 추가함 8. 데이터가 추가된 뷰 반환
++
++## HTTPS
++
++---
++
++**hypertext transfer protocol secure**: 웹에서 데이터를 안전하게 전송하기 위해 사용되는 HTTP 보안버전
++
++- TLS/ SSL 프로토콜을 사용하여 암호화 구현함
++
++### HTTP와 HTTPS의 차이점
++
++---
++
++- HTTP는 보안이 없는 프로토콜이고, HTTPS는 데이터를 암호화하여 보안을 강화한 프로토콜이다.
++
++| 항목       | HTTP                     | HTTPS                           |
++| :--------- | :----------------------- | :------------------------------ |
++| 보안       | 암호화 없음              | 데이터 암호화로 보안 강화       |
++| 포트       | 80번 포트 사용           | 443번 포트 사용                 |
++| 인증       | 서버 인증 없음           | SSL/TLS 인증서로 서버 인증 가능 |
++| 데이터보호 | 데이터가 평문으로 전송됨 | 데이터를 암호화해 전송          |
++
++## DNS
++
++---
++
++Domain Name System
++도메인이름을 ip주소로 변환해주는 서버
++
++- 사용편의성
++- 유연한 관리
++  - ip주소가 바뀌더라도, 도메인 이름은 유지됨
++- 빠른 접속속도
++  - 캐싱메커니즘으로 자주 사용하는 도메인을 캐싱하여, 더 빠르게 사이트에 접속 가능
++- 부하 분산 지원
++  - 여러 서버에 트래픽 분산, 대규모 서비스에서도 안정적인 접속을 유지할 수 있도록 함(하나의 도메인에 여러 ip주소 매핑)
++
++## CI/CD
++
++---
++
++소프트웨어 개발에서 자동화된 빌드, 테스트, 배포 프로세스를 통해 코드를 빠르고 안정적으로 배포할 수 있도록 도와주는 접근 방식
++
++### CI (Continuous Integration)
++
++**지속적 통합** : 개발자가 작성한 코드를 정기적으로 통합하여 빌드하고 테스트하는 과정
++
++### CD (Continuous Deployment)
++
++**지속적 배포** : 테스트를 통과한 코드를 자동으로 프로덕션에 배포
++
++> CI/CD는 소프트웨어 개발 과정에서 코드 통합, 테스트, 배포를 자동화하여 품질과 속도를 동시에 향상시키는 프로세스
++
++## REST API
++
++---
++
++클라이언트와 서버간에 http 프로토콜, 데이터를 주고 받는 방식을 정의한 것
++
++- HTTP 메서드 사용
++- URI로 자원 식별
++- 무상태성
++- 표준화된 데이터 포맷(예) JSON)
++- 계층적 구조
++
++### RESTFUL
++
++> CRUD를 잘 지키는 것
++
++###### 출처
++
++---
++
++[생활코딩 JWT](https://www.youtube.com/watch?v=36lpDzQzVXs)
++[MVC패턴 블로그](https://chanhuiseok.github.io/posts/spring-3/)
+Index: taehyeon/3-4일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/3-4일차.md b/taehyeon/3-4일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138289)
++++ b/taehyeon/3-4일차.md	(date 1733216138289)
+@@ -0,0 +1,105 @@
++# 3일차
++
++## @Embeddable,@Embedded
++
++### @Embeddable
++
++- 값 타입을 정의하는 클래스에 선언
++- 해당 클래스가 다른 엔티티의 일부로 포함될 수 있음을 나타냄
++- 독자적인 생명주기가 없음
++
++### @Embedded
++
++- 값 타입을 사용하는 엔티티의 필드에 선언
++- @Embeddable로 정의된 값 타입을 포함함을 나타냄
++- 엔티티의 일부로 테이블에 매핑됨
++
++### 주의점
++
++- 테이블 구조 유지
++    - @Embeddable 클래스의 필드들은 해당 클래스를 포함하는 엔티티의 테이블에 직접 컬럼으로 매핑
++    - 별도의 테이블이 생성되지 않음
++- 컬럼 이름
++    - @Embeddable 클래스의 필드명이 그대로 컬럼명으로 사용
++    - @AttributeOverride를 사용하여 컬럼명을 재정의할 수 있음
++- 중첩 @Embeddable
++    계층 구조가 생성되지 않고 모든 필드가 같은 레벨의 컬럼으로 생성됨
++- 관계 매핑
++    - @Embeddable 클래스 내에 @ManyToOne 등의 관계가 있으면, 해당 관계에 대한 외래 키 컬럼이 테이블에 추가됩니다.
++- NULL 처리
++    - @Embeddable 객체가 null이면 관련된 모든 컬럼이 NULL로 설정 됨
++
++## 데이터베이스 연관 관계 설정
++
++### @OneToOne (1:1)
++
++- 양쪽 엔티티가 서로 하나의 관계만 가짐
++
++### @ManyToOne (N:1)
++
++- 다대일 관계에서 가장 많이 사용
++    - 조회 성능이 좋음
++    - 조인 쿼리가 단순함
++- 외래키는 항상 다(N)쪽에 있음
++
++### @OneToMany (1:N)
++
++- 일대다 관계
++- 컬렉션을 사용하여 여러 엔티티 참조
++
++### @ManyToMany
++
++- 중간 테이블이 자동으로 생성됨
++- 보통 중간 테이블을 엔티티로 승격하여 사용
++- 실무에서 사용을 지양
++    - 중간 테이블에 대한 세밀한 제어 불가
++    - 복잡한 비즈니스 로직 구현의 어려움
++    - 확장성 제한
++
++### 연관관계의 주인
++
++- 외래 키가 있는 곳이 연관관계의 주인
++- mappedBy 속성으로 주인 지정
++- 주인만이 외래 키를 관리할 수 있음
++
++### 테이블과 객체 연관 관계 주의점
++
++- 방향성
++    - 테이블은 외래키를 통해 양방향 조인 가능
++    - 참조를 통해 단방향 관계만 가능
++- 관계 표현 방식
++    - 외래 키로 관계를 표현
++    - 참조로 관계를 표현
++- 데이터 일관성
++    - 외래 키 제약 조건으로 참조 무결성 보장
++    - 양방향 관계에서 양쪽 객체를 모두 관리해야 함
++        - ex) 연관 되어 있는 모든 엔티티에 값을 변경하는 연관관계 편의 메서드 구현
++
++### 외래 키 제약 조건
++
++- 한 테이블의 필드가 다른 테이블의 기본 키를 참조 하도록 강제
++- 데이터 삽입 시 참조되는 테이블의 값도 변경
++- 데이터 갱신 시 외래키가 변경될 경우 새로운 테이블 생성
++- 데이터 삭제 시 해당 레코드를 참조하는 외래키가 있는 경우 삭제 거부
++
++### 중간테이블
++
++- @ManyToMany 관계인 경우 사용
++- 다대다 관계를 일대다 다대일 관계로 만들어줌
++
++## PK(Primary Key), FK(Foreign Key)
++
++### PK(Primary Key)
++
++- 테이블의 각 레코드를 고유하게 식별하는 키
++- NULL 값을 가질 수 없음
++- 중복된 값을 가질 수 없음
++
++### Foreign Key
++
++- 다른 테이블의 PK를 참조하는 키
++- 테이블 간의 관계를 정의
++- NULL 값 허용 가능
++- 중복된 값 허용 가능
++
++![ERD](3일차ERD.png)
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseUpdateRequestDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseUpdateRequestDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseUpdateRequestDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138293)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseUpdateRequestDto.java	(date 1733216138293)
+@@ -0,0 +1,23 @@
++package jpabook.onboarding.course.controller.dto.request;
++
++import jakarta.validation.constraints.NotBlank;
++import jpabook.onboarding.data.status.CourseStatus;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class CourseUpdateRequestDto {
++	@NotBlank(message = "교수 이름은 필수입니다.")
++	private final String professorName;
++
++	@NotBlank(message = "강의 이름은 필수입니다.")
++	private final String name;
++
++	@NotBlank(message = "학점은 필수입니다.")
++	private final int grade;
++
++	@NotBlank(message = "강의 상태는 필수입니다.")
++	private final CourseStatus status;
++}
+Index: taehyeon/onboarding/gradlew
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/gradlew b/taehyeon/onboarding/gradlew
+new file mode 100755
+--- /dev/null	(date 1733216138292)
++++ b/taehyeon/onboarding/gradlew	(date 1733216138292)
+@@ -0,0 +1,252 @@
++#!/bin/sh
++
++#
++# Copyright © 2015-2021 the original authors.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      https://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# SPDX-License-Identifier: Apache-2.0
++#
++
++##############################################################################
++#
++#   Gradle start up script for POSIX generated by Gradle.
++#
++#   Important for running:
++#
++#   (1) You need a POSIX-compliant shell to run this script. If your /bin/sh is
++#       noncompliant, but you have some other compliant shell such as ksh or
++#       bash, then to run this script, type that shell name before the whole
++#       command line, like:
++#
++#           ksh Gradle
++#
++#       Busybox and similar reduced shells will NOT work, because this script
++#       requires all of these POSIX shell features:
++#         * functions;
++#         * expansions «$var», «${var}», «${var:-default}», «${var+SET}»,
++#           «${var#prefix}», «${var%suffix}», and «$( cmd )»;
++#         * compound commands having a testable exit status, especially «case»;
++#         * various built-in commands including «command», «set», and «ulimit».
++#
++#   Important for patching:
++#
++#   (2) This script targets any POSIX shell, so it avoids extensions provided
++#       by Bash, Ksh, etc; in particular arrays are avoided.
++#
++#       The "traditional" practice of packing multiple parameters into a
++#       space-separated string is a well documented source of bugs and security
++#       problems, so this is (mostly) avoided, by progressively accumulating
++#       options in "$@", and eventually passing that to Java.
++#
++#       Where the inherited environment variables (DEFAULT_JVM_OPTS, JAVA_OPTS,
++#       and GRADLE_OPTS) rely on word-splitting, this is performed explicitly;
++#       see the in-line comments for details.
++#
++#       There are tweaks for specific operating systems such as AIX, CygWin,
++#       Darwin, MinGW, and NonStop.
++#
++#   (3) This script is generated from the Groovy template
++#       https://github.com/gradle/gradle/blob/HEAD/platforms/jvm/plugins-application/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt
++#       within the Gradle project.
++#
++#       You can find Gradle at https://github.com/gradle/gradle/.
++#
++##############################################################################
++
++# Attempt to set APP_HOME
++
++# Resolve links: $0 may be a link
++app_path=$0
++
++# Need this for daisy-chained symlinks.
++while
++    APP_HOME=${app_path%"${app_path##*/}"}  # leaves a trailing /; empty if no leading path
++    [ -h "$app_path" ]
++do
++    ls=$( ls -ld "$app_path" )
++    link=${ls#*' -> '}
++    case $link in             #(
++      /*)   app_path=$link ;; #(
++      *)    app_path=$APP_HOME$link ;;
++    esac
++done
++
++# This is normally unused
++# shellcheck disable=SC2034
++APP_BASE_NAME=${0##*/}
++# Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)
++APP_HOME=$( cd -P "${APP_HOME:-./}" > /dev/null && printf '%s
++' "$PWD" ) || exit
++
++# Use the maximum available, or set MAX_FD != -1 to use that value.
++MAX_FD=maximum
++
++warn () {
++    echo "$*"
++} >&2
++
++die () {
++    echo
++    echo "$*"
++    echo
++    exit 1
++} >&2
++
++# OS specific support (must be 'true' or 'false').
++cygwin=false
++msys=false
++darwin=false
++nonstop=false
++case "$( uname )" in                #(
++  CYGWIN* )         cygwin=true  ;; #(
++  Darwin* )         darwin=true  ;; #(
++  MSYS* | MINGW* )  msys=true    ;; #(
++  NONSTOP* )        nonstop=true ;;
++esac
++
++CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
++
++
++# Determine the Java command to use to start the JVM.
++if [ -n "$JAVA_HOME" ] ; then
++    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
++        # IBM's JDK on AIX uses strange locations for the executables
++        JAVACMD=$JAVA_HOME/jre/sh/java
++    else
++        JAVACMD=$JAVA_HOME/bin/java
++    fi
++    if [ ! -x "$JAVACMD" ] ; then
++        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
++
++Please set the JAVA_HOME variable in your environment to match the
++location of your Java installation."
++    fi
++else
++    JAVACMD=java
++    if ! command -v java >/dev/null 2>&1
++    then
++        die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
++
++Please set the JAVA_HOME variable in your environment to match the
++location of your Java installation."
++    fi
++fi
++
++# Increase the maximum file descriptors if we can.
++if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
++    case $MAX_FD in #(
++      max*)
++        # In POSIX sh, ulimit -H is undefined. That's why the result is checked to see if it worked.
++        # shellcheck disable=SC2039,SC3045
++        MAX_FD=$( ulimit -H -n ) ||
++            warn "Could not query maximum file descriptor limit"
++    esac
++    case $MAX_FD in  #(
++      '' | soft) :;; #(
++      *)
++        # In POSIX sh, ulimit -n is undefined. That's why the result is checked to see if it worked.
++        # shellcheck disable=SC2039,SC3045
++        ulimit -n "$MAX_FD" ||
++            warn "Could not set maximum file descriptor limit to $MAX_FD"
++    esac
++fi
++
++# Collect all arguments for the java command, stacking in reverse order:
++#   * args from the command line
++#   * the main class name
++#   * -classpath
++#   * -D...appname settings
++#   * --module-path (only if needed)
++#   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.
++
++# For Cygwin or MSYS, switch paths to Windows format before running java
++if "$cygwin" || "$msys" ; then
++    APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
++    CLASSPATH=$( cygpath --path --mixed "$CLASSPATH" )
++
++    JAVACMD=$( cygpath --unix "$JAVACMD" )
++
++    # Now convert the arguments - kludge to limit ourselves to /bin/sh
++    for arg do
++        if
++            case $arg in                                #(
++              -*)   false ;;                            # don't mess with options #(
++              /?*)  t=${arg#/} t=/${t%%/*}              # looks like a POSIX filepath
++                    [ -e "$t" ] ;;                      #(
++              *)    false ;;
++            esac
++        then
++            arg=$( cygpath --path --ignore --mixed "$arg" )
++        fi
++        # Roll the args list around exactly as many times as the number of
++        # args, so each arg winds up back in the position where it started, but
++        # possibly modified.
++        #
++        # NB: a `for` loop captures its iteration list before it begins, so
++        # changing the positional parameters here affects neither the number of
++        # iterations, nor the values presented in `arg`.
++        shift                   # remove old arg
++        set -- "$@" "$arg"      # push replacement arg
++    done
++fi
++
++
++# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
++
++# Collect all arguments for the java command:
++#   * DEFAULT_JVM_OPTS, JAVA_OPTS, JAVA_OPTS, and optsEnvironmentVar are not allowed to contain shell fragments,
++#     and any embedded shellness will be escaped.
++#   * For example: A user cannot expect ${Hostname} to be expanded, as it is an environment variable and will be
++#     treated as '${Hostname}' itself on the command line.
++
++set -- \
++        "-Dorg.gradle.appname=$APP_BASE_NAME" \
++        -classpath "$CLASSPATH" \
++        org.gradle.wrapper.GradleWrapperMain \
++        "$@"
++
++# Stop when "xargs" is not available.
++if ! command -v xargs >/dev/null 2>&1
++then
++    die "xargs is not available"
++fi
++
++# Use "xargs" to parse quoted args.
++#
++# With -n1 it outputs one arg per line, with the quotes and backslashes removed.
++#
++# In Bash we could simply go:
++#
++#   readarray ARGS < <( xargs -n1 <<<"$var" ) &&
++#   set -- "${ARGS[@]}" "$@"
++#
++# but POSIX shell has neither arrays nor command substitution, so instead we
++# post-process each arg (as a line of input to sed) to backslash-escape any
++# character that might be a shell metacharacter, then use eval to reverse
++# that process (while maintaining the separation between arguments), and wrap
++# the whole thing up as a single "set" statement.
++#
++# This will of course break if any of these variables contains a newline or
++# an unmatched quote.
++#
++
++eval "set -- $(
++        printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" |
++        xargs -n1 |
++        sed ' s~[^-[:alnum:]+,./:=@_]~\\&~g; ' |
++        tr '\n' ' '
++    )" '"$@"'
++
++exec "$JAVACMD" "$@"
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/response/CourseResponseDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/response/CourseResponseDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/response/CourseResponseDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/response/CourseResponseDto.java	(date 1733216138294)
+@@ -0,0 +1,27 @@
++package jpabook.onboarding.course.controller.dto.response;
++
++import jpabook.onboarding.data.entity.Course;
++import jpabook.onboarding.data.status.CourseStatus;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class CourseResponseDto {
++	private final long id;
++	private final String professorName;
++	private final String name;
++	private final int count;
++	private final int grade;
++	private final CourseStatus status;
++
++	public CourseResponseDto(final Course course) {
++		this.id = course.getId();
++		this.professorName = course.getProfessorName();
++		this.name = course.getName();
++		this.count = course.getCount();
++		this.grade = course.getGrade();
++		this.status = course.getStatus();
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseRequestDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseRequestDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseRequestDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138293)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/dto/request/CourseRequestDto.java	(date 1733216138293)
+@@ -0,0 +1,19 @@
++package jpabook.onboarding.course.controller.dto.request;
++
++import jakarta.validation.constraints.NotBlank;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class CourseRequestDto {
++	@NotBlank(message = "교수 이름은 필수입니다.")
++	private final String professorName;
++
++	@NotBlank(message = "강의 이름은 필수입니다.")
++	private final String name;
++
++	@NotBlank(message = "현재 수강 인원은 필수입니다.")
++	private final int count;
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/.gitattributes
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/.gitattributes b/taehyeon/onboarding/.gitattributes
+new file mode 100644
+--- /dev/null	(date 1733216138291)
++++ b/taehyeon/onboarding/.gitattributes	(date 1733216138291)
+@@ -0,0 +1,3 @@
++/gradlew text eol=lf
++*.bat text eol=crlf
++*.jar binary
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/request/StudentRequestDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/request/StudentRequestDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/request/StudentRequestDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/request/StudentRequestDto.java	(date 1733216138295)
+@@ -0,0 +1,20 @@
++package jpabook.onboarding.student.controller.dto.request;
++
++import java.time.LocalDate;
++
++import jakarta.validation.constraints.NotBlank;
++import jakarta.validation.constraints.NotNull;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class StudentRequestDto {
++
++	@NotBlank(message = "이름은 필수입니다.")
++	private final String name;
++
++	@NotNull(message = "생일은 필수입니다.")
++	private final LocalDate birth;
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentResponseDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentResponseDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentResponseDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentResponseDto.java	(date 1733216138296)
+@@ -0,0 +1,28 @@
++package jpabook.onboarding.student.controller.dto.response;
++
++import java.time.LocalDate;
++
++import jpabook.onboarding.data.entity.Student;
++import jpabook.onboarding.data.status.StudentStatus;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class StudentResponseDto {
++
++	private final String name;
++	private final LocalDate birth;
++	private final int currentGrade;
++	private final int totalGrade;
++	private final StudentStatus status;
++
++	public StudentResponseDto(final Student student) {
++		this.name = student.getName();
++		this.birth = student.getBirth();
++		this.currentGrade = student.getCurrentGrade();
++		this.totalGrade = student.getTotalGrade();
++		this.status = student.getStatus();
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/gradlew.bat
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/gradlew.bat b/taehyeon/onboarding/gradlew.bat
+new file mode 100644
+--- /dev/null	(date 1733216138292)
++++ b/taehyeon/onboarding/gradlew.bat	(date 1733216138292)
+@@ -0,0 +1,94 @@
++@rem
++@rem Copyright 2015 the original author or authors.
++@rem
++@rem Licensed under the Apache License, Version 2.0 (the "License");
++@rem you may not use this file except in compliance with the License.
++@rem You may obtain a copy of the License at
++@rem
++@rem      https://www.apache.org/licenses/LICENSE-2.0
++@rem
++@rem Unless required by applicable law or agreed to in writing, software
++@rem distributed under the License is distributed on an "AS IS" BASIS,
++@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++@rem See the License for the specific language governing permissions and
++@rem limitations under the License.
++@rem
++@rem SPDX-License-Identifier: Apache-2.0
++@rem
++
++@if "%DEBUG%"=="" @echo off
++@rem ##########################################################################
++@rem
++@rem  Gradle startup script for Windows
++@rem
++@rem ##########################################################################
++
++@rem Set local scope for the variables with windows NT shell
++if "%OS%"=="Windows_NT" setlocal
++
++set DIRNAME=%~dp0
++if "%DIRNAME%"=="" set DIRNAME=.
++@rem This is normally unused
++set APP_BASE_NAME=%~n0
++set APP_HOME=%DIRNAME%
++
++@rem Resolve any "." and ".." in APP_HOME to make it shorter.
++for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
++
++@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
++set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
++
++@rem Find java.exe
++if defined JAVA_HOME goto findJavaFromJavaHome
++
++set JAVA_EXE=java.exe
++%JAVA_EXE% -version >NUL 2>&1
++if %ERRORLEVEL% equ 0 goto execute
++
++echo. 1>&2
++echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH. 1>&2
++echo. 1>&2
++echo Please set the JAVA_HOME variable in your environment to match the 1>&2
++echo location of your Java installation. 1>&2
++
++goto fail
++
++:findJavaFromJavaHome
++set JAVA_HOME=%JAVA_HOME:"=%
++set JAVA_EXE=%JAVA_HOME%/bin/java.exe
++
++if exist "%JAVA_EXE%" goto execute
++
++echo. 1>&2
++echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME% 1>&2
++echo. 1>&2
++echo Please set the JAVA_HOME variable in your environment to match the 1>&2
++echo location of your Java installation. 1>&2
++
++goto fail
++
++:execute
++@rem Setup the command line
++
++set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
++
++
++@rem Execute Gradle
++"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
++
++:end
++@rem End local scope for the variables with windows NT shell
++if %ERRORLEVEL% equ 0 goto mainEnd
++
++:fail
++rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of
++rem the _cmd.exe /c_ return code!
++set EXIT_CODE=%ERRORLEVEL%
++if %EXIT_CODE% equ 0 set EXIT_CODE=1
++if not ""=="%GRADLE_EXIT_CONSOLE%" exit %EXIT_CODE%
++exit /b %EXIT_CODE%
++
++:mainEnd
++if "%OS%"=="Windows_NT" endlocal
++
++:omega
+Index: taehyeon/onboarding/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/.gitignore b/taehyeon/onboarding/.gitignore
+new file mode 100644
+--- /dev/null	(date 1733216138291)
++++ b/taehyeon/onboarding/.gitignore	(date 1733216138291)
+@@ -0,0 +1,37 @@
++HELP.md
++.gradle
++build/
++!gradle/wrapper/gradle-wrapper.jar
++!**/src/main/**/build/
++!**/src/test/**/build/
++
++### STS ###
++.apt_generated
++.classpath
++.factorypath
++.project
++.settings
++.springBeans
++.sts4-cache
++bin/
++!**/src/main/**/bin/
++!**/src/test/**/bin/
++
++### IntelliJ IDEA ###
++.idea
++*.iws
++*.iml
++*.ipr
++out/
++!**/src/main/**/out/
++!**/src/test/**/out/
++
++### NetBeans ###
++/nbproject/private/
++/nbbuild/
++/dist/
++/nbdist/
++/.nb-gradle/
++
++### VS Code ###
++.vscode/
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/request/SugangRequestDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/request/SugangRequestDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/request/SugangRequestDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/request/SugangRequestDto.java	(date 1733216138296)
+@@ -0,0 +1,19 @@
++package jpabook.onboarding.sugang.controller.dto.request;
++
++import java.time.LocalDate;
++
++import jakarta.validation.constraints.NotBlank;
++import jakarta.validation.constraints.NotNull;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class SugangRequestDto {
++	@NotBlank(message = "이름은 필수입니다.")
++	private final String name;
++
++	@NotNull(message = "생일은 필수입니다.")
++	private final LocalDate birth;
++}
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/response/SugangResponseDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/response/SugangResponseDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/response/SugangResponseDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138297)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/dto/response/SugangResponseDto.java	(date 1733216138297)
+@@ -0,0 +1,23 @@
++package jpabook.onboarding.sugang.controller.dto.response;
++
++import jakarta.validation.constraints.NotBlank;
++import jpabook.onboarding.data.entity.Sugang;
++import jpabook.onboarding.data.status.SugangStatus;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class SugangResponseDto {
++	@NotBlank(message = "과목 이름은 필수입니다.")
++	private final String courseName;
++
++	@NotBlank(message = "수강 상태는 필수입니다.")
++	private final SugangStatus status;
++
++	public SugangResponseDto(final Sugang sugang) {
++		this.courseName = sugang.getCourse().getName();
++		this.status = sugang.getStatus();
++	}
++}
+Index: taehyeon/onboarding/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/build.gradle b/taehyeon/onboarding/build.gradle
+new file mode 100644
+--- /dev/null	(date 1733216138291)
++++ b/taehyeon/onboarding/build.gradle	(date 1733216138291)
+@@ -0,0 +1,33 @@
++plugins {
++    id 'java'
++    id 'org.springframework.boot' version '3.3.5'
++    id 'io.spring.dependency-management' version '1.1.6'
++}
++
++group = 'jpabook'
++version = '0.0.1-SNAPSHOT'
++
++java {
++    toolchain {
++        languageVersion = JavaLanguageVersion.of(21)
++    }
++}
++
++repositories {
++    mavenCentral()
++}
++
++dependencies {
++    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
++    implementation 'org.springframework.boot:spring-boot-starter-web'
++    implementation 'org.springframework.boot:spring-boot-starter-validation'
++    compileOnly 'org.projectlombok:lombok'
++    runtimeOnly 'com.mysql:mysql-connector-j'
++    annotationProcessor 'org.projectlombok:lombok'
++    testImplementation 'org.springframework.boot:spring-boot-starter-test'
++    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
++}
++
++tasks.named('test') {
++    useJUnitPlatform()
++}
+Index: seykim/2일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/seykim/2일차.md b/seykim/2일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138288)
++++ b/seykim/2일차.md	(date 1733216138288)
+@@ -0,0 +1,239 @@
++# 온보딩 2일차
++- [RDB && RDBMS](#rdb--rdbms)
++- [RDB와 NoSQL의 차이](#rdb와-nosql의-차이)
++- [테이블, 컬럼, 스키마](#테이블-컬럼-스키마)
++- [데이터 모델링](#데이터-모델링)
++- [데이터 정규화](#데이터-정규화)
++- [트랜잭션](#트랜잭션)
++- [DB의 무결성](#db의-무결성)
++- [자주 사용하는 SQL문](#자주-사용하는-sql문)
++
++## [RDB && RDBMS](https://curriculum.cosadama.com/basic-sql/1-3/)
++- ### RDB
++        Relational DataBase로 관계형 데이터베이스라고 함
++
++        key, value를 2차원 테이블 형식으로 나타내며 하나의 데이터 베이스 안에는 여러 테이블이 존재할 수 있음
++
++        각 테이블은 행,열로 이루어져 있고 각 열은 특정 데이터 타입을 가짐
++
++    - 구성요소
++        - 테이블 : 데이터를 저장하는 기본 단위
++
++        - 행 또는 레코드 : 특정 엔티티나 해당 항목의 여러 속성의 값을 가짐
++
++        - 열 또는 속성 : 테이블의 각 열의 특정 속성
++
++    - 특징
++        - 정규화 : 데이터를 중복없이 효율적으로 담기 위함, 이를 통해 데이터 무결성을 지님
++
++        - 관계 설정 : 테이블간의 관계를 설정하여 연결할 수 있음, 보통 FK(Foreign Key)를 통해 연결되며 일대일, 일대다, 다대다 모델을 가짐
++
++        - SQL : 데이터의 저장, 수정, 삭제 등의 작업을 함
++
++- ### RDBMS
++        Relational DataBase Management System으로 관계형 데이터베이스 관리 시스템이라 함
++
++        MySQL, PostgreSQL, Oracle 등이 포함됨
++
++    - 주요 기능
++
++        1. 데이터의 정의(DDL) : 테이블, 인덱스, 뷰 등 데이터베이스의 구조를 정의하는 기능
++
++        2. 데이터 조작(DML) : 데이터를 추가, 수정, 삭제 하는 기능
++
++        3. 데이터 조회(DQL) : 데이터를 검색하는 기능으로 SQL의 SELECT가 여기에 포함
++
++        4. 데이터 무결성 관리 : 데이터의 일관성을 유지하기 위한 기능으로, FK, PK, UNIQUE등이 포함 됨
++
++        5. 트랜잭션 관리 : 여러 데이터 조작을 하나의 단위로 묶는 것으로, 트랜잭션의 원자성, 일관성, 고립성, 지속성의 원칙을 지킴(ACID)
++
++        6. 동시성 제어 : 다중 사용자 환경을 지원하며, 잠금 매커니즘을 통해 무결성을 유지
++
++        7. 백업과 복구 : 데이터 손실을 방지하고 이를 복구할 수 있도록 지원
++
++    - ### [ACID](https://ko.wikipedia.org/wiki/ACID)
++        - 원자성(Atomicity) : 트랜잭션과 관련된 작업들이 부분적으로 실행되다가 중단되지 않는 것을 보장하는 것
++
++        - 일관성(Consistency) : 트랜잭션 처리 전과 후의 데이터 모순이 없는 상태를 유지
++
++        - 고립성(Isolation) : 트랜잭션 수행 시 다른 트랜잭션의 연산 작업이 끼어들지 못하도록 보장하는 것
++
++        - 지속성(Durability) : 성공적으로 진행된 트랜잭션은 영원히 반영되어야 함
++    
++## RDB와 NoSQL의 차이
++- ### NoSQL
++            비정형 데이터 또는 반정형 데이터를 저장하고 관리하는데 초점을 둔 데이터 베이스
++
++            문서형, 키-값형, 컬럼형, 그래프형 등의 데이터 모델이 있음
++
++            주로 데이터의 구조가 자주 변하거나 많은 데이터를 빠르게 처리해야하는 곳에 사용 -> 웹 애플리케이션, 실시간 데이터 분석, IoT, 소셜 네트워크 등에 쓰임
++
++    - NoSQL의 특징
++
++        - 유연한 데이터 구조 : 고정된 스키마가 없어 데이터의 구조가 변해도 수정하기 편리함
++
++        - 확장성 : 분산형 구조로 데이터가 계속 추가 되어도 확장하기 용이함
++
++        - BASE 속성 : BASE원칙(Basically Available, Soft state, Eventually consistent)을 따르며, 이는 데이터가 완벽하게 일관되지 않아도 일관성에 도달한다는 속성
++
++        - 데이터 모델 종류
++            - 문서형 : 데이터를 JSON, BSON 형식의 문서로 저장(MongoDB 등)
++
++            - 키-값 : 데이터를 키와 값의 쌍으로 저장(Redis 등)
++
++            - 컬럼형 : 컬럼 패밀리 형식으로 데이터를 저장하며 특정 컬럼에 빠른 접근 속도를 가짐(HBase 등)
++
++            - 그래프형 : 데이터의 관계를 그래프의 구조로 저장(Neo4j 등)
++
++- ### NoSQL과 RDB의 차이
++    |특성|RDB|NoSQL|
++    |:---|:---|:---|
++    |데이터 구조|고정된 테이블 구조, 행과 열|유연한 구조, 스키마가 없음|
++    |관계|외래키로 각 테이블간의 관계 명시|데이터 모델에 따라 관계 표현 가능(문서, 키-값, 컬럼, 그래프)|
++    |확장성|수직적 확장(서버의 성능을 높임)|수평적 확장(서버를 추가 확장)|
++    |ACID 지원|ACID 속성으로 일관성 중시|BASE 속성으로 가용성 및 확장성 중시|
++    |주요 사용 사례|금융, ERP 등 정확한 데이터가 필요한 경우|빅데이터, 실시간 네트워크, IoT 등|
++
++
++## 테이블, 컬럼, 스키마
++- ### 테이블
++    - 데이터 베이스에서 데이터를 저장하는 구조적인 단위로, 행과 열로 구분
++
++    - 행 : 하나의 엔티티에 대한 테이블의 모든 정보
++    
++    - 열 : 엔티티의 하나의 속성
++
++- ### 컬럼
++    - 데이터베이스의 테이블의 속성
++
++    - 각 컬럼은 특정 데이터 타입을 가짐
++
++<img width="770" alt="스크린샷 2024-11-12 오후 1 57 18" src="https://github.com/user-attachments/assets/da653e59-eabb-460f-9921-37a78073357f">
++
++
++- ### 스키마
++    - 데이터 베이스의 구조를 정의하는 틀이나 설계도
++
++    - 스키마의 구조
++        - 외부 스키마 : 사용자의 입장에서 데이터 베이스의 모습으로 일부분을 정의한 것
++
++        - 내부 스키마 : 모든 사용자들이 필요로하는 데이터를 통합한 전체의 데이터 베이스 구조를 논리적으로 정의한 것
++
++        - 개념 스키마 : 전체 데이터 베이스의 물리적 저장 형태를 기술하는 것
++
++<img width="839" alt="스크린샷 2024-11-12 오후 2 04 16" src="https://github.com/user-attachments/assets/0550ee0e-b83e-4bc6-a210-4c191c3618c9">
++
++
++## 데이터 모델링
++- 데이터 모델링 : 데이터 베이스 시스템의 구조와 관계를 시각적으로 표현하고, 데이터의 저장 및 처리 방식을 계획하는 프로세스
++
++- ### 데이터 모델링의 목적
++    - 데이터 구조의 정의 : 데이터를 어떻게 저장할 것인지, 어떤 테이블과 컬럼이 필요할 것인지 결정
++
++    - 데이터 관계 명세 : 서로 다른 데이터 간의 관계를 정의하여 효율적으로 관리 및 쿼리 할 수 있도록 함
++
++    - 데이터 무결성 유지 : 데이터의 정확성과 일관성을 보장하기 위해 제약과 규칙 설정
++
++    - 요구 사항 수집 : 시스템 요구사항을 수집 및 데이터 흐름을 이해하여 필요한 데이터 정의
++
++- ### 데이터 모델링의 단계
++    1. 개념적 데이터 모델링
++        - 전체적인 데이터 구조를 높은 수준에서 정의
++
++        - 주로 ERD를 사용하여 시각적으로 나타냄
++
++    2. 논리적 데이터 모델링
++        - 개념적 모델에서 더 구체적인 데이터 구조를 정의
++
++        - 데이터 타입, 키, 제약 조건 등을 포함하며 DBMS와는 독립적
++    3. 물리적 데이터 모델링
++        - 논리적 모델을 바탕으로 실제 DBMS에 구현할 수 있도록 세부적인 구조 정의
++
++        - 인덱스, 파티셔닝, 성능 고려 등 실제 데이터 베이스의 설계를 최적화
++
++- ### 데이터 모델링의 도구와 기법
++    - ERD(Entity-Relationship Diagram) : 데이터 모델링에서 가장 일반적으로 사용되는 시각적 도구로 엔티티와 그들 간의 관계를 나타냄, 엔티티는 사각형, 관계는 선, 속성은 타원으로 표시 
++
++    - UMLD(Unified Modeling Language Diagram) : 객체지향 프로그래밍과 연계하여 사용
++
++    - 정규화 : 데이터 중복을 최소화하고 데이터의 무결성을 유지하기 위해 테이블을 구조적으로 나누는 과정
++
++- ### 데이터 모델링의 중요성
++    - 비즈니스 요구 반영 : 데이터 모델링은 비즈니스 프로세스를 이해하고 필요한 데이터를 정의
++
++    - 효율적인 데이터 관리 : 데이터의 무결성을 유지하고 쿼리 성능을 향상
++
++    - 변화에 대한 유연성 : 시스템의 확장성과 유연성을 높임
++
++## 데이터 정규화
++- ### 제1 정규화
++    - 각 셀에는 하나의 값만 있어야하며 중복되는 컬럼이 없어야 함
++
++    <img width="866" alt="스크린샷 2024-11-12 오후 3 30 59" src="https://github.com/user-attachments/assets/8de4d7cb-4558-4ce0-8d4b-b79b6743f5ba">
++
++- ### 제2 정규화
++    - 제1 정규화를 만족하면서 테이블의 모든 컬럼이 PK에 완전 함수 종속이 되어야 함
++        - 완전 함수 종속 : PK 전체에 종속적이여야함, 부분적으로 종속된 컬럼은 별도의 테이블로 분리
++
++    <img width="875" alt="스크린샷 2024-11-12 오후 3 37 15" src="https://github.com/user-attachments/assets/8f276853-1e0e-4212-b4cb-0d44fac17d6d">
++
++- ### 제3 정규화
++    - 제2 정규화를 만족하면서 이행적 종속이 없어야 함
++
++    - 이행적 종속 : 어떤 컬럼 A가 기본 키 X에 종속이고, 또 다른 컬럼 B가 컬럼 A에 종속적일 때, 컬럼 B는 기본 키 X에 이행적으로 종속
++        - X -> A, A -> B => X -> B
++
++    <img width="830" alt="스크린샷 2024-11-12 오후 3 44 16" src="https://github.com/user-attachments/assets/e37d7358-5172-4b76-b2a4-34e127746db7">
++
++## 트랜잭션
++-  트랜잭션(Transaction) : 데이터 베이스에서 여러 작업을 하나의 논리적 작업 단위로 묶은 것
++    - [ACID](#acid)
++
++    -  트랜잭션 관리
++        - BEGIN : 트랜잭션의 시작을 명시
++
++        - COMMIT : 트랜잭션 내 모든 작업이 성공했을 때, 이를 완료하고 데이터 베이스에 영구히 반영
++
++        - ROLLBACK : 트랜잭션 내 작업이 하나라도 오류가 발생했을 때, 해당 트랜잭션을 취소하고 데이터베이스를 트랜잭션 실행 전 상태로 되돌림
++
++## DB의 무결성
++- 무결성 : 데이터 베이스에서 데이터의 정확성, 일관성, 신뢰성을 유지하는 것
++    - 데이터 무결성의 종류
++        1. 개체 무결성(Entity Integrity)
++            - 기본 키 제약 조건을 통해 데이터 베이스의 각 행이 고유한 식별자를 가지도록 보장
++
++        2. 참조 무결성(Referentiaol Integrity)
++            - 외래 키 제약 조건을 통해 두 테이블 간의 관계를 올바르게 유지
++
++        3. 도메인 무결성(Domain Integrity)
++            - 컬럼의 데이터 타입과 제약 조건을 통해 특정 컬럼에 들어갈 수 있는 범위 지정
++
++        4. 고유성 무결성(Unique Integrity)
++            - 특정 컬럼이나 조합이 유일한 값을 가져야 한다는 제약 조건을 설정하여 중복 방지
++
++        5. 속성 무결성(Attribute Integrity)
++            - 각 컬럼의 속성이 올바르게 유지되도록 하여 필수 데이터가 누락되지 않도록 보장
++
++## 자주 사용하는 SQL문
++- DDL(Data Definition Language) : 테이블이나 관계의 구조를 생성하는 언어
++    - Create : 새로운 데이터베이스 테이블 , 뷰 인덱스 저장 프로시저 생성
++    - Drop : 이미 존재하는 데이터베이스 테이블, 뷰, 인덱스, 저장 프로시저 삭제
++    - Alter : 이미 존재하는 데이터베이스 개체에 대한 변경
++    - Truncate : 테이블에서 데이터 제거(한번 삭제 시 돌이킬 수 없음)
++
++- DML(Data Manipulation Language) : 테이블에 데이터 검색, 삽입, 수정, 삭제하는데 사용
++    - Select - 검색
++    - Insert - 삽입
++    - Update - 업데이트
++    - Delete - 삭제
++
++- DCL(Data Control Language) : 데이터의 사용 권한을 관리하는데 사용함
++    - Grant : 특정 데이터베이스 사용자에게 특정 작업에 대한 수행 권한 부여
++    - Revoke : 특정 데이터베이스 사용자에게 특정 작업에 대한 수행 권한 삭제
++        - 부여할 수 있는  권한
++            - Connect
++            - Select
++            - Insert
++            - Update
++            - Delete
++            - Usage
+\ No newline at end of file
+Index: seykim/3일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/seykim/3일차.md b/seykim/3일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138288)
++++ b/seykim/3일차.md	(date 1733216138288)
+@@ -0,0 +1,154 @@
++# 온보딩 3일차
++- [Embedded && Embeddable](#embedded--embeddable)
++- [연관 관계 설정](#연관-관계-설정)
++- [ERD 작성](#erd-작성)
++
++## Embedded && Embeddable
++- 임베디드 타입 : 객체지향 프로그래밍에서 값 타입을 매핑할 때 사용되는 기능, 즉 새로운 값 타입을 직접 정의해서 사용하는 것(CPP에서 struct를 정의하는 것과 비슷한 느낌)
++
++- @Embedded
++    - 엔티티에서 임베디드 타입의 객체를 포함할 때 사용하는 어노테이션
++
++    - 값 타입을 사용하는 곳에 표시
++
++            {
++                @Embedded
++                public Sample sample;
++            }
++
++- @Embeddable
++    - 해당 클래스가 임베디드 타입으로 사용될 수 있음을 표시
++
++    - 값 타입을 정의하는 곳에 표시
++
++            {
++                @Embeddable
++                public class sampleTest {
++                    ~~~~
++                }
++            }
++
++- 임베디드 타입의 장점
++    - 객체지향적 설계 : 여러 필드를 하나로 묶어서 사용할 수 있고, 가독성이 좋아 객체지향적 설계에 도움
++    - 재사용성 : 여러 엔티티에서도 해당 임베디드 타입을 사용할 수 있음
++    - 중복 코드 감소 : 하나의 객체를 여러 엔티티에 쉽게 포합할 수 있어서 중복된 엔티티를 감소시킴
++
++
++## 연관 관계 설정
++- **PK(Primary Key) : 기본 키**
++        
++        테이블 내에서 각 행을 고유하게 식별할 수 있는 하나의 컬럼 또는 컬럼들의 조합
++
++        하나의 ID역할을 하며, 중복되지 않음
++
++    - 특징
++
++        - 유일성 : 테이블 내에서 고유함, 즉 중복되지 않음
++
++        - NotNULL : 기본 키 컬럼은 NULL값을 가질 수 없음
++
++        - 변경을 권장하지 않음 : 고유 식별자로 변경이 권장되지 않음
++
++        - 자동 생성 기능 : 자동으로 증가하는 ID값 등등 DB시스템에서 제공
++
++    - 복합 키(Composite Key)
++        - 두 개 이상의 컬럼을 조합하여 하나의 기본 키로 사용할 수 있는 키의 조합
++
++        - 예시
++
++                CREATE TABLE StudentGrades (
++                    student_id INT, course_id INT, 
++                    grade CHAR(1), 
++                    PRIMARY KEY (student_id, course_id));
++            - 위의 테이블에서 student_id + course_id의 조합을 통해서 기본 키로 대체할 수 있음
++
++
++- **FK(Foreign Key) : 외래 키**
++
++        한 테이블에서 다른 테이블의 기본 키를 참조하는 컬럼
++
++        두 테이블 간의 관계를 정의하고 데이터의 무결성을 보장함
++
++    - 특징
++
++        - 참조 무결성 보장 : 참조하는 테이블(부모 테이블)의 기본 키와 일치해야 하고 부모 테이블에는 없는 값을 가질 수 없음 => 데이터 일관성 유지
++
++        - NULL 허용 여부 : 부모 테이블의 기본 키와 관계 설정에 따라 NULL을 허용할 수도 있음
++
++        - 부모-자식 관계 : 외래 키가 정의된 테이블은 자식 테이블이라고 하며, 외래 키가 참조한 테이블은 부모 테이블이라 함
++
++        - 참조 행동 : 부모 테이블에서 데이터가 변경될 때, 자식 테이블의 데이터에 미치는 영향을 설정
++
++            - ON DELETE CASCADE : 부모 테이블의 행이 삭제되면 관련 자식 테이블의 행도 함께 삭제
++
++            - ON UPDATE CASCADE : 부모 테이블의 기본 키 값이 변경이 되면 자식 테이블의 외래 키 값도 함께 변경
++
++- ### PK와 FK의 차이점
++
++    |구분|PK|FK|
++    |:---|:---|:---|
++    |목적|고유 식별자|다른 테이블의 기본 키를 참조하여 테이블 간의 관계 정의|
++    |고유성|고유해야함|중복 가능, 하지만 참조값은 부모 테이블에 반드시 있어야함|
++    |NULL허용|X|O|
++    |위치|현재 테이블 내부에서 정의|다른 테이블의 기본 키를 참조하여 현재 테이블에 정의|
++    |제약 조건|고유한 값|참조 무결성을 유지|
++
++- **연관관계의 주인**
++    - 외래 키를 가지고 있는 테이블
++
++    - 양방향 관계에서 관계를 관리하고 업데이트 할 수 있는 권한을 가진 객체
++
++    - 연관관계의 주인이 아닌 경우 읽기 전용으로 동작
++
++    - 데이터의 무결성을 유지하고 불필요한 쿼리 생성을 방지하기 위함
++
++    - 외래 키가 존재하는 쪽이 연관관계의 주인, 관계를 관리하고 변경해야하는 주체가 주인이 되는것이 좋음
++
++    - 이를 잘못 설정할 경우 데이터베이스에 적용이 되지 않는 문제가 발생할 수 있음
++
++- **@OneToOne**
++    - 일대일 관계 : 하나의 엔티티이 다른 테이블의 하나의 엔티티과 연결된 경우
++
++    - 주로 두 테이블을 분리하여 저장할 필요가 있을 때 사용
++
++    <img width="571" alt="스크린샷 2024-11-13 오후 4 36 39" src="https://github.com/user-attachments/assets/c196ee48-8a75-4af0-812d-95356ac4ff69">
++
++- **@OneToMany**
++    - 일대다 관계 : 하나의 엔티티가 여러 엔티티와 매칭되는 관계, 즉 하나의 부모 엔티티가 여러 자식 엔티티를 가질 수 있는 구조
++
++    <img width="729" alt="스크린샷 2024-11-13 오후 4 39 34" src="https://github.com/user-attachments/assets/8326c25e-2699-4147-961b-d1d454707177">
++
++- **@ManyToOne**
++    - 다대일 관계 : 여러 개의 엔티티가 하나의 엔티티와 매칭되는 관계로 OneToMany와 반대 방향
++
++    <img width="670" alt="스크린샷 2024-11-13 오후 4 47 31" src="https://github.com/user-attachments/assets/4a29ec10-8769-466e-84fe-10b2774dad33">
++
++
++- **@ManyToMany**
++    - 다대다 관계 : 여러 엔티티가 여러 엔티티와 매칭되는 관계
++
++    <img width="746" alt="스크린샷 2024-11-13 오후 4 50 58" src="https://github.com/user-attachments/assets/6cc4918b-6559-41ba-8759-b68695de3364">
++
++    - 중간 테이블 : 다대다 관계에서 두개의 1대 다 관계로 분해하여 데이터의 중복을 줄이는 방식
++
++    <img width="944" alt="스크린샷 2024-11-13 오후 4 33 41" src="https://github.com/user-attachments/assets/fa5c8f65-c134-4f99-a2e5-8a2bdf6084df">
++    
++    - 단점
++        1. 데이터 중복과 무결성 문제 : 중복 데이터 가능성 및 무결성 제약의 복잡성
++        2. 데이터 처리와 성능 문제 : Join 비용 증가 및 복잡한 쿼리
++        3. 관계 관리의 어려움 : 삭제 및 갱신이 어렵고, 관계 정보 확장성이 제한 됨
++        4. 데이터 모델의 비직관성 : 데이터 모델이 복잡하고, 요구사항의 표현력이 떨어짐
++
++## ERD 작성
++- 아래의 내용을 기반으로 ERD 작성하기
++
++        1. 학생들이 수강신청을 하는 홈페이지를 만들 예정입니다.
++
++        2. 학생은 이름과 생년월일을 필수로 가지고 있습니다.
++
++        3. 강의는 교수명, 강의이름, 현재 신청인원을 필수로 가지고 있습니다.
++
++        4. 강의를 신청하려면 학생 이름과 생년월일을 입력해야합니다.
++
++
++    <img width="944" alt="스크린샷 2024-11-13 오후 4 33 41" src="https://github.com/user-attachments/assets/fa5c8f65-c134-4f99-a2e5-8a2bdf6084df">
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentSchedulesResponseDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentSchedulesResponseDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentSchedulesResponseDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentSchedulesResponseDto.java	(date 1733216138296)
+@@ -0,0 +1,12 @@
++package jpabook.onboarding.student.controller.dto.response;
++
++import java.util.List;
++
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor
++public class StudentSchedulesResponseDto {
++	private final List<StudentScheduleResponseDto> schedules;
++}
+Index: taehyeon/onboarding/settings.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/settings.gradle b/taehyeon/onboarding/settings.gradle
+new file mode 100644
+--- /dev/null	(date 1733216138293)
++++ b/taehyeon/onboarding/settings.gradle	(date 1733216138293)
+@@ -0,0 +1,1 @@
++rootProject.name = 'onboarding'
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentScheduleResponseDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentScheduleResponseDto.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentScheduleResponseDto.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/dto/response/StudentScheduleResponseDto.java	(date 1733216138296)
+@@ -0,0 +1,25 @@
++package jpabook.onboarding.student.controller.dto.response;
++
++import jpabook.onboarding.data.entity.Sugang;
++import jpabook.onboarding.data.status.SugangStatus;
++import lombok.AccessLevel;
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++
++@Getter
++@AllArgsConstructor(access = AccessLevel.PROTECTED)
++public class StudentScheduleResponseDto {
++	private final Long id;
++	private final String professorName;
++	private final String courseName;
++	private final int grade;
++	private final SugangStatus status;
++
++	public StudentScheduleResponseDto(final Sugang sugang) {
++		this.id = sugang.getId();
++		this.professorName = sugang.getCourse().getProfessorName();
++		this.courseName = sugang.getCourse().getName();
++		this.grade = sugang.getCourse().getGrade();
++		this.status = sugang.getStatus();
++	}
++}
+Index: seykim/1일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/seykim/1일차.md b/seykim/1일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138288)
++++ b/seykim/1일차.md	(date 1733216138288)
+@@ -0,0 +1,484 @@
++# 온보딩 1~2일차
++- [HTTP METHOD](#http-method)
++- [HTTP STATUS](#http-status)
++- [HTTP HEADER](#http-header)
++- [REST API](#rest-api)
++- [Cookie & Session](#cookie--session)
++- [JWT](#jwt)
++- [MVC && MVC2](#mvc--mvc2)
++- [HTTPS & DNS Server & CI/CD](#https--dns-server--cicd)
++
++## [HTTP METHOD](https://inpa.tistory.com/entry/WEB-%F0%9F%8C%90-HTTP-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%A2%85%EB%A5%98-%ED%86%B5%EC%8B%A0-%EA%B3%BC%EC%A0%95-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC)
++
++- 클라이언트 <-> 서버 간의 통신에서 이루어지는 요청(Request)과 응답(Response)에서 데이터를 전송하는 방식
++- 주어진 리소스에 수행하길 원하는 행동
++
++### 총 사용되는 메소드 9개
++
++|주요 메소드|설명|
++|:--|:--|
++|[GET](#주요-메소드---get)|리소스 조회|
++|[POST](#주요-메소드---post)|요청 데이터 처리, 주로 등록으로 사용|
++|[PUT](#주요-메소드---put)|리소스 덮어쓰기, 해당 리소스가 없으면 생성|
++|[PATCH](#주요-메소드---patch)|리소스 부분 덮어쓰기(특정부분 update)|
++|[DELETE](#주요-메소드---delete)|리소스 삭제|
++-----------------
++|기타 메소드|설명|
++|:--|:--|
++|[HEAD](#기타-메소드---head)|GET과 동일하지만 메시지 부분(body)을 제외하고 상태줄과 헤더만 반환|
++|[OPTIONS](#기타-메소드---options)|대상 리소스에 대한 통신 기능 옵션(메소드)을 설명|
++|[CONNECT](#기타-메소드---connect)|대상 자원으로 식별되는 서버에 대한 터널을 설정|
++|[TRACE](#기타-메소드---trace)|대상 리소스에 대한 경로를 따라 메시지 루프백 테스트를 수행|
++-------
++
++- ##### 주요 메소드 - GET
++
++		리소스 조회 메소드(READ)
++		전달하고 싶은 데이터는 쿼리스트링을 통해서 전달
++		- 예시 : GET /sample/100?name=test&age=20
++
++		쿼리스트링 대신 메시지 바디를 통해서 전달할 수 있지만, RESTful한 방법이 아니고 서버에서 따로 구성해야하기  때문에 권장하지 않음
++
++		조회할 때 POST도 사용할 수 있지만, GET 메소드는 캐싱이 가능해서 조회에서는 GET 메소드가 유리함
++
++	- ###### 정적 데이터 조회과정
++		1. 이미지 또는 정적 텍스트 문서 GET
++		2. 쿼리 파라미터 없이 리소스 경로로 단순하게 조회 가능
++		- 예시 :  GET /sample/100 HTTP1.1 -> 100번째 데이터를 단순 조회하는것
++	- ##### 동적 데이터 조회과정
++		1. 주로 검색, 게시판 목록에서 검색어로 이용
++		2. 쿼리 파라미터를 사용해서 데이터 전달
++		3. 쿼리 파라미터는 key=valeu&key=value 의 구조로 되어있음
++		- 예시 : GET /search/name=hello&age=20 -> 조건에 부합한 상세 데이터를 찾아서 조회해줌
++	- ##### HTML Form 데이터 조회과정
++		1. 웹 문서에서 폼 입력칸에 데이터를 적고 전송 버튼을 누름  
++		2. 지정한 GET 메소드 동작에 따라 해당 태그안에 들어간 값들이 쿼리스트링으로 서버로 전송됨
++		- 예시 : input안에 name과 age를 입력하게 되어있다면 이것이 GET /search/name=hello&age=20 이런식으로 서버로 전송이 됨
++		- HTML Form 태그 문서로 사용자와 UI로 상호작용하여 서보와 통신
++		- HTML Form 전송은 GET, POST만 지원
++		
++- ##### 주요 메소드 - POST
++		전달한 데이터 처리/생성 요청 매서드(Create)
++
++		메시지 바디를 통해 서버로 요청 데이터를 전달하면 서버는 요청 데이터를 처리하여 업데이트
++
++		전달된 데이터로 주로 신규 리소스 등록, 프로세스 처리에 사용
++
++		만일 데이터를 GET하는데 있어, JSON으로 조회 데이터를 넘겨야하는 애매한 경우 POST를 사용
++		
++		비멱등성(여러번의 요청에 대해서 항상 동일한 결과x)의 특성 및 식별자를 보내지 않아야함
++	- ###### JSON 데이터 전송 과정
++		1. 클라이언트는 메시지 바디에 등록할 정보를 JSON형태로 만들어서 서버로 전송
++		2. 서버에서는 해당 데이터를 처리 로직에 따라서 처리
++		3. 처리 후 데이터를 바디에 담아서 클라이언트로 응답(신규 데이터 생성 시 201 또는 200 status로 반환)
++
++	- ###### HTML Form 데이터 전송 과정
++		1. 웹 문서에서 폼 입력칸에 데이터를 적고 전송
++		2. 지정한 POST 메소드 동작에 따라 input 태그 안에 들어간 값들이 쿼리스트링으로 서버로 전송
++		- HTML Form 태그 문서로 사용자와 UI로 상호작용하여 서버와 통신
++		- 회원가입, 상품 주문, 데이터 변경 등등에 이용
++		- HTML Form 전송은 GET, POST만 지원
++	
++	- ###### Content-Type 헤더 종류(enctype)
++		- application/x-www-form-urlencoded
++			- Form의 내용을 HTTP 메시지 바디를 통해서 전송(key=value, 쿼리 파라미터 형식)
++			- 전송 데이터를 url encoding 처리
++			- 예시 : abc김 -> abc%EA%B9%80
++
++		- multipart/form-data
++			- 파일 업로드 같은 바이너리 데이터 전송 시 사용
++			- 다른 종류의 여러 파일과 Form의 내용 함께 전송 가능
++
++		- application/json
++			- TEXT, XML, JSON 데이터 전송 시 사용
++		
++		
++	- ###### 파일 데이터 전송 과정
++		- enctype을 *multipart/form-data* 로 작성 해 해당 폼에 파일이 있다는 것을 표시
++		- 바이너리 데이터 전송 시 사용
++		- *multipart/form-data* 형식이라면 HTTP 메시지에 임의의 구분자(---------XXX)가 Form 데이터 간 구분을 지어줌
++		- 여러 개의 Content-Type에 대한 데이터를 보낼 수 있음
++
++- ##### 주요 메소드 - PUT
++		리소스를 수정하는 메소드(Update)
++
++		만일 요청 메시지에 리소스가 있으면 덮어쓰고 없으면 새로 생성
++		
++		데이터를 대체(update)해야하니 리소스의 구체적인 경로를 지정해줘야 함
++
++		멱등성(여러번의 요청에 대해서 항상 동일한 결과)를 가지고 있으며 식별자를 요청url에 포함
++
++	- ###### PUT 요청에 리소스가 있는 경우
++		1. 식별자를 통해 리소스를 교체한다는 요청
++		2. 기존 데이터가 있을 경우, 완전하게 대체
++
++	- ###### PUT 요청에 리소스가 없는 경우
++		1. 식별자를 통해 리소스를 교체한다는 요청
++		2. 기존 데이터가 없다면, POST처럼 신규로 생성
++
++	- ###### PUT 요청에 일부 리소스만 변경하길 원하는 경우
++		1. 식별자를 통해 리소스를 교체한다는 요청
++		2. 기존 데이터가 있는데, 전체 리소스 중 일부 리소스만 남아있고 나머지 리소스는 데이터가 삭제
++
++- ##### 주요 메소드 - PATCH
++		리소스 일부 부분을 변경하는 메소드(Update)
++		
++		만일 PATCH를 지원하지 않는 서버에서는 대신에 POST를 사용
++	1. 일부 리소스만 변경하려고 PATCH로 해당 데이터 전달
++
++	2. PUT과는 다르게 일부 데이터만 변경
++
++- ##### 주요 메소드 - DELETE
++		리소스 제거하는 메소드(Delete)
++
++		상태코드는 대부분 200을 사용하고 상황에 따라 204를 사용
++
++		식별자를 통해서 해당 리소스를 특정
++	
++	1. 식별자를 통해 제거하고자 하는 리소스를 특정해서 Delete로 전달
++
++	2.  서버에서 요청을 받고 데이터베이스의 해당 리소스를 제거
++
++- ##### 기타 메소드 - HEAD
++		GET과 동일하지만 서버에서 바디를 리턴하지 않음
++		
++		응답 상태 코드만 확인할 때와 같이 리소스를 받지 않고 오직 찾기만 원할 때 사용 (일종의 검사 용도)
++
++		서버의 응답 헤더를 봄으로써 리소스가 수정 되었는지 확인 가능
++
++    
++- ##### 기타 메소드 - OPTIONS
++		예비 요청에 사용되는 HTTP 메소드
++
++		예비 요청이란 본 요청을 하기 전에 안전한지 미리 검사하는 것
++
++		서버의 지원 가능한 HTTP 메소드와 출처를 응답받아 CORS정책을 검사하기 위한 요청
++
++	- ###### CORS 정책
++		- CORS(Cross-Origin Resource Sharing)는 다른 출처의 리소스에 접근할 수 있도록 하는 정책
++		- 출처가 다른 서버와 안전하게 통신하기 위함
++		- 출처 = 프로토콜 + 호스트 + 포트 (예: http://example:3000)
++		
++- ##### 기타 메소드 - CONNECT
++		클라이언트가 서버와의 터널을 설정해 두 지점 간의 TCP 연결을 확립하기 위해서 사용
++
++		HTTPS 요청을 위한 프록시 서버를 설정 
++
++- ##### 기타 메소드 - TRACE
++		일종의 검사용
++
++		서버에 도달했을 때 최종 패킷의 요청 패킷 내용을 응답 받을 수 있음
++
++		디버깅을 위해 사용하는 목적으로, 방화벽 및 프록시서버, 게이트웨이 등을 거쳐서 변조된 내용이 무엇인지 확인하려는 목적이나 이는 보안 취약점이 될 수 있어서 지양되는 메소드
++
++## [HTTP STATUS](https://hongong.hanbit.co.kr/http-%EC%83%81%ED%83%9C-%EC%BD%94%EB%93%9C-%ED%91%9C-1xx-5xx-%EC%A0%84%EC%B2%B4-%EC%9A%94%EC%95%BD-%EC%A0%95%EB%A6%AC/)
++
++|종류|내용|의미|
++|:----:|:----:|:----|
++|[1xx](#1xx)|Informational(정보 제공)|임시 응답으로 현재 클라이언트의 요청까지는 처리 되었으니 계속 진행하라는 의미| 
++|[2xx](#2xx)|Success(성공)|클라이언트의 요청이 서버에서 성공적으로 처리 되었다는 의미| 
++|[3xx](#3xx)|Redirection(리다이렉션)|완전한 처리를 위해 추가 동작이 필요한 경우로 해당 주소로 다시 시도하거나 연결해주는 의미| 
++|[4xx](#4xx)|Client Error(클라이언트 에러)|없는 페이지를 요청하는 등 클라이언트 요청 메시지 내용이 잘못된 경우를 의미| 
++|[5xx](#5xx)|Server Error(서버 에러)|서버에서 메시지 처리에 문제가 발생한 경우로, 서버의 부하, DB오류 등이 발생하는 경우를 의미| 
++
++### 1XX
++|종류|상태 텍스트|의미|
++|:----|:----|:----|
++|100|Continue|계속 진행하라는 의미| 
++|101|Switching Protocols|프로토콜을 전환(업그레이드)| 
++|102|Processing|타임아웃이 발생하지 않도록 처리중이라는 의미| 
++
++
++### 2XX
++|종류|상태 텍스트|의미|
++|:----|:----|:----|
++|200|OK|서버에서 요청을 성공적으로 처리| 
++|201|Create|서버에서 요청이 처리되어서 새로운 리소스가 생성됨| 
++|202|Accepted|요청은 접수하였지만 아직 처리가 완료되지 않음| 
++|204|No Content|처리를 성공하였지만 클라이언트에게 돌려줄 컨텐츠가 없음|
++
++
++
++### 3XX
++|종류|상태 텍스트|의미|
++|:----|:----|:----|
++|301|Moved Permanently|지정한 리소스가 새로운 URI로 이동| 
++|303|See Other|다른 위치로 요청하라는 의미| 
++|304|Not Modified|마지막 요청 이후 요청 페이지가 수정되지 않음|
++|307|Temporary Redirect|임시로 리다이렉션 요청이 필요함| 
++
++### 4XX
++|종류|상태 텍스트|의미|
++|:----|:----|:----|
++|400|Bad Request|잘못된 요청구문| 
++|401|Unauthorized|지정한 리소스에 대한 액세스 권한이 없음| 
++|403|Forbidden|지정한 리소스에 대한 액세스가 금지 됨| 
++|404|Not Found|지정한 리소스를 찾을 수 없음|
++
++### 5XX
++|종류|상태 텍스트|의미|
++|:----|:----|:----|
++|500|Internal Server Error|서버에 에러가 발생| 
++|501|Not Implemented|요청한 URI의 메소드에 대해 서버가 구현하고 있지 않음| 
++|502|Bad Gateway|게이트웨이 또는 프록시 역할을 하는 서버가 그 뒷단의 서버로부터 잘못된 응답을 받음| 
++|504|Gateway Timeout|게이트웨이 또는 프록시 역할을 하는 서버가 그 뒷단의 서버로부터 응답을 기다리다 타임아웃이 발생|
++
++## [HTTP HEADER](https://gmlwjd9405.github.io/2019/01/28/http-header-types.html)
++
++### 항목
++- [HTTP 헤더 내 일반 헤더(General Header)](#http-일반-헤더--요청-및-응답-메시지-모두에서-사용-가능한-일본-목적의-헤더)
++- [HTTP 헤더 내 엔티디/개체 해더(Entity Header)](#http-엔티티-헤더--요청-및-응답-메시지-모두에서-사용-가능한-entity콘텐츠-본문-리소스에-대한-설명-헤더-항목)
++- [HTTP 헤더 내 요청 해더(Request Header)](#http-요청-헤더--요청-메시지-내에서만-나타나며-가장-방대함)
++- [HTTP 헤더 내 응답 헤더(Response Header)](#http-응답-헤더--http요청이나-헤더를-수신했을-때의-응답)
++- [HTTP 헤더 내 캐시/쿠키 헤더](#http-캐시쿠키-헤더)
++
++#### HTTP 일반 헤더 : 요청 및 응답 메시지 모두에서 사용 가능한 일본 목적의 헤더
++- 주요 항목
++	- Date : HTTP 메시지를 생성한 일시
++	- Connnection : 클라이언트와 서버 간 연결에 대한 옵션 설정
++	- Cache-Control
++	- Pragma
++	- Trailer
++
++#### HTTP 엔티티 헤더 : 요청 및 응답 메시지 모두에서 사용 가능한 Entity(콘텐츠, 본문, 리소스)에 대한 설명 헤더 항목
++- 주요 항목
++	- Content-Type : 해당 개체에 포함되는 미디어 타입 정보
++	- Content-Language : 해당 개체에 어울리는 사용자 언어
++	- Content-Encoding : 해당 개체 데이터의 압축 방식
++	- Content-Length : 해당 개체의 바이트 길이 또는 크기
++	- Content-Location : 해당 개체의 실제 위치
++	- Content-Disposition : 응답 바디를 브라우저가 표시하는 방법
++	- Content-Security-Policy : 다른 외부 파일들을 불러오는 경우, 보완 관련 소스 명시
++	- Location : 리다이렉트가 되었을 경우, 이동된 주소 또는 새로 생성된 리소스 주소 명시
++	- Last-Modified : 리소스를 마지막으로 갱신한 일시
++	- Transfer-Encoding : 바디가 길거나 길이를 모를경우 이를 청크로 나눠서 일부분씩 전송
++
++#### HTTP 요청 헤더 : 요청 메시지 내에서만 나타나며 가장 방대함
++- 주요 항목
++	- Host : 요청하는 호스트에 대한 호스트명 및 포트 번호
++	- User-Agent : 클라이언트 소프트웨어 명칭 및 버전 정보
++	- From : 클라이언트 사용자 메일 주소
++	- Cookie : 서버에 의해 Set-Cookie로 클라이언트에게 설정된 쿠키 정보
++	- Referer : 바로 직전에 머물렀던 웹 링크 주소
++	- If-Modified-Since : 제시한 일시 이후로만 변경된 리소스를 취득 요청
++	- Authorization : 인증토큰을 서버로 보낼 때 사용하는 헤더
++	- Origin : 서버로 POST요청을 보낼 때, 요청이 어느 주소에서 시작되었는지 나타냄
++	- Accept : 클라이언트 자신이 원하는 미디어 타입 및 우선순위
++	- Accept-Charset : 문자 집합
++	- Accept-Encoding : 문자 인코딩 방식
++	- Accept-Language : 문자 언어
++
++#### HTTP 응답 헤더 : HTTP요청이나 헤더를 수신했을 때의 응답
++- 주요 항목
++	- Server : 서버 소프트웨어 정보
++	- Accept-Range
++	- Set-Cookie : 서버측에서 클라이언트에게 세션 쿠키 정보를 설정
++	- Expires : 리소스의 유효기간
++	- Age : max-age 시간 내에서 시간이 얼마나 흘렀는지 초단위로 알려주는 캐시 응답
++	- ETag : HTTP 컨텐츠가 바뀌었는지를 검사할 수 있는 태그
++	- Proxy-authenticate
++	- Allow : 서버측에서 지원 가능한 HTTP메소드의 리스트
++	- Access-Control-Allow-Origin : CORS정책에 맞는 요청을 보내는 프론트의 주소
++
++#### HTTP 캐시/쿠키 헤더
++- 캐싱 관련
++	- Cache-Control -> no-store : 아무것도 캐싱하지 않음
++	- Cache-Control -> no-cache : 모든 캐시를 쓰기 전에 서버에 해당 캐시를 사용해도 되는지 확인
++	- Cache-Control -> must-revalidate : 만료된 캐시만 서버에 확인
++	- Cache-Control -> public : 공유 캐시에 저장해도 됨
++	- Cache-Control -> private : 특정 사용자 환경에만 저장
++	- Cache-Control -> max-age : 캐시의 유효기간
++	- Expires : 캐시의 만료기간 (단, Cache-Control의 max-age가 있는경우 무시됨)
++	- Age : max-age 시간 내에서 시간이 얼마나 흘렀는지 초단위로 알려주는 캐시 응답
++	- ETag : HTTP 컨텐츠가 바뀌었는지를 검사할 수 있는 태그
++	- If-None-Match : 서버에 ETag가 달라졌는지 검사 요청
++- 쿠키 관련
++	- Cookie : 서버에 의해 Set-Cookie로 클라이언트에게 설정된 쿠키 정보
++	- Set-Cookie : 서버측에서 클라이언트에게 세션 쿠키 정보를 설정할 때 사용하는 항목
++
++
++## REST API
++- ### [REST(Representational State Transfer)](https://ko.wikipedia.org/wiki/REST)
++		네트워크 아키텍쳐 원리의 모음
++
++		웹 상의 자료를 HTTP위에서 별도의 전송 계층없이 전송하기 위한 인터페이스
++
++		CRUD(Create, Read, Update, Delete)를 따라감
++		
++	- REST의 특징
++
++		1. 인터페이스 일관성 : 일관적인 인터페이스로 분리 되어야 함
++
++		2. 무상태 : 서버가 데이터를 들고 있지 않으며, 클라이언트는 서버에 요청을 보낼 때 모든 데이터를 들고 있어야 함
++
++		3. 캐시 처리 기능 : 캐싱이 가능한 응답이여야하며, 이를 통해 서버의 과부화와 트래픽을 감소시킬 수 있음
++
++		4. 계층화 : 보안, 로드 밸런싱, 프록시 등을 추가해 시스템 확장성, 보안성을 증가시키고 클라이언트는 중간계층을 알 필요가 없으며 API가 제공하는 데이터와 기능에 접근
++
++		5. 클라이언트/서버 구조 : 클라이언트는 사용자 인터페이스, 서버는 데이터관리와 로직을 설계함으로 서로가 독립적으로 설계
++
++- ### REST API
++		REST의 특징을 기반으로 만든 API
++
++	- REST API 설계 규칙
++		1. 자원 명사는 복수형으로 사용
++		2. HTTP 메소드는 목적에 맞게 사용
++		3. 계층 구조를 이용한 URI설계
++		4. 쿼리 파라미터로 정렬, 페이징 필터링 지원
++		5. 응답에 HTTP Status 사용
++		6. 일관된 데이터 형식 사용
++
++- ### RESTful API
++		REST원리를 따르는 시스템을 RESTful이라고 하며, REST API를 제공하면 이것이 RESTful API라고 함
++	- 목적 : 이해하기 쉽고 사용하기 쉬운 REST API를 만들기 위함
++	- RESTful하지 못한 경우
++		- CRUD를 따르지 않고, 업데이트나 생성에 모두 POST를 사용하고, 데이터 조회시에도 POST를 사용하는 등 원래의 목적을 벗어난 API를 사용할 때 
++		- 쿼리 스트링에 잘못된 정보나 불필요한 정보를 포함해서 API를 보내거나 URI가 설정될 때
++
++## Cookie && Session
++- ### [Cookie](https://ko.wikipedia.org/wiki/HTTP_%EC%BF%A0%ED%82%A4)
++		사용자의 컴퓨터에 저장되는 이름을 가진 작은 크기의 데이터
++
++		즉, 사용자가 어떤 웹사이트에 방문했을 경우 남는 작은 기록 정보파일
++	- 쿠키의 구조
++		1. 이름
++		2. 값
++		3. 0개 이상의 속성(key : value 구조)
++			- 속성 : 쿠키의 만료기간, 도메인, 플래그 등
++	- 쿠키의 목적
++		1. 세션 관리 : 서버에 저장해야할 로그인, 장바구니 등의 정보 관리
++		2. 개인화 : 사용자 테마 등 개인의 세팅
++		3. 트래킹 : 사용자의 행동을 기록하고 분석하는 용도
++	- 쿠키의 생성 방법
++		- HTTP 요청을 수신할 떄, 서버에서 응답과 함께 Set-Cookie 헤더를 전송함으로 쿠키를 생성
++		- 예시 : Set-Cookie: id=a3fWb; Expires=Wed, 21 Oct 2024 17:28:00 GMT;
++	- 쿠키의 보안 관련 주의
++		1. Secure 속성 : HTTPS 프로토콜 상에서 암호화된 요청일 경우에만 전송, 민감한 정보는 쿠키에 저장되면 안됨
++		2. HTTP Only 속성 : XSS공격을 방지하기 위해서 자바스크립트에서 쿠키에 접근할 수 없도록 막음
++		3. SameSite 속성 : 쿠키가 cross-site 요청과 함께 전송되지 않았음을 요구하게 만들어 cross-site요청 위조 공격(CSRF)를 방지
++	
++- ### [Session](https://developer.mozilla.org/ko/docs/Web/HTTP/Session)
++		사용자가 웹 서버와 상호작용 하는동안 유지되는 상태
++
++		사용자의 로그인상태, 장바구니 등 의 내용을 담아두는것
++
++	- 세션의 특징 및 역할
++		- 기본적으로 HTTP에서 무상태를 유지하기 때문에, 상태성을 유지해야하는 것들을 세션에서 관리함
++		- 고유 ID를 통해서 관리하며 고유 ID는 쿠키로 저장이 됨
++	
++	- 세션의 작동 원리
++		1. 사용자가 웹 사이트에 접속
++		2. 세션 ID 저장
++		3. 서버에서 세션 데이터 관리
++		4. 사용자가 세션을 통해 상태 유지
++		5. 세션 종료
++	- 세션의 장점
++		1. 상태 유지 : HTTP에서 무상태를 유지하는데, 이를 상태를 유지함으로 로그인 등 편리함 제공
++		2. 보안 : 세션 데이터가 서버에 저장되므로 쿠키에 중요한 정보를 담을 필요가 없음
++		3. 다양한 데이터 저장 가능 : 서버에 데이터가 저장되므로 클라이언트의 저장용량과 상관없이 데이터를 저장할 수 있음
++	- 세션의 단점
++		1. 서버 자원 사용 : 서버가 세션 관리를 하기때문에 사용자가 많아질 경우 서버에 부하가 걸림
++		2. 서버 확장성 : 서버에 저장을 할 경우, 서버 확장 시 세션 데이터를 공유하는데 작업이 필요함
++		
++- 쿠키와 세션의 차이점
++	|특성|쿠키|세션|
++	|:---|:---|:---|
++	|저장 위치|클라이언트|서버|
++	|용도|방문기록, 설정, 세션 ID등 쿠키로 저장|로그인상태 등등 중요한 정보를 저장|
++	|보안|브라우저에 저장됨으로 상대적으로 취약, HttpOnly 와 Secure 옵션으로 강화|서버에 저장됨으로 상대적으로 안전|
++	|만료|expires 또는 max-age로 지정 가능|서버 설정시간에 따라 만료기간 결정|
++
++## [JWT](https://ko.wikipedia.org/wiki/JSON_%EC%9B%B9_%ED%86%A0%ED%81%B0)
++- ### JWT(JSON Web Token)
++		JSON 포맷을 사용하여 사용자와 서버 간에 정보를 안전하게 주고받기 위한 토큰
++	- JWT의 구조
++		- 헤더
++			
++				{
++					"alg" : "HS256",
++					"typ" : "JWT"
++				}
++			- 토큰의 해싱 알고리즘 타입과 타입을 담고 있음
++		- 페이로드
++				
++				{
++					"sub": "1234567890",
++					"name": "John Doe",
++					"admin": true
++				}
++			- 토큰에 포함할 정보(클레임)을 담는 부분
++			- 등록된 클레임 : 주로 토큰의 상태나 유효기간을 나타냄
++				- iss : 토큰 발급자
++				- sub : 토큰 제목이나 주체
++				- exp : 토큰 만료 시간
++				- iat : 토큰 발행 시간
++			- 공개 클레임 : 사용자가 추가하는 클레임
++			- 비공개 클레임 : 클라이언트와 서버간의 정보 공유를 위한 정의하는 클레임
++		- 서명
++				
++				HMAC-SHA256(secret, base64urlEncoding(header) + '.' + base64urlEncoding(payload) )
++			
++			- JWT의 무결성을 검사하기 위함
++			- 생성과정
++				1. 인코딩 된 헤더와 페이로드를 .으로 연결
++				2. 비밀키와 함께 헤더의 해싱 알고리즘으로 서명 생성
++	- JWT의 생성 과정
++		- 사용자가 로그인을 하면 서버는 인증 후 사용자 정보로 JWT를 생성하여 클라이언트에 전달
++		- JWT는 헤더, 페이로드, 서명을 포함하여 BASE64로 인코딩 된 문자열로 클라이언트에 전달
++	- JWT의 사용 과정
++		- 클라이언트는 이후 요청할 때마다 JWT를 HTTP헤더에 포함해서 전송
++		- 서버는 서명을 검증해 무결성 확인 후, 페이로드를 통해 사용자를 식별
++	- JWT의 장점과 단점
++		- 장점
++			- 무상태성 : 서버는 클라이언트의 JWT만 확인하면 되므로 세션을 관리할 필요 X
++
++			- 확장성 : 무상태성으로 인해 서버가 JWT를 독립적으로 검증
++
++			- 효율적인 데이터 전송 : JWT는 클라이언트 쪽에 저장하고 필요할 때마다 전달
++
++		- 단점
++			- 토큰 크기 : JWT는 자체적으로 많은 정보를 담을 수 있기 때문에 토큰의 크기가 커질 수 있음
++
++			- 보안 : JWT가 클라이언트에 저장되어서 탈취 위험이 있음
++
++## MVC && MVC2
++- ### [MVC](https://developer.mozilla.org/ko/docs/Glossary/MVC)
++		M(Model) : 데이터와 비즈니스 로직 관리
++		V(View) : 레이아웃과 화면 처리
++		C(Controller) : 모델과 뷰로 명령을 전달
++		로 사용자와 상호작용하는 S/W를 디자인함에 있어 세가지 요소로 쪼개어 하는 디자인 패턴
++	<img width="398" alt="스크린샷 2024-11-11 오후 4 50 53" src="https://github.com/user-attachments/assets/89e37eb6-c3fd-4fbc-aa4f-a472e0e69090">
++
++	- 서로 분리되어 각자의 역할에 집중할 수 있고, 유지보수 및 확장,유연성 증가를 위해서 사용
++		
++- ### MVC2
++		MVC2 패턴에서는 모든 요청이 Controller를 거쳐 처리되므로, Controller 중심 구조로 작동
++	- MVC2 패턴의 특징 및 장점
++		1. 역할 분리의 강화 :  뷰와 모델 간의 상호작용을 없애고 컨트롤러를 중심으로 모든 요청을 관리하여, 유지보수가 쉬운 구조를 제공
++
++		2. 확장성 향상 : 모델, 뷰, 컨트롤러 간의 상호작용이 최소화되므로, 기능이 추가되더라도 각각에 대한 영향이 최소화
++
++		3. 테스트 용이성 : 각 컴포넌트의 역할이 명확히 구분되기 때문에 단위 테스트가 쉬워짐
++		
++		4. 중앙 집중형 컨트롤러 : 모든 요청이 컨트롤러를 통해 관리되므로, 공통적인 요청 처리 로직을 한 곳에 집중시켜 작성
++
++## HTTPS & DNS Server & CI/CD
++- ### [HTTPS](https://ko.wikipedia.org/wiki/HTTPS)
++	- HTTPS(HyperText Transfer Protocol over Secure Socket Layer)는 HTTP에서 보안이 강화된 버전
++	- TLS또는 SSL프로토콜을 통해서 세션 데이터를 암호화를 통해서 보안을 강화
++- ### [DNS Server](https://www.cdnetworks.com/ko/blog/web-performance/what-is-a-dns-server/)
++	- DNS(Domain Name System) : 인터넷에서 사용자가 입력한 도메인을 IP주소로 변환하는 시스템
++		- 도메인 이름을 IP주소로 변환 : www.example.com -> 98.12.125.232로 변환
++		- 로드 밸런싱 : 여러서버에 분할된 IP주소를 통해 트래픽을 분산
++		- 도메인 별칭관리 : example.com -> www.example.com 으로 별칭을 지정 가능
++	- DNS 서버의 종류
++		1. 루트 네임 서버 : 최상위에 위치한 DNS서버로, com,org,net같은 TLD 서버에 대한 정보를 가지고 있음 / 브라우저가 특정 도메인의 IP를 모를 때, 루트 네임 서버가  TLD서버를 안내
++		2. TLD 네임 서버 : 특정 TLD를 담당하는 DNS 서버로 도메인 네임 서버 위치 정보를 제공
++		3. 권한 네임 서버 : 특정 도메인에 대한 최종 정보(IP 주소 등)를 가지고 있는 DNS 서버
++		4. 재귀적 DNS 서버 : 사용자나 클라이언트가 요청한 도메인에 대해 IP 주소를 찾기 위해 여러 DNS 서버에 쿼리를 보내는 서버
++
++- ### [CI/CD](https://ko.wikipedia.org/wiki/CI/CD)
++	- CI(Continuous Intergration)
++		- 지속적으로 품질관리를 적용하는 프로세스를 실행하는 것
++	- CD(Continuous Delivery)
++		- 짧은 주기로 소프트웨어를 개발하는 방식으로, 소프트웨어를 신뢰 가능한 수준으로 출시할 수 있도록 보증하기 위함
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/resources/application.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/resources/application.yml b/taehyeon/onboarding/src/main/resources/application.yml
+new file mode 100644
+--- /dev/null	(date 1733216138297)
++++ b/taehyeon/onboarding/src/main/resources/application.yml	(date 1733216138297)
+@@ -0,0 +1,15 @@
++spring:
++  application:
++    name: onboarding
++  datasource:
++    username: root
++    url: jdbc:mysql://localhost:3306/onboarding_db
++  jpa:
++    hibernate:
++      ddl-auto: update
++    properties:
++      hibernate:
++        show_sql: true
++logging:
++  level:
++    org.hibernate.orm.jdbc.bind: trace
+\ No newline at end of file
+Index: taehyeon/onboarding/gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/taehyeon/onboarding/gradle/wrapper/gradle-wrapper.properties b/taehyeon/onboarding/gradle/wrapper/gradle-wrapper.properties
+new file mode 100644
+--- /dev/null	(date 1733216138292)
++++ b/taehyeon/onboarding/gradle/wrapper/gradle-wrapper.properties	(date 1733216138292)
+@@ -0,0 +1,7 @@
++distributionBase=GRADLE_USER_HOME
++distributionPath=wrapper/dists
++distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
++networkTimeout=10000
++validateDistributionUrl=true
++zipStoreBase=GRADLE_USER_HOME
++zipStorePath=wrapper/dists
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/OnboardingApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/OnboardingApplication.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/OnboardingApplication.java
+new file mode 100644
+--- /dev/null	(date 1733216138293)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/OnboardingApplication.java	(date 1733216138293)
+@@ -0,0 +1,12 @@
++package jpabook.onboarding;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++@SpringBootApplication
++public class OnboardingApplication {
++
++	public static void main(String[] args) {
++		SpringApplication.run(OnboardingApplication.class, args);
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/test/java/jpabook/onboarding/OnboardingApplicationTests.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/test/java/jpabook/onboarding/OnboardingApplicationTests.java b/taehyeon/onboarding/src/test/java/jpabook/onboarding/OnboardingApplicationTests.java
+new file mode 100644
+--- /dev/null	(date 1733216138297)
++++ b/taehyeon/onboarding/src/test/java/jpabook/onboarding/OnboardingApplicationTests.java	(date 1733216138297)
+@@ -0,0 +1,13 @@
++package jpabook.onboarding;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++
++@SpringBootTest
++class OnboardingApplicationTests {
++
++	@Test
++	void contextLoads() {
++	}
++
++}
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Sugang.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Sugang.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Sugang.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Sugang.java	(date 1733216138294)
+@@ -0,0 +1,53 @@
++package jpabook.onboarding.data.entity;
++
++import org.hibernate.annotations.JdbcTypeCode;
++import org.hibernate.type.SqlTypes;
++
++import jakarta.persistence.Column;
++import jakarta.persistence.Entity;
++import jakarta.persistence.EnumType;
++import jakarta.persistence.Enumerated;
++import jakarta.persistence.FetchType;
++import jakarta.persistence.GeneratedValue;
++import jakarta.persistence.GenerationType;
++import jakarta.persistence.Id;
++import jakarta.persistence.JoinColumn;
++import jakarta.persistence.ManyToOne;
++import jpabook.onboarding.data.status.SugangStatus;
++import lombok.AccessLevel;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++
++@Entity
++@Getter
++@NoArgsConstructor(access = AccessLevel.PROTECTED)
++public class Sugang {
++	@Id
++	@GeneratedValue(strategy = GenerationType.IDENTITY)
++	@Column(name = "sugang_id")
++	private Long id;
++
++	@ManyToOne(fetch = FetchType.LAZY)
++	@JoinColumn(name = "student_id")
++	private Student student;
++
++	@ManyToOne(fetch = FetchType.LAZY)
++	@JoinColumn(name = "course_id")
++	private Course course;
++
++	@Enumerated(EnumType.STRING)
++	@Column(nullable = false, length = 20)
++	@JdbcTypeCode(SqlTypes.VARCHAR)
++	private SugangStatus status;
++
++	public Sugang(final Student student, final Course course) {
++		this.student = student;
++		student.getSugangs().add(this);
++		this.course = course;
++		this.status = SugangStatus.ONGOING;
++	}
++
++	public void updateStatus(final SugangStatus status) {
++		this.status = status;
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Course.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Course.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Course.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Course.java	(date 1733216138294)
+@@ -0,0 +1,76 @@
++package jpabook.onboarding.data.entity;
++
++import org.hibernate.annotations.JdbcTypeCode;
++import org.hibernate.type.SqlTypes;
++
++import jakarta.persistence.Column;
++import jakarta.persistence.Entity;
++import jakarta.persistence.EnumType;
++import jakarta.persistence.Enumerated;
++import jakarta.persistence.GeneratedValue;
++import jakarta.persistence.GenerationType;
++import jakarta.persistence.Id;
++import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
++import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
++import jpabook.onboarding.data.status.CourseStatus;
++import lombok.AccessLevel;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++import lombok.Setter;
++
++@Entity
++@Getter
++@NoArgsConstructor(access = AccessLevel.PROTECTED)
++public class Course {
++
++	private static final int MAX_COUNT = 10;
++
++	@Id
++	@GeneratedValue(strategy = GenerationType.IDENTITY)
++	@Column(name = "course_id")
++	private Long id;
++
++	@Column(nullable = false)
++	private String professorName;
++
++	@Column(nullable = false)
++	private String name;
++
++	@Column(nullable = false)
++	private int count;
++
++	@Column
++	private int grade;
++
++	@Enumerated(EnumType.STRING)
++	@Column(nullable = false, length = 20)
++	@JdbcTypeCode(SqlTypes.VARCHAR)
++	private CourseStatus status;
++
++	public Course(CourseRequestDto request) {
++		this.professorName = request.getProfessorName();
++		this.name = request.getName();
++		this.count = request.getCount();
++		this.grade = 3;
++		this.status = CourseStatus.REGISTERED;
++	}
++
++	public Course(CourseUpdateRequestDto request) {
++		this.professorName = request.getProfessorName();
++		this.name = request.getName();
++		this.count = 0;
++		this.grade = request.getGrade();
++		this.status = request.getStatus();
++	}
++
++	public void updateStatus(final CourseStatus status) {
++		this.status = status;
++	}
++
++	public void update(final CourseUpdateRequestDto request) {
++		this.name = request.getName();
++		this.grade = request.getGrade();
++		this.professorName = request.getProfessorName();
++		this.status = request.getStatus();
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/StudentStatus.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/StudentStatus.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/StudentStatus.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/StudentStatus.java	(date 1733216138295)
+@@ -0,0 +1,17 @@
++package jpabook.onboarding.data.status;
++
++public enum StudentStatus {
++	ENROLLED("재학"),
++	DROP("중퇴"),
++	GRADUATED("졸업");
++
++	private final String status;
++
++	StudentStatus(String status) {
++		this.status = status;
++	}
++
++	public String getStatus() {
++		return status;
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/CourseStatus.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/CourseStatus.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/CourseStatus.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/CourseStatus.java	(date 1733216138295)
+@@ -0,0 +1,17 @@
++package jpabook.onboarding.data.status;
++
++public enum CourseStatus {
++	REGISTERED("등록"),
++	DELETED("삭제"),
++	COMPLETED("완료");
++
++	private final String status;
++
++	CourseStatus(String status) {
++		this.status = status;
++	}
++
++	public String getStatus() {
++		return status;
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Student.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Student.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Student.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/entity/Student.java	(date 1733216138294)
+@@ -0,0 +1,63 @@
++package jpabook.onboarding.data.entity;
++
++import java.time.LocalDate;
++import java.util.ArrayList;
++import java.util.List;
++
++import org.hibernate.annotations.JdbcTypeCode;
++import org.hibernate.type.SqlTypes;
++
++import jakarta.persistence.CascadeType;
++import jakarta.persistence.Column;
++import jakarta.persistence.Entity;
++import jakarta.persistence.EnumType;
++import jakarta.persistence.Enumerated;
++import jakarta.persistence.GeneratedValue;
++import jakarta.persistence.GenerationType;
++import jakarta.persistence.Id;
++import jakarta.persistence.OneToMany;
++import jpabook.onboarding.data.status.StudentStatus;
++import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
++import lombok.AccessLevel;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++
++@Entity
++@Getter
++@NoArgsConstructor(access = AccessLevel.PROTECTED)
++public class Student {
++	@Id
++	@GeneratedValue(strategy = GenerationType.IDENTITY)
++	@Column(name = "student_id")
++	private Long id;
++
++	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
++	private List<Sugang> sugangs = new ArrayList<>();
++
++	@Column(nullable = false)
++	private String name;
++
++	@Column(nullable = false)
++	private LocalDate birth;
++
++	@Column
++	private int currentGrade;
++
++	@Column
++	private int totalGrade;
++
++	@Enumerated(EnumType.STRING)
++	@Column(nullable = false, length = 20)
++	@JdbcTypeCode(SqlTypes.VARCHAR)
++	private StudentStatus status;
++
++	public Student(StudentRequestDto request) {
++		this.name = request.getName();
++		this.birth = request.getBirth();
++		this.status = StudentStatus.ENROLLED;
++	}
++
++	public void updateStatus(final StudentStatus status) {
++		this.status = status;
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/SugangStatus.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/SugangStatus.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/SugangStatus.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/status/SugangStatus.java	(date 1733216138295)
+@@ -0,0 +1,17 @@
++package jpabook.onboarding.data.status;
++
++public enum SugangStatus {
++	ONGOING("진행중"),
++	CANCELED("취소"),
++	COMPLETED("완료");
++
++	private final String status;
++
++	SugangStatus(String status) {
++		this.status = status;
++	}
++
++	public String getStatus() {
++		return status;
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/SugangRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/SugangRepository.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/SugangRepository.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/SugangRepository.java	(date 1733216138295)
+@@ -0,0 +1,15 @@
++package jpabook.onboarding.data.repository;
++
++import java.util.Optional;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.stereotype.Repository;
++
++import jpabook.onboarding.data.entity.Course;
++import jpabook.onboarding.data.entity.Student;
++import jpabook.onboarding.data.entity.Sugang;
++
++@Repository
++public interface SugangRepository extends JpaRepository<Sugang, Long> {
++	Optional<Sugang> findByStudentAndCourse(Student student, Course course);
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseService.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseService.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseService.java	(date 1733216138294)
+@@ -0,0 +1,15 @@
++package jpabook.onboarding.course.service;
++
++import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
++import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
++import jpabook.onboarding.course.controller.dto.response.CourseResponseDto;
++
++public interface CourseService {
++	CourseResponseDto create(CourseRequestDto request);
++
++	CourseResponseDto delete(Long courseId);
++
++	CourseResponseDto complete(Long courseId);
++
++	CourseResponseDto update(Long courseId, CourseUpdateRequestDto request);
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/StudentRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/StudentRepository.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/StudentRepository.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/StudentRepository.java	(date 1733216138295)
+@@ -0,0 +1,19 @@
++package jpabook.onboarding.data.repository;
++
++import java.time.LocalDate;
++import java.util.Optional;
++
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.Pageable;
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.stereotype.Repository;
++
++import jpabook.onboarding.data.entity.Student;
++import jpabook.onboarding.data.status.StudentStatus;
++
++@Repository
++public interface StudentRepository extends JpaRepository<Student, Long> {
++	Optional<Student> findByNameAndBirth(String name, LocalDate birth);
++
++	Page<Student> findAllByStatus(StudentStatus status, Pageable pageable);
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/CourseRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/CourseRepository.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/CourseRepository.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/data/repository/CourseRepository.java	(date 1733216138294)
+@@ -0,0 +1,10 @@
++package jpabook.onboarding.data.repository;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.stereotype.Repository;
++
++import jpabook.onboarding.data.entity.Course;
++
++@Repository
++public interface CourseRepository extends JpaRepository<Course, Long> {
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/CourseController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/CourseController.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/CourseController.java
+new file mode 100644
+--- /dev/null	(date 1733216138293)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/controller/CourseController.java	(date 1733216138293)
+@@ -0,0 +1,49 @@
++package jpabook.onboarding.course.controller;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.PatchMapping;
++import org.springframework.web.bind.annotation.PathVariable;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.PutMapping;
++import org.springframework.web.bind.annotation.RequestBody;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RestController;
++
++import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
++import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
++import jpabook.onboarding.course.controller.dto.response.CourseResponseDto;
++import jpabook.onboarding.course.service.CourseService;
++import lombok.RequiredArgsConstructor;
++
++@RestController
++@RequestMapping("/courses")
++@RequiredArgsConstructor
++public class CourseController {
++	private final CourseService service;
++
++	@PostMapping
++	public ResponseEntity<CourseResponseDto> createCourse(@RequestBody final CourseRequestDto request) {
++		final CourseResponseDto response = service.create(request);
++		return ResponseEntity.status(HttpStatus.CREATED).body(response);
++	}
++
++	@PutMapping("/{courseId}")
++	public ResponseEntity<CourseResponseDto> updateCourse(@PathVariable final Long courseId,
++		@RequestBody final CourseUpdateRequestDto request) {
++		final CourseResponseDto response = service.update(courseId, request);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++
++	@PatchMapping("/delete/{courseId}")
++	public ResponseEntity<CourseResponseDto> deleteCourse(@PathVariable final Long courseId) {
++		final CourseResponseDto response = service.delete(courseId);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++
++	@PatchMapping("/complete/{courseId}")
++	public ResponseEntity<CourseResponseDto> completeCourse(@PathVariable final Long courseId) {
++		final CourseResponseDto response = service.complete(courseId);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangServiceImpl.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangServiceImpl.java
+new file mode 100644
+--- /dev/null	(date 1733216138297)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangServiceImpl.java	(date 1733216138297)
+@@ -0,0 +1,50 @@
++package jpabook.onboarding.sugang.service;
++
++import java.util.Optional;
++
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++
++import jpabook.onboarding.data.entity.Course;
++import jpabook.onboarding.data.entity.Student;
++import jpabook.onboarding.data.entity.Sugang;
++import jpabook.onboarding.data.repository.CourseRepository;
++import jpabook.onboarding.data.repository.StudentRepository;
++import jpabook.onboarding.data.repository.SugangRepository;
++import jpabook.onboarding.data.status.SugangStatus;
++import jpabook.onboarding.sugang.controller.dto.request.SugangRequestDto;
++import jpabook.onboarding.sugang.controller.dto.response.SugangResponseDto;
++import lombok.RequiredArgsConstructor;
++
++@Service
++@RequiredArgsConstructor
++public class SugangServiceImpl implements SugangService {
++	private final SugangRepository repository;
++	private final StudentRepository studentRepository;
++	private final CourseRepository courseRepository;
++
++	@Transactional
++	@Override
++	public SugangResponseDto cancelSugang(final SugangRequestDto request, final Long courseId) {
++		final Optional<Student> student = studentRepository.findByNameAndBirth(request.getName(), request.getBirth());
++		final Optional<Course> course = courseRepository.findById(courseId);
++		if (student.isEmpty() || course.isEmpty()) {
++			return null;
++		}
++		final Optional<Sugang> sugang = repository.findByStudentAndCourse(student.get(), course.get());
++		sugang.get().updateStatus(SugangStatus.CANCELED);
++		return new SugangResponseDto(sugang.get());
++	}
++
++	@Override
++	public SugangResponseDto createSugang(final SugangRequestDto request, final Long courseId) {
++		final Optional<Student> student = studentRepository.findByNameAndBirth(request.getName(), request.getBirth());
++		final Optional<Course> course = courseRepository.findById(courseId);
++		if (student.isEmpty() || course.isEmpty()) {
++			return null;
++		}
++		final Sugang sugang = new Sugang(student.get(), course.get());
++		repository.save(sugang);
++		return new SugangResponseDto(sugang);
++	}
++}
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseServiceImpl.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseServiceImpl.java
+new file mode 100644
+--- /dev/null	(date 1733216138294)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/course/service/CourseServiceImpl.java	(date 1733216138294)
+@@ -0,0 +1,62 @@
++package jpabook.onboarding.course.service;
++
++import java.util.Optional;
++
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++
++import jpabook.onboarding.course.controller.dto.request.CourseRequestDto;
++import jpabook.onboarding.course.controller.dto.request.CourseUpdateRequestDto;
++import jpabook.onboarding.course.controller.dto.response.CourseResponseDto;
++import jpabook.onboarding.data.entity.Course;
++import jpabook.onboarding.data.repository.CourseRepository;
++import jpabook.onboarding.data.status.CourseStatus;
++import lombok.RequiredArgsConstructor;
++
++@Service
++@RequiredArgsConstructor
++public class CourseServiceImpl implements CourseService {
++	private final CourseRepository repository;
++
++	@Override
++	public CourseResponseDto create(final CourseRequestDto request) {
++		final Course course = new Course(request);
++		repository.save(course);
++		return new CourseResponseDto(course);
++	}
++
++	@Transactional
++	@Override
++	public CourseResponseDto complete(final Long courseId) {
++		final Optional<Course> course = repository.findById(courseId);
++		if (course.isEmpty()) {
++			return null;
++		}
++		course.get().updateStatus(CourseStatus.COMPLETED);
++		return new CourseResponseDto(course.get());
++	}
++
++	@Transactional
++	@Override
++	public CourseResponseDto update(final Long courseId, final CourseUpdateRequestDto request) {
++		final Optional<Course> course = repository.findById(courseId);
++		if (course.isEmpty()) {
++			final Course newCourse = repository.save(new Course(request));
++			return new CourseResponseDto(newCourse);
++		}
++		course.get().update(request);
++		return new CourseResponseDto(course.get());
++	}
++
++	@Transactional
++	@Override
++	public CourseResponseDto delete(final Long courseId) {
++		final Optional<Course> course = repository.findById(courseId);
++		if (course.isEmpty()) {
++			return null;
++		}
++		course.get().updateStatus(CourseStatus.DELETED);
++		return new CourseResponseDto(course.get());
++
++	}
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/SugangController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/SugangController.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/SugangController.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/controller/SugangController.java	(date 1733216138296)
+@@ -0,0 +1,36 @@
++package jpabook.onboarding.sugang.controller;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.PatchMapping;
++import org.springframework.web.bind.annotation.PathVariable;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestBody;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RestController;
++
++import jpabook.onboarding.sugang.controller.dto.request.SugangRequestDto;
++import jpabook.onboarding.sugang.controller.dto.response.SugangResponseDto;
++import jpabook.onboarding.sugang.service.SugangService;
++import lombok.RequiredArgsConstructor;
++
++@RestController
++@RequestMapping("/sugangs")
++@RequiredArgsConstructor
++public class SugangController {
++	private final SugangService service;
++
++	@PostMapping("/{courseId}")
++	public ResponseEntity<SugangResponseDto> createSugang(@RequestBody final SugangRequestDto request,
++		@PathVariable final Long courseId) {
++		final SugangResponseDto response = service.createSugang(request, courseId);
++		return ResponseEntity.status(HttpStatus.CREATED).body(response);
++	}
++
++	@PatchMapping("/{courseId}")
++	public ResponseEntity<SugangResponseDto> cancelSugang(@RequestBody final SugangRequestDto request,
++		@PathVariable final Long courseId) {
++		final SugangResponseDto response = service.cancelSugang(request, courseId);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++}
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentService.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentService.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentService.java	(date 1733216138296)
+@@ -0,0 +1,18 @@
++package jpabook.onboarding.student.service;
++
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.Pageable;
++
++import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
++import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
++import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
++
++public interface StudentService {
++	StudentResponseDto create(StudentRequestDto request);
++
++	StudentResponseDto drop(StudentRequestDto request);
++
++	Page<StudentResponseDto> getGraduates(Pageable pageable);
++
++	StudentSchedulesResponseDto getSchedule(StudentRequestDto request);
++}
+\ No newline at end of file
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangService.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangService.java
+new file mode 100644
+--- /dev/null	(date 1733216138297)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/sugang/service/SugangService.java	(date 1733216138297)
+@@ -0,0 +1,10 @@
++package jpabook.onboarding.sugang.service;
++
++import jpabook.onboarding.sugang.controller.dto.request.SugangRequestDto;
++import jpabook.onboarding.sugang.controller.dto.response.SugangResponseDto;
++
++public interface SugangService {
++	SugangResponseDto createSugang(SugangRequestDto request, Long courseId);
++
++	SugangResponseDto cancelSugang(SugangRequestDto request, Long courseId);
++}
+\ No newline at end of file
+Index: wonhshin/2일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/wonhshin/2일차.md b/wonhshin/2일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138298)
++++ b/wonhshin/2일차.md	(date 1733216138298)
+@@ -0,0 +1,486 @@
++---
++
++- RDB
++- RDBMS
++- RDB와 NoSQL의 차이
++- 테이블, 컬럼, 스키마
++- 데이터 모델링
++    - 데이터 정규화
++- 트랜잭션
++- DB의 무결성
++- sql문
++- DB직접 연결하기
++    - datagrip으로 연동해보기
++- 2일차 md로 작성
++
++## RDB
++
++**realational database**
++
++---
++
++RDB(관계형 데이터베이스)는 데이터를 테이블(table)형태로 저장하고, 테이블 간의 관계를 정의하여 데이터를 효율적으로 관리하는 데이터베이스 관리 시스템
++
++- 구조화된 데이터 : 데이터는 행(row)과 열(column)로 구성된 테이블에 저장됨
++- 스키마 기반 : 고정된 데이터 구조(스키마)를 기반으로 데이터 저장함
++- SQL 사용: 데이터를 관리하고 조회하기 위해 표준 언어인 SQL(Structure Query Language)사용
++- 무결성 보장: 기본키, 외래 키, 제약조건을 사용해 데이터 무결성과 일관성 유지
++- 구성요소 : 테이블, 행(개별 레코드), 열(데이터 속성), 기본키, 외래키
++
++### RDB의 장점
++
++---
++
++1. 데이터 무결성 보장 : 관계와 제약조건을 통해 데이터 정확성 유지
++2. 표준화된 SQL : 데이터 관리와 쿼리에 강력하고 일관된 인터페이스 제공
++3. 복잡한 관계 처리 가능 : 테이블 간 관계를 통해 복잡한 데이터 모델링이 가능
++4. 트랜잭션 관리 : ACID 속성을 통해 안정적이고 신뢰성 있는 데이터 관리 가능
++5. 분류, 정렬, 탐색 속도가 빠름
++
++### RDB의 단점
++
++---
++
++- 고정된 스키마를 사용하기 때문에 데이터 구조를 사전에 정의해야함 ⇒ 데이터 형태가 자주 변경되거나 비정형 데이터(ex.json) 처리 시 비효율적임
++- 대규모 데이터 처리에 한계가 있음
++- 복잡한 관계 처리를 위해 JOIN연산이 사용되는데, 성능 저하를 초래함
++
++> 이러한 이유로, NoSQL로 대체되기도 함
++
++## RDBMS
++
++Relational Database Management System
++
++---
++
++Relational Database를 관리하기 위한 소프트웨어.
++
++데이터 베이스를 생성, 저장, 수정, 삭제, 관리하고 데이터를 효율적으로 쿼리할 수 있도록 다양한 기능 제공함
++
++- 데이터를 테이블 형식으로 저장하고, SQL을 사용하여 데이터와 상호작용하며, 관계형 데이터 모델을 기반으로 데이터 무결성과 일관성을 유지
++
++### 주요기능
++
++---
++
++1. 데이터 정의\_DDL
++   - 데이터 베이스 구조와 스키마를 정의하거나 벼경
++   - Create, Alter, Drop
++2. 데이터 조작\_DML
++   - 데이터를 삽입, 수정, 삭제, 검색하는 기능
++   - Insert, Update, Delete, Select
++3. 데이터 제어\_DCL
++   - 데이터베이스 사용자 권한을 관리하는 기능
++   - Grant, Rovoke
++4. 트랜잭션 관리\_TCL
++   - 데이터베이스의 일관성과 무결성을 유지하기 위한 트랜잭션 관리기능
++   - Commit, Rollback, SavePoint
++5. 데이터 무결성 보장
++   - 제약조건을 통해 데이터의 일관성과 정확성 유지
++   - primary ket, foreign key, unique, Not Null, check 등
++
++### RDBMS의 구조
++
++---
++
++1. 데이터베이스
++   - 데이터를 저장하는 논리적 저장소
++2. 테이블
++   - **데이터를 행과 열 형태로 저장**
++   - 각 테이블은 고유한 이름과 스키마를 가짐
++3. 행\_Row
++   - 데이터의 개별 레코드
++   - 하나의 행 = record, tuple
++4. 열\_Column
++   - 데이터의 속성(attribute) 정의
++   - 하나의 열 = field, item
++5. Key
++   - Primary key: 각 행을 고유하게 식별
++   - Foreign key: 다른 테이블과의 관계를 정의
++
++### 대표적인 RDBMS software
++
++---
++
++1. 오픈소스:
++   - MySQL
++   - PostgreSQL
++   - MariaDB
++2. 상용
++   - Oracle
++3. 클라우드
++   - Amazon
++   - Google Cloude
++   - Azure SQL database
++
++## NoSQL과 RDB
++
++---
++
++NoSQL
++
++- 비관계형 데이터 모델 사용, 키-값, 문서, 그래프 등 다양한 데이터 모델을 사용하는 데이터베이스 시스템
++
++|             | RDB                        | NoSQL                |
++| ----------- | -------------------------- | -------------------- |
++| 데이터 구조 | 관계형 데이터 모델         | 비관계형 데이터 모델 |
++| 확장성      | 수직 확장                  | 수평 확장            |
++| 일관성      | 보장                       | 모델에 따라 제어     |
++| 유연성      | 변경이 어려움              | 변경 쉬움            |
++| RDBMS       | mySQL, Postgre SQL, Oracle | Mongo, Redis         |
++
++차이점 : RDB는 관계를 중심으로 데이터를 저장하고 분석하는데 사용되며, NoSQL은 대규모 및 분산 환경에서 확장성을 위해 설계되어 다양한 데이터 모델을 사용함
++
++## E-R(Entity-Relationship) Model
++
++개체-관계 모델이란, 구조화된 데이터에 대한 일련의 표현이다.
++
++---
++
++- ER모델은 데이터베이스 설계의 초기 단계에서 데이터 구조를 시각적으로 표현하는데 사용되며, 설계된 ER모델은 RDBMS의 스키마로 구현됨
++- ER모델의 엔터티 속성, 관계는 각각 테이블, 열, 외래키로 변환됨
++
++      ## 스키마
++
++      ---
++
++      데이터베이스의 구조와 제약조건에 관해 전반적인 명세를 기술한 구조적 설계도(청사진)
++
++      → DB내에 어떤 구조로 데이터가 저장되어있는 지를 나타내는 데이터베이스 구조
++
++      ### 스키마의 구성요소
++
++      ---
++
++      1. 테이블
++          - 데이터를 저장하는 기본단위, 행과 열로 구성
++      2. 열
++          - 데이터 속성 정의
++      3. 개체
++          - 속성의 집합
++      4. 제약조건
++          - 데이터의 무결성과 일관성을 보장하기 위해 설정
++          - Primary Key : 각 행을 고유하게 식별
++          - Foreign Key : 다른 테이블과의 관계를 정의
++          - Not Null : 특정 열이 NULL값을 가질 수 없음
++          - Unique : 특정 열의 값이 고유해야함
++      5. 인덱스
++          - 데이터 검색 속도 향상
++      6. 관계
++          - 테이블 간의 연결을 정의 예) 1:1, 1:N, N:M 관계
++
++      ### 개념스키마, 내부스키마, 물리스키마, 외부스키마
++
++      ---
++
++  ![](https://velog.velcdn.com/images/wondi/post/ba514e94-294b-4c44-84e8-5c1dda42a8ae/image.png)
++  ![](https://velog.velcdn.com/images/wondi/post/b8f77175-fa9d-4db0-a2e6-39a8c357f09c/image.png)
++
++      - 외부 스키마 = 서브 스키마 - 사용자 뷰
++
++      ## 테이블, 행, 열
++
++      ---
++
++      테이블:
++
++      - 데이터를 행과 열로 구성된 2차원 구조로 저장하는 데이터베이스의 기본 단위
++
++      컬럼:
++
++      - 데이터의 속성을 정의함.
++      - 하나의 컬럼은 특정 데이터 타입을 가지며, 모든 행에서 동일한 의미와 타입을 가짐
++
++      행:
++
++      - 고유한 데이터를 나타내며, Primary Key를 통해 고유하게 식별됨
++
++## 데이터 모델링
++
++: 문제를 현실로 붙어 뜯어내 고도의 추상화를 거쳐, 컴퓨터에 작성하는 것
++
++---
++
++개념적 데이터 모델링 ⇒ 논리적 데이터 모델링 ⇒ 물리적 데이터 모델링
++
++### 개념적 데이터 모델링
++
++---
++
++E-R 다이어그램 구성
++
++- 파악한 업무에서 개념을 뽑는 과정
++
++![](https://velog.velcdn.com/images/wondi/post/72b3e7ea-bde6-4772-b7f9-cea408eac37e/image.png)
++
++**ERD로 얻을 수 있는 것 : 정보, 정보그룹, 관계**
++
++- Entity = 테이블로 전환
++- 글 → 본문, 제목, 생성일 ⇒ Attribute(=column)
++- entity들간의 관계 Pk, Fk, Join
++
++- Identifier가 없다면, 일련번호를 따로 만들면 됨
++
++```c
++Employees
+++-------------+
++| 직원 ID (PK)|
++| 이름        |
++| 직책        |
++| 급여        |
++| 부서 ID (FK)|
+++-------------+
++      |
++      | 1:N
++      |
++Departments
+++-------------+
++| 부서 ID (PK)|
++| 부서 이름    |
++| 위치        |
+++-------------+
++```
++
++### Relationship
++
++---
++
++- Cardinality **`기수`**
++- 데이터 집합에서의 카디널리티
++  - 특정 데이터 집합의 유니크한 값의 개수
++  - 데이터 집합의 중복도가 낮으면 카디널리티가 높고, 중복도가 높으면 카디널리티가 낮다.
++  - 예)성별-남,여 cardinality 2개
++    - 주민등록번호: 데이터 개수와 동일
++- **관계형 데이터베이스에서 카디널리티**
++
++  - 두 테이블 간의 관계에서 하나의 엔터티가 다른 엔터티와 연결될 수 있는 횟수를 나타냄
++  - 일대일, 일대다, 다대다 관계
++
++- Optionality
++
++### 논리적 데이터 모델링
++
++---
++
++생각했던 개념을 표로 전환하는 작업/ 논리적인 데이터 구조 설계함
++
++- 성능고려x
++
++매핑 룰: ERD를 통해 표현한 내용을 관계형 데이터 베이스에 맞는 형식으로 전환할 때 사용하는 방법론
++
++- N:M
++  - mapping 테이블이 필요함
++
++![](https://velog.velcdn.com/images/wondi/post/d9cad3a9-3dac-4c7d-ab04-198318c1306e/image.png)
++
++### 정규화
++
++---
++
++- 정제되어있지 않은 데이터를 관계데이터의 표로 만들어주는 형식
++
++데이터 ⇒ 1정규형1NF ⇒ 2정규형2NF ⇒ 3정규3NF
++
++### 제1정규화
++
++---
++
++- 도메인이 원자값 Atomic domain
++
++![](https://velog.velcdn.com/images/wondi/post/f87553ab-f65a-425d-afb9-ab57e08c18f3/image.png)
++
++### 제2정규화
++
++---
++
++- 부분함수 종속성 제거
++
++![](https://velog.velcdn.com/images/wondi/post/129ee23e-877a-4386-b5ad-32a1fecb3302/image.png)
++
++### 제3정규화
++
++---
++
++- 이행적함수 종속성 제거
++- 데이터 중복 최소화, 데이터 무결성 유지
++
++![](https://velog.velcdn.com/images/wondi/post/68237673-5f0c-400e-a081-2e8540eacaf8/image.png)
++
++A→B→C 면 A→C X
++
++1. 직원 데이터를 관리하는 테이블
++
++```c
++Employees
+++------------+-----------+-------------+------------+
++| EmployeeID | Name      | Department  | DeptPhone  |
+++------------+-----------+-------------+------------+
++| 1          | Alice     | HR          | 123-4567   |
++| 2          | Bob       | IT          | 987-6543   |
++| 3          | Charlie   | HR          | 123-4567   |
+++------------+-----------+-------------+------------+
++```
++
++- Department와 DeptPhone에 이행적 종속이 있음
++
++2.
++
++```c
++직원 테이블(Employees):
+++------------+-----------+-------------+
++| EmployeeID | Name      | Department  |
+++------------+-----------+-------------+
++| 1          | Alice     | HR          |
++| 2          | Bob       | IT          |
++| 3          | Charlie   | HR          |
+++------------+-----------+-------------+
++
++부서 테이블(Departments):
+++-------------+------------+
++| Department  | DeptPhone  |
+++-------------+------------+
++| HR          | 123-4567   |
++| IT          | 987-6543   |
+++-------------+------------+
++```
++
++### 물리적 데이터 모델링
++
++---
++
++코드 작성 ⇒ SQL 작성
++
++- **성능향상**이 제일 중요함
++  - index : 읽기 성능 ⬆️ , 쓰기 성능 ⬇️
++  - application : 캐싱 ⇒ 데이터베이스 부하 ⬇️
++- ⭐️쿼리의 병목이 생기는 지 확인하는 것이 중요!⭐️
++- **역정규화, 반정규화**
++
++### 역정규화
++
++: denormalization
++
++---
++
++정규화 → Join을 하면 읽기 성능이 내려감
++
++1. Join을 줄이기
++   - 중복을 허용함
++2. 컬럼을 조작하여 계산을 줄임
++   - group by ⇒ 비싼 작업
++   - 자주쓰는 것이라면, 데이터를 추가하는 방법도 있음
++3. 표를 쪼개기
++   - 컬럼을 기준으로 테이블을 분리 ⇒ 샤딩
++   - 행을 기준으로 테이블을 분리 ⇒ 사용자가 많다면, 1~1000/ 1001~2000 까지 나누면서 쓸 수 있음
++4. 관계의 역정규화
++   - FK를 사용해서 다른 표와 결합함
++
++## 트랜잭션
++
++---
++
++데이터베이스의 상태를 변환시키는 하나의 논리적인 기능을 수행하기 위한 작업의 단위 or 일련의 연산
++
++- Select, Insert, Delete, Udate를 통해 데이터베이스에 접근하는 것
++
++### 트랜잭션의 특징
++
++---
++
++1. 원자성 Atomicity
++
++   트랜잭션이 데이터베이스에 모두 반영되거나, 전혀 반영되지 않아야 함
++
++2. 일관성 Consistency
++
++   처음 참조작업한 데이터베이스로 진행됨
++
++3. 독립성 Isolation
++
++   트랜잭션이 실행될 때 다른 트랜잭션이 연산에 끼어들 수 없다
++
++4. 영속성(지속성) Durability
++
++   트랜잭션이 성공적으로 완료됐을 때, 결과는 영구적으로 반영되어야 함
++
++![](https://velog.velcdn.com/images/wondi/post/a0029e47-0a3a-446d-a1fa-050c64f58550/image.png)
++
++Commit
++
++- 모든 작업들을 정상 처리하겠다고 확정하는 명령어.
++- 해당 과정을 DB에 영구 저장하겠다는 의미, Commit이 수행되면 하나의 트랜잭션 과정이 종료됨
++
++Roll-back
++
++- 작업 중 문제 발생으로 트랜잭션의 처리과정에서 발생한 변경사항을 취소하는 명령어. 예전 상태로 복구함
++
++## 데이터베이스의 무결성
++
++Data Integrity
++
++---
++
++무결성은 데이터베이스에 저장된 데이터의 정확성, 일관성, 신뢰성을 보장하는 개념
++
++데이터가 규칙과 제약조건을 충족하고, 데이터가 손상되지 않고 정확히 저장, 관리되도록 보장하는 것을 의미함
++
++### 무결성의 목적
++
++---
++
++1. 데이터의 정확성 유지
++2. 데이터의 일관성 보장
++3. 데이터의 신뢰성 확보
++
++### 무결성의 유형
++
++---
++
++1. 개체 무결성
++2. 참조 무결성
++3. 도메인 무결성\_특정 값이특정 도메인을 충족해야함
++4. 키 무결성
++5. 비즈니스 무결성
++
++![](https://velog.velcdn.com/images/wondi/post/11ef4fb6-10de-480a-bac5-1417b476273f/image.png)
++
++### 무결성 유지 방법
++
++---
++
++1. 제약조건
++2. 트랜잭션
++3. 정규화
++4. 백업, 복구
++
++### 무결성이 깨질 경우 생기는 문제
++
++---
++
++1. 데이터 중복
++2. 삽입이상
++3. 삭제이상
++4. 갱신이상
++
++## SQL
++
++---
++
++| 분류        | 주요 명령어                                                        | 사용예시                          |
++| ----------- | ------------------------------------------------------------------ | --------------------------------- |
++| DDL         | CREATE, ALTER, DROP, TRUNCATE                                      | 테이블 및 데이터베이스 구조 정의. |
++| DML         | SELECT, INSERT, UPDATE, DELETE                                     | 데이터 삽입, 수정, 삭제 및 조회.  |
++| DCL         | GRANT, REVOKE                                                      | 권한 부여 및 철회.                |
++| TCL         | COMMIT, ROLLBACK, SAVEPOINT                                        | 트랜잭션 관리.                    |
++| Constraints | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK, DEFAULT         | 데이터 무결성을 보장.             |
++| 연산/ 함수  | SELECT, GROUP BY, ORDER BY, 집계 함수(SUM, AVG, MAX, MIN 등), JOIN | 데이터 조회 및 조작.              |
++
++```c
++조회시
++SELECT 컬럼명, 집계함수 as 별명
++FROM 테이블명
++WHERE 테이블 조건
++GROUP BY 컬럼명
++HAVING 그룹 조건
++ORDER BY 컬럼명
++```
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/StudentController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/StudentController.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/StudentController.java
+new file mode 100644
+--- /dev/null	(date 1733216138295)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/controller/StudentController.java	(date 1733216138295)
+@@ -0,0 +1,55 @@
++package jpabook.onboarding.student.controller;
++
++import java.util.List;
++
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.PageRequest;
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.PatchMapping;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestBody;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RequestParam;
++import org.springframework.web.bind.annotation.RestController;
++
++import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
++import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
++import jpabook.onboarding.student.controller.dto.response.StudentScheduleResponseDto;
++import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
++import jpabook.onboarding.student.service.StudentService;
++import lombok.RequiredArgsConstructor;
++
++@RestController
++@RequestMapping("/students")
++@RequiredArgsConstructor
++public class StudentController {
++
++	private final StudentService service;
++
++	@PostMapping
++	public ResponseEntity<StudentResponseDto> createStudent(@RequestBody final StudentRequestDto request) {
++		final StudentResponseDto response = service.create(request);
++		return ResponseEntity.status(HttpStatus.CREATED).body(response);
++	}
++
++	@PatchMapping("/drop")
++	public ResponseEntity<StudentResponseDto> dropStudent(@RequestBody final StudentRequestDto request) {
++		final StudentResponseDto response = service.drop(request);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++
++	@GetMapping("/graduated")
++	public ResponseEntity<Page<StudentResponseDto>> getGraduates(@RequestParam(defaultValue = "0") final int page) {
++		final PageRequest pageRequest = PageRequest.of(page, 5);
++		final Page<StudentResponseDto> response = service.getGraduates(pageRequest);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++
++	@GetMapping("/schedule")
++	public ResponseEntity<StudentSchedulesResponseDto> getSchedule(@RequestBody final StudentRequestDto request) {
++		final StudentSchedulesResponseDto response = service.getSchedule(request);
++		return ResponseEntity.status(HttpStatus.OK).body(response);
++	}
++}
+\ No newline at end of file
+Index: wonhshin/3일차.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/wonhshin/3일차.md b/wonhshin/3일차.md
+new file mode 100644
+--- /dev/null	(date 1733216138298)
++++ b/wonhshin/3일차.md	(date 1733216138298)
+@@ -0,0 +1,428 @@
++- @Embedded, @Embeddable
++- 연관 관계 설정
++  - @OneToOne, @ManyToOne, @ManyToMany, @OneToMany
++  - @ManyToMany의 단점
++  - 중간 테이블
++  - 연관관계의 주인
++  - PK, FK
++- ERD작성
++  - 학생들이 수강신청을 하는 홈페이지를 만들 예정입니다.
++    - 학생은 이름과 생년월일을 필수로 가지고 있습니다.
++    - 강의는 교수명, 강의이름, 현재 신청인원을 필수로 가지고 있습니다.
++    - 강의를 신청하려면 학생 이름과 생년월일을 입력해야합니다.
++- 작성한 ERD를 https://dbdiagram.io/ 로 만들어서 제출 (아래 명세 과제를 참조해서 작성하는게 좋습니다)
++
++---
++
++## @Embedded, @Embeddable 개념
++
++---
++
++```java
++@Entity
++
++public class Student
++{
++	private long id;
++	private String name;
++	**@Embedded
++	private Address address; => 이 클래스안에 있는 데이터는 수평적 구조로 Student class의 변수로 만들어짐**
++}
++```
++
++```java
++@embedded
++public Address address;
++
++@embeddable
++public Class Address
++{
++				**private String city;
++				private String street;
++				private String zipcode;**
++}
++```
++
++- Address 클래스 안에 엔티티로 사용할 목적이 아닌, 값 타입으로 사용하기 위해 만든 것
++
++⇒ 이를 JPA에서는 임베디드 타입이라고 부름(Int, string과 같은 값 타입)
++
++| id  | name  | city  | street | zipcode |
++| --- | ----- | ----- | ------ | ------- |
++| 1   | wonie | seoul | ..     | ..      |
++
++### @Embeddable
++
++: 값 타입을 정의하는 곳에 표시
++
++### @Embedded
++
++: 값 타입을 사용하는 곳에 표시
++
++- 객체 내부에서 복합 값을 표현할 때 사용
++- 엔티티가 아닌 독립적인 테이블로 생성되지 않고 포함된 엔티티의 테이블에 필드로 매핑됨
++- 재사용 가능한 값 타입을 통해 엔티티 구조를 간결하게 관리할 수 있음
++
++```
++기본적으로 @Entity 클래스는 독립된 테이블로 매핑되지만:
++•	@Embeddable: 클래스가 테이블이 아닌 다른 엔티티의 값 타입으로 포함되도록 선언.
++•	@Embedded: @Embeddable로 선언된 값을 포함시키도록 엔티티에 선언.
++
++```
++
++**장점**
++
++- 테이블 수 감소
++- 재사용 가능
++- 복합 데이터 관리
++
++### embedded 특징
++
++---
++
++1. 임베디드 타입은 또 다른 임베디드 타입을 포함하거나 entity를 참조할 수 있음 ⇒ 다른 엔티티, 값 타입과 연관관계가능
++
++```java
++@Entity
++public class User {
++    @Id
++    private Long id;
++    private String name;
++
++    @Embedded
++    private Address address;
++
++    @Embedded
++    private Phone phone;
++}
++```
++
++```java
++@Embeddable
++public class Address
++{
++	private String city;
++	private String street;
++
++	@Embedded
++	private Zipcode zipcode;
++}
++```
++
++## JPA와 ORM의 개념
++
++> **_JPA_Java Persistence API_**
++> 자바 진영의 ORM기술에 대한 API 표준 명세 ⇒ 보다 객체와 데이터베이스 간의 관계를 편리하게 이어줌
++
++> **ORM_Object-Relational_Mapping**
++> 객체와 관계형 데이터베이스의 데이터를 자동으로 매핑해주는 것
++
++- 객체 지향 프로그래밍은 클래스를 사용하고, 관계형 데이터베이스는 테이블을 사용함
++- 객체 모델과 관계형 모델 간 불일치가 존재
++- ORM을 통해 객체간의 관계를 바탕으로 SQL을 자동으로 생성하여 불일치 해결
++- 데이터베이스 데이터 ↔ 매핑 ↔ Object 필드
++- 객체를 통해 간접적으로 데이터베이스를 다룸
++
++JPA에서는 기본적으로 클래스는 하나의 테이블로 매핑됨 ⇒
++embedded와 embeddable은 이러한 규칙을 변경하여, 별도의 테이블을 생성안하고 엔티티 테이블에 내장된 값타입으로 매핑할 수 있음
++
++### 기본적인 JPA매핑 방식
++
++- 하나의 클래스 → 하나의 테이블
++
++```java
++@Entity
++public class User {
++    @Id
++    private Long id;
++    private String name;
++}
++```
++
++@Entity로 선언된 클래스는 기본적으로 독립된 테이블로 매핑됨
++
++## 연관관계 매핑이란?
++
++---
++
++연관관계는 객체 또는 테이블이 서로 논리적인 의미를 갖고 양쪽을 서로 참조하는 것
++객체의 참조와 테이블의 외래 키를 매핑하는 것을 의미
++
++- JPA에서는 연관관계에 있는 상대 테이블의 PK를 멤버 변수로 갖지 않고, 엔티티 객체 자체를 참조함
++
++### 방향
++
++---
++
++- 단방향
++  - 두 엔티티가 관계를 맺을 때, 한쪽의 엔티티만 참고하고 있는 것
++- 양방향
++  - 두 엔티티가 관계를 맺을 때, 양쪽이 서로 참고하고 있는 것
++- [학교 → 학생] or [학생 → 학교] 둘 중 하나만 참조하면 단방향, 양쪽을 참조하면 양방향
++- ⭐️객체 지향 모델링에서는 구현하고자하는 서비스에 따라 단방향인지, 양방향 관계인지 선택해야함
++
++### 다중성
++
++---
++
++관계에 있는 두 엔티티가 하나의 관계를 가지는 것을 의미함
++
++- `@OneToOne` 일대일 1:1
++- `@OneToMany` 일대다 1:N
++- `@ManyToOne` 다대일 N:1
++- `@ManyToMany` 다대다 N:M
++
++하나의 학교는 학생들을 구성원 가지고 있음
++
++1:N
++
++학생들은 하나의 학교에 속함
++
++N:1
++
++⇒ 어떤 엔티티를 중심으로 하는 지에 따라, 다중성이 바뀜
++
++### 연관관계 매핑
++
++---
++
++```java
++@Entity
++public class Team
++{
++	private Long id;
++	private String name;
++}
++
++@Entity
++
++public class Member
++{
++	private long id;
++	private String name;
++
++	@ManyToOne
++	private Team team;
++}
++```
++
++- (1)xxxTo(2)xxx :
++  - 1xxx: 해당 필드가 위치한 클래스 자신(Member)
++  - 2xxx: 매핑할 대상 클래스 (Team)
++
++### 연관관계의 주인
++
++---
++
++실제 DB FK를 가진 쪽이 연관관계의 주인
++
++- 연관관계의 주인이 아니면 조회만 가능함
++
++### @OneToOne
++
++: 일대일 관계를 매핑할 때 사용되는 애노테이션
++
++---
++
++User와 UserProfile의 관계
++
++**양방향 관계**
++
++- 서로 @OneToOne이 되어있음
++
++**일방향 관계**
++
++- 하나만 @OneToOne이 되어있음
++
++```java
++@Entity
++public class User {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    @OneToOne
++    @JoinColumn(name = "profile_id") // 외래 키 설정
++    private UserProfile profile;
++}
++
++@Entity
++public class UserProfile {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    @OneToOne(mappedBy = "profile") // User 엔티티에서 매핑된 필드명 지정
++
++    private User user;
++}
++```
++
++- OneToOne이 없으면, User만 UserProfile을 쓸 수 있음. UserProfile은 User의 정보를 알 수 없음
++
++| 특징         | 양방향 관계                              | 일방향 관계                    |
++| ------------ | ---------------------------------------- | ------------------------------ |
++| 참조 방향    | 두 엔티티가 서로 참조                    | 한 엔티티만 다른 엔티티를 참조 |
++| 관계의 주인  | @JoinColumn이 있는 쪽이 주인             | 관계의 주인만 존재             |
++| 외래 키 관리 | 관계의 주인이 외래 키를 관리             | 주인이 외래 키를 관리          |
++| 코드 복잡도  | 비교적 복잡                              | 단순                           |
++| 예제         | User -> UserProfile, UserProfile -> User | User -> UserProfile            |
++
++### @OneToMany 일대다 & 다대일 관계 @ManyToOne
++
++---
++
++1. Team
++
++- 여러 member를 가질 수 있음
++- 1:N 관계
++
++1. Member
++
++- 하나의 팀에만 속할 수 있음
++- N:1관계
++
++### 1:N
++
++---
++
++```java
++@Entity
++public class Team {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    private String name;
++
++    @OneToMany(mappedBy = "team")
++    private List<Member> members = new ArrayList<>();
++}
++```
++
++- Team은 한개, 멤버는 여러개 이므로 일대다 관계 생성. = @OneToMany
++- 외래키를 `@OneToMany`에서 관리하면, 성능과 효능이 떨어질 수 있음
++
++### N:1
++
++---
++
++```java
++@Entity
++public class Member {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    private String name;
++
++    @ManyToOne
++    @JoinColumn(name = "team_id") // 외래 키 컬럼 설정
++    private Team team;
++}
++```
++
++- member는 여러 개, team은 한개이므로 다대일 관계 생성 = @ManyToOne
++- Member는 Team의 ID를 FK로 가지게 됨
++- 연관관계의 주인은 **Member (외래키를 관리하는 쪽이 관계의 주인)**
++- `@ManyToOne`에 Mapped by로 양방향 설정할 수 있지만, 권장은 안함
++
++### 다대다관계
++
++---
++
++두 엔티티가 서로 여러개의 인스턴스를 참조하고, 관계를 매핑할 때 사용
++
++- 예) 학생과 강의간의 관계 ⇒ 학생은 여러 강의를 수강할 수 있고, 한 강의는 여러 학생을 가질 수 있음
++- RDBMS는 정규화된 테이블 2개로 다대다를 표현할 수 없음
++- 즉, ⭐️중간테이블이 필요!⭐️
++
++**예시**
++
++1. student 테이블
++
++| id  | name  |
++| --- | ----- |
++| 1   | wonie |
++| 2   | konie |
++
++1. course 테이블
++
++| id  | title            |
++| --- | ---------------- |
++| 1   | computer science |
++| 2   | math             |
++
++1. 중간 테이블 (student_course)
++
++| student_id | course_id |
++| ---------- | --------- |
++| 1          | 1         |
++| 1          | 2         |
++| 2          | 1         |
++
++다대다 관계의 단점과 한계
++
++---
++
++- JPA가 자동으로 연결 테이블 생성, 쿼리가 예측하기 힘듦
++- 중간 테이블의 추가 정보 저장 불가
++  - 기본 @ManyToMany에서는 중간 테이블에 추가적인 데이터를 저장할 수 없음
++
++### 중간테이블
++
++---
++
++다대다 관계를 데이터베이스에서 구현할 때, 표현할 수 없기 때문에 두 테이블 간의 관계를 나타내기 위해 사용하는 테이블
++
++- 각 엔티티는 중간 테이블과 1:N 관계를 가짐
++- 중간 테이블은 두 엔티티에 대해 각각 N:1 관계를 가짐
++
++### 연관관계의 주인
++
++---
++
++JPA에서 양방향 연관관계를 매핑할 때 외래키를 관리하는 쪽을 의미함
++
++- 관계의 주인은 실제 데이터베이스 테이블에서 외래 키가 위치한 엔티티를 기반으로 결정됨
++
++왜 주인을 정하는지?
++
++1. JPA에서 객체 간의 연관관계와 테이블 간의 연관관계를 분리하여 관리
++   - 객체 간의 연관관계: 양방향 매핑에서 두 객체가 서로 참조
++   - 테이블 간의 연관관계: 외래 키를 사용하여 관계 표현
++2. 외래 키는 하나의 테이블에만 존재하기에, 외래키를 관리할 주인을 지정해야함
++3. 연관관계의 주인만이 외래 키를 변경/관리할 수 있으며, 주인이 아닌 쪽은 **읽기전용**임
++4. 보통 주인은 외래 키를 가진 쪽을 설정(ManyToOne이 주인되는 것이 일반적)
++5. 주인이 아닌 쪽은 mappedBy속성을 사용하여 관계의 주인을 명시함
++
++## PK, FK
++
++---
++
++### PK(Primary Key)
++
++- 기본키는 테이블의 각 행을 유일하게 식별할 수 있는 컬럼 또는 컬럼의 조합
++- 기본 키는 중복될 수 없으며(유일성), NULL값을 가질 수 없다(NOT NULL)
++
++### FK(Foreign Key)
++
++- 외래 키는 한 테이블의 컬럼이 다른 테이블의 PK를 참조하는 관계를 나타냄
++- 외래 키는 테이블 간의 관계를 정의하며, 데이터의 참조 무결성을 보장함
++
++| **특징**           | **Primary Key (PK)**                   | **Foreign Key (FK)**                         |
++| ------------------ | -------------------------------------- | -------------------------------------------- |
++| **목적**           | 테이블의 각 행을 고유하게 식별         | 다른 테이블의 기본 키를 참조하여 관계를 정의 |
++| **중복 여부**      | 중복 불가능                            | 중복 가능                                    |
++| **NULL 허용 여부** | 허용되지 않음                          | NULL 허용 가능                               |
++| **테이블 간 관계** | 관계를 정의하지 않음                   | 테이블 간의 관계를 정의                      |
++| **데이터 무결성**  | **테이블 내**에서 데이터 무결성을 보장 | **테이블 간**의 참조 무결성을 보장           |
++
++## ERD 생성
++
++    - 학생들이 수강신청을 하는 홈페이지를 만들 예정입니다.
++        - 학생은 이름과 생년월일을 필수로 가지고 있습니다.
++        - 강의는 교수명, 강의이름, 현재 신청인원을 필수로 가지고 있습니다.
++        - 강의를 신청하려면 학생 이름과 생년월일을 입력해야합니다.
++
++![](https://velog.velcdn.com/images/wondi/post/c26bc749-c3db-4bc0-bf7a-12244c43ce61/image.png)
+Index: taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentServiceImpl.java b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentServiceImpl.java
+new file mode 100644
+--- /dev/null	(date 1733216138296)
++++ b/taehyeon/onboarding/src/main/java/jpabook/onboarding/student/service/StudentServiceImpl.java	(date 1733216138296)
+@@ -0,0 +1,62 @@
++package jpabook.onboarding.student.service;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Optional;
++
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.Pageable;
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++
++import jpabook.onboarding.data.entity.Student;
++import jpabook.onboarding.data.entity.Sugang;
++import jpabook.onboarding.data.repository.StudentRepository;
++import jpabook.onboarding.data.status.StudentStatus;
++import jpabook.onboarding.student.controller.dto.request.StudentRequestDto;
++import jpabook.onboarding.student.controller.dto.response.StudentResponseDto;
++import jpabook.onboarding.student.controller.dto.response.StudentScheduleResponseDto;
++import jpabook.onboarding.student.controller.dto.response.StudentSchedulesResponseDto;
++import lombok.RequiredArgsConstructor;
++
++@Service
++@RequiredArgsConstructor
++public class StudentServiceImpl implements StudentService {
++	private final StudentRepository repository;
++
++	@Override
++	public StudentResponseDto create(final StudentRequestDto request) {
++		final Student student = new Student(request);
++		repository.save(student);
++		return new StudentResponseDto(student);
++	}
++
++	@Transactional
++	@Override
++	public StudentResponseDto drop(final StudentRequestDto request) {
++		final Optional<Student> student = repository.findByNameAndBirth(request.getName(), request.getBirth());
++		if (student.isEmpty()) {
++			return null;
++		}
++		student.get().updateStatus(StudentStatus.DROP);
++		return new StudentResponseDto(student.get());
++	}
++
++	@Transactional(readOnly = true)
++	@Override
++	public Page<StudentResponseDto> getGraduates(final Pageable pageable) {
++		return repository.findAllByStatus(StudentStatus.GRADUATED, pageable).map(StudentResponseDto::new);
++	}
++
++	@Transactional(readOnly = true)
++	@Override
++	public StudentSchedulesResponseDto getSchedule(final StudentRequestDto request) {
++		final Optional<Student> student = repository.findByNameAndBirth(request.getName(), request.getBirth());
++		final List<Sugang> sugangs = student.get().getSugangs();
++		final List<StudentScheduleResponseDto> schedule = new ArrayList<>();
++		for (final Sugang sugang : sugangs) {
++			schedule.add(new StudentScheduleResponseDto(sugang));
++		}
++		return new StudentSchedulesResponseDto(schedule);
++	}
++}
+\ No newline at end of file

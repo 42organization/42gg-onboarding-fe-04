@@ -13,3 +13,4 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(errorCode.getStatus()).build();
 	}
 }
+

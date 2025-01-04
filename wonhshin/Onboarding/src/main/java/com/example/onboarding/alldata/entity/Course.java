@@ -12,7 +12,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,66 +58,47 @@ public class Course {
 
 	public static Course of(String professorName, String courseTitle, Integer currentCount, Integer courseGrade,
 		CourseStatus courseStatus) {
-		return new Course(professorName, courseTitle, currentCount != null ? currentCount : 0,
-			courseGrade != null ? courseGrade : 3, courseStatus != null ? courseStatus : CourseStatus.REGISTERED);
+		int resolvedCount = currentCount;
+		if (currentCount == null) {
+			resolvedCount = 0;
+		}
+		int resolvedGrade = courseGrade;
+		if (courseGrade == null) {
+			resolvedGrade = 3;
+		}
+		CourseStatus resolvedStatus = courseStatus;
+		if (courseStatus == null) {
+			resolvedStatus = CourseStatus.REGISTERED;
+		}
+		return new Course(professorName, courseTitle, resolvedCount, resolvedGrade, resolvedStatus);
 	}
 
-	private class StatusManager {
-		private void updateStatus(CourseStatus newStatus) {
-			if (courseStatus != newStatus) {
-				validateStatus();
-				courseStatus = newStatus;
-			}
-		}
-
-		private void validateStatus() {
-			if (!isStatusRegistered())
-				throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
-		}
-
-		private boolean isStatusRegistered() {
-			return CourseStatus.REGISTERED == courseStatus;
-		}
+	private boolean isStatusRegistered() {
+		return CourseStatus.REGISTERED == courseStatus;
 	}
 
-	private class EnrollmentManager {
-		void addStudent() {
-			if (exceedCapacity())
-				throw new CustomException(ErrorCode.COURSE_MAX_OVER);
-			currentCount++;
-			if (exceedCapacity())
-				new StatusManager().updateStatus(CourseStatus.COMPLETED);
-		}
-
-		void removeStudent() {
-			if (currentCount > 0)
-				currentCount--;
-		}
-
-		boolean exceedCapacity() {
-			return currentCount >= MAX_COURSE_COUNT;
-		}
-	}
-
-	@Transient
-	private final StatusManager statusManager = new StatusManager();
-	@Transient
-	private final EnrollmentManager enrollmentManager = new EnrollmentManager();
-
-	public void update(CourseReqDto req) {
-		validate(req);
-		updateInfo(req);
-	}
-
-	public void validate(CourseReqDto req) {
-		if (!statusManager.isStatusRegistered())
+	private void validate(CourseReqDto req) {
+		if (!isStatusRegistered())
 			throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
 		int currentCount = req.getCurrentCount() != null ? req.getCurrentCount() : this.currentCount;
 		if (currentCount > getMaxCourseCount())
 			throw new CustomException(ErrorCode.COURSE_MAX_OVER);
 	}
 
-	public void updateInfo(CourseReqDto req) {
+	private void updateStatus(CourseStatus newStatus) {
+		if (courseStatus != newStatus) {
+			if (!isStatusRegistered())
+				throw new CustomException(ErrorCode.COURSE_NOT_CHANGE);
+			courseStatus = newStatus;
+		}
+	}
+
+	public void update(CourseReqDto req) {
+		validate(req);
+		updateInfo(req);
+	}
+
+	private void updateInfo(CourseReqDto req) {
 		this.professorName = req.getProfessorName();
 		this.courseTitle = req.getCourseTitle();
 		if (req.getCurrentCount() != null) {
@@ -128,27 +108,40 @@ public class Course {
 			this.courseGrade = req.getCourseGrade();
 		}
 		if (req.getCourseStatus() != null) {
-			statusManager.updateStatus(req.getCourseStatus());
+			updateStatus(req.getCourseStatus());
 		}
 	}
 
+	public boolean exceedCapacity() {
+		return currentCount >= MAX_COURSE_COUNT;
+	}
+
+	private void addStudent() {
+		if (exceedCapacity())
+			throw new CustomException(ErrorCode.COURSE_MAX_OVER);
+		currentCount++;
+		if (exceedCapacity())
+			updateStatus(CourseStatus.COMPLETED);
+	}
+
+	private void removeStudent() {
+		if (currentCount > 0)
+			currentCount--;
+	}
+
 	public void delete() {
-		statusManager.updateStatus(CourseStatus.DELETED);
+		updateStatus(CourseStatus.DELETED);
 	}
 
 	public void complete() {
-		statusManager.updateStatus(CourseStatus.COMPLETED);
-	}
-
-	public boolean exceedCapacity() {
-		return enrollmentManager.exceedCapacity();
+		updateStatus(CourseStatus.COMPLETED);
 	}
 
 	public void plusCurrentCount() {
-		enrollmentManager.addStudent();
+		addStudent();
 	}
 
 	public void minusCurrentCount() {
-		enrollmentManager.removeStudent();
+		removeStudent();
 	}
 }
