@@ -1,4 +1,13 @@
-build/resources/main/application.yml
+/build/
 .DS_Store
 application.yml
-wonhshin/Onboarding/build
+*.yml
+.gradle/
+/gradle/
+build.gradle
+.build
+.gradle
+*.md
+settings.gradle
+.build/
+build/

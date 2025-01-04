@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/42gg-onboarding-be-renewal.iml" filepath="$PROJECT_DIR$/.idea/42gg-onboarding-be-renewal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/onboarding.main.iml" filepath="$PROJECT_DIR$/.idea/modules/onboarding.main.iml" />
     </modules>
   </component>
 </project>

@@ -4,72 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c0d3893-f76a-4a85-b988-4e88be3ec8db" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Student/Controller/DTO/req/StudentReqDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Student/Controller/DTO/res/StudentResDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Student/Controller/StudentController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Student/Service/StudentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Sugang/Controller/DTO/req/SugangReqDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Sugang/Controller/DTO/res/SugangResDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Sugang/Controller/SugangController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Sugang/Service/StudentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Course/Controller/CourseController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Course/Controller/DTO/req/CourseReqDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Course/Controller/DTO/res/CourseResDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Course/Service/CourseService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Student/Controller/DTO/req/StudentReqDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Student/Controller/DTO/res/StudentResDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Student/Controller/StudentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Student/Service/StudentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Student/StudentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Sugang/Controller/DTO/req/SugangReqDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Sugang/Controller/DTO/res/SugangResDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Sugang/Controller/SugangController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/Sugang/Service/StudentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/Status/CourseStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/Status/EnrollmentStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/Status/StudentStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/entity/Course.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/entity/Student.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/entity/StudentCourse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/repository/CourseRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/repository/CourseRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/repository/StudentCourseRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/classes/java/main/data/repository/StudentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/resources/main/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/resources/main/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/Course.class.uniqueId4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/CourseController.class.uniqueId2" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/CourseController.class.uniqueId2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/CourseRepo.class.uniqueId1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/CourseRepository.class.uniqueId7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/CourseResDto.class.uniqueId5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/CourseService.class.uniqueId6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/StudentCourse.class.uniqueId0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/compileTransaction/stash-dir/StudentCourseRepository.class.uniqueId3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Course/Controller/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Course/Controller/CourseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Course/Controller/DTO/req/CourseReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Course/Controller/DTO/req/CourseReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Course/Controller/DTO/res/CourseResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Course/Controller/DTO/res/CourseResDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Course/Service/CourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Course/Service/CourseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Student/Controller/DTO/req/StudentReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Student/Controller/DTO/res/StudentResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Student/Controller/StudentController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Student/Service/StudentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Student/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/Student/StudentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Sugang/Controller/DTO/req/SugangReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Sugang/Controller/DTO/res/SugangResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Sugang/Controller/SugangController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/Sugang/Service/StudentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/Status/CourseStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/Status/CourseStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/Status/EnrollmentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/Status/EnrollmentStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/Status/StudentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/Status/StudentStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/entity/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/entity/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/entity/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/entity/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/entity/StudentCourse.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/entity/StudentCourse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/repository/CourseRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/repository/CourseRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/repository/CourseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/repository/CourseRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/repository/StudentCourseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/repository/StudentCourseRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/data/repository/StudentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/42gg-onboarding-be-renewal/src/main/java/com/example/onboarding/data/repository/StudentRepository.java" afterDir="false" />
-    </list>
+    <list default="true" id="463e2700-501b-408f-8f23-5c007d267cf5" name="Changes" comment="" />
+    <list id="3fe4d931-f638-495b-be44-492726766bb2" name="Changes by snorlax" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,12 +19,14 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="onboarding" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -98,9 +36,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Class" />
         <option value="Interface" />
         <option value="Enum" />
+        <option value="Kotlin Class" />
+        <option value="JUnit5 Test Class" />
         <option value="Class" />
       </list>
     </option>
@@ -109,33 +48,58 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/42gg-onboarding-be-renewal" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;wonies&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/42organization/42gg-onboarding-be-renewal.git&quot;,
+    &quot;accountId&quot;: &quot;ac7cdb4f-2875-4f1d-af73-03eaf8f592c9&quot;
+  }
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 2
 }</component>
-  <component name="ProjectId" id="2p6lkSk37gceSYHNk5sjw0gTCoF" />
+  <component name="ProjectId" id="2pKsMI9N116ARyrC7fAYie1hb13" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Gradle.Build onboarding.executor": "Run",
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Gradle.Build 42gg-onboarding-be-renewal.executor": "Run",
+    "Gradle.StudentValidatorTest.executor": "Coverage",
+    "Gradle.StudentValidatorTest.testValidateSugangOrDrop_WithStatusDrop_ThrowCustomException.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.OnboardingApplication.executor": "Run",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "wonhshiin",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/wonie/onboarding/42gg-onboarding-be-renewal",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.stylelint": "true",
     "node.js.detected.package.tslint": "true",
@@ -143,31 +107,96 @@
     "node.js.selected.package.stylelint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "actions.on.save",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
+      "oracle",
       "mysql"
     ]
   }
 }]]></component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/42gg-onboarding-be-renewal" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+    <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.example.onboarding.alldata.validator" />
+    </key>
   </component>
-  <component name="RunManager">
-    <configuration name="OnboardingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <component name="RunManager" selected="Gradle.StudentValidatorTest">
+    <configuration name="StudentValidatorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.example.onboarding.alldata.validator.StudentValidatorTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="StudentValidatorTest.testValidateSugangOrDrop_WithStatusDrop_ThrowCustomException" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.example.onboarding.alldata.validator.StudentValidatorTest.testValidateSugangOrDrop_WithStatusDrop_ThrowCustomException&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="OnboardingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="onboarding.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.onboarding.OnboardingApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.onboarding.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.StudentValidatorTest" />
+        <item itemvalue="Gradle.StudentValidatorTest.testValidateSugangOrDrop_WithStatusDrop_ThrowCustomException" />
+        <item itemvalue="Spring Boot.OnboardingApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -180,45 +209,78 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9c0d3893-f76a-4a85-b988-4e88be3ec8db" name="Changes" comment="" />
-      <created>1732094548254</created>
+      <changelist id="463e2700-501b-408f-8f23-5c007d267cf5" name="Changes" comment="" />
+      <created>1732526051620</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1732094548254</updated>
-      <workItem from="1732094549404" duration="3195000" />
-      <workItem from="1732197283931" duration="597000" />
-      <workItem from="1732292074686" duration="11000" />
-      <workItem from="1732503927643" duration="15059000" />
-      <workItem from="1732519774315" duration="145000" />
-      <workItem from="1732519926967" duration="3939000" />
-      <workItem from="1732524139264" duration="79000" />
-      <workItem from="1732524220214" duration="27000" />
-      <workItem from="1732524253524" duration="10000" />
-      <workItem from="1732524269947" duration="22000" />
-      <workItem from="1732524424971" duration="17000" />
-      <workItem from="1732524446102" duration="3000" />
-      <workItem from="1732524465183" duration="39000" />
-      <workItem from="1732524551987" duration="33000" />
-      <workItem from="1732524590442" duration="36000" />
-      <workItem from="1732524648547" duration="2057000" />
+      <updated>1732526051620</updated>
+      <workItem from="1732526052655" duration="2992000" />
+      <workItem from="1732537803931" duration="34556000" />
+      <workItem from="1732621725717" duration="790000" />
+      <workItem from="1732634965195" duration="45029000" />
+      <workItem from="1732777822577" duration="3537000" />
+      <workItem from="1732949915885" duration="12563000" />
+      <workItem from="1733036229469" duration="26882000" />
+      <workItem from="1733121208498" duration="10958000" />
+      <workItem from="1733138192681" duration="602000" />
+      <workItem from="1733150845387" duration="16887000" />
+      <workItem from="1733371448374" duration="6400000" />
+      <workItem from="1733464797446" duration="8587000" />
+      <workItem from="1733474576523" duration="2000" />
+      <workItem from="1733661607625" duration="585000" />
+      <workItem from="1734174980100" duration="5980000" />
+      <workItem from="1734258941802" duration="11187000" />
+      <workItem from="1734326537661" duration="1277000" />
+      <workItem from="1734334720775" duration="2198000" />
+      <workItem from="1734338985466" duration="544000" />
+      <workItem from="1734339538983" duration="24000" />
+      <workItem from="1734341855688" duration="955000" />
+      <workItem from="1734837130894" duration="4479000" />
+      <workItem from="1734942740011" duration="702000" />
+      <workItem from="1734964260456" duration="599000" />
+      <workItem from="1735186619377" duration="1768000" />
+      <workItem from="1735994972690" duration="14000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <breakpoint enabled="true" type="java-exception">
-          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/onboarding/student/service/StudentService.java</url>
+          <line>38</line>
           <option name="timeStamp" value="1" />
-        </breakpoint>
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/onboarding$StudentValidatorTest.ic" NAME="StudentValidatorTest Coverage Results" MODIFIED="1734334995839" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

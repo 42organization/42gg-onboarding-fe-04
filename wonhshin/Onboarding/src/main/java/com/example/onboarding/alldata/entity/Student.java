@@ -8,7 +8,7 @@ import org.hibernate.type.SqlTypes;
 import com.example.onboarding.alldata.exception.CustomException;
 import com.example.onboarding.alldata.exception.ErrorCode;
 import com.example.onboarding.alldata.status.StudentStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.example.onboarding.alldata.validator.StudentValidator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +17,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -27,6 +26,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Student {
+	public static final int MAX_TATAL_GRADE = 60;
+	private static final int MAX_SEMESTER_GRADE = 15;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -37,7 +39,7 @@ public class Student {
 
 	@Column
 	@NotNull
-	@JsonFormat(pattern = "yyyyMMdd")
+	// @JsonFormat(pattern = "yyyyMMdd") // TODO: 패턴말고 exceptionHandler로 오류잡기
 	private LocalDate studentBirth;
 
 	@Column
@@ -63,71 +65,77 @@ public class Student {
 
 	public static Student of(String studentName, LocalDate studentBirth, Integer currentGrade, Integer totalGrade,
 		StudentStatus studentStatus) {
-		return new Student(studentName, studentBirth, currentGrade != null ? currentGrade : 0,
-			totalGrade != null ? totalGrade : 0, studentStatus != null ? studentStatus : StudentStatus.ACTIVE);
+		int resolvedCurrentGrade = currentGrade;
+		if (currentGrade == null) {
+			resolvedCurrentGrade = 0;
+		}
+
+		int resolvedTotalGrade = totalGrade;
+		if (totalGrade == null) {
+			resolvedTotalGrade = 0;
+		}
+
+		StudentStatus resolvedStatus = studentStatus;
+		if (studentStatus == null) {
+			resolvedStatus = StudentStatus.ACTIVE;
+		}
+
+		return new Student(studentName, studentBirth, resolvedCurrentGrade, resolvedTotalGrade, resolvedStatus);
 	}
 
-	private class StatusManager {
-		private void updateStatus(StudentStatus newStatus) {
-			if (studentStatus != newStatus) {
-				validateStatus();
-				studentStatus = newStatus;
-			}
-		}
-
-		private void validateStatus() {
-			if (!isStatusActive())
-				throw new CustomException(ErrorCode.STUDENT_NOT_FOUND);
-		}
-
-		private boolean isStatusActive() {
-			return studentStatus == StudentStatus.ACTIVE && totalGrade <= 60;
-		}
-	}
-
-	private class GradeManager {
-		void addCredit(int credit) {
-			validateCreditAdd(credit);
-			currentGrade += credit;
-			totalGrade += credit;
-			if (totalGrade >= 60) {
-				statusManager.updateStatus(StudentStatus.GRADUATED);
-			}
-		}
-
-		void removeCredit(int credit) {
-			if (currentGrade >= credit) {
-				currentGrade -= credit;
-				totalGrade -= credit;
-			}
-		}
-
-		void validateCreditAdd(int credit) {
-			if (currentGrade + credit > 15)
-				throw new CustomException(ErrorCode.STUDENT_OVER_GRADE);
-			if (totalGrade + credit > 60)
-				throw new CustomException(ErrorCode.STUDENT_OVER_TOTALGRADE);
+	private void updateStatus(StudentStatus newStatus) {
+		if (studentStatus != newStatus) {
+			validateStatus();
+			studentStatus = newStatus;
 		}
 	}
 
-	@Transient
-	private final StatusManager statusManager = new StatusManager();
-	@Transient
-	private final GradeManager gradeManager = new GradeManager();
+	private void validateStatus() {
+		if (!isStatusActive())
+			throw new CustomException(ErrorCode.STUDENT_NOT_FOUND);
+	}
+
+	private boolean isStatusActive() {
+		return studentStatus == StudentStatus.ACTIVE && totalGrade <= MAX_TATAL_GRADE;
+	}
+
+	private void add(int credit) {
+		validateCreditAdd(credit);
+		currentGrade += credit;
+		totalGrade += credit;
+		if (totalGrade >= MAX_TATAL_GRADE) {
+			updateStatus(StudentStatus.GRADUATED);
+		}
+	}
+
+	private void remove(int credit) {
+		if (currentGrade >= credit) {
+			currentGrade -= credit;
+			totalGrade -= credit;
+		}
+	}
+
+	private void validateCreditAdd(int credit) {
+		if (currentGrade + credit > MAX_SEMESTER_GRADE)
+			throw new CustomException(ErrorCode.STUDENT_OVER_GRADE);
+		if (totalGrade + credit > MAX_TATAL_GRADE)
+			throw new CustomException(ErrorCode.STUDENT_OVER_TOTALGRADE);
+	}
 
 	public void drop() {
-		statusManager.updateStatus(StudentStatus.DROPOUT);
+		StudentValidator.validateSugangOrDrop(studentStatus, totalGrade);
+		updateStatus(StudentStatus.DROPOUT);
 	}
 
 	public boolean canRegister() {
-		return statusManager.isStatusActive();
+		return isStatusActive();
 	}
 
 	public void addCredit(int credit) {
-		gradeManager.addCredit(credit);
+		add(credit);
 	}
 
 	public void removeCredit(int credit) {
-		gradeManager.removeCredit(credit);
+		remove(credit);
 	}
 }

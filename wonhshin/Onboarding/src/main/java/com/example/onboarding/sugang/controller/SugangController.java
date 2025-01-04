@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.onboarding.alldata.exception.CustomException;
 import com.example.onboarding.course.controller.dto.res.CourseResDto;
 import com.example.onboarding.sugang.controller.dto.req.SugangReqDto;
 import com.example.onboarding.sugang.service.SugangService;
@@ -30,12 +29,8 @@ public class SugangController {
 
 	@PostMapping("/{course_id}")
 	public ResponseEntity<Void> enroll(@RequestBody @Valid SugangReqDto req, @PathVariable Integer course_id) {
-		try { // TODO: httpstatus 에러 잘 가는 지 확인하기!
-			sugangService.enroll(req, course_id);
-			return ResponseEntity.status(HttpStatus.CREATED).build();
-		} catch (CustomException e) {
-			return ResponseEntity.status(e.getErrorCode().getStatus()).build();
-		}
+		sugangService.enroll(req, course_id);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PatchMapping("/{course_id}")
