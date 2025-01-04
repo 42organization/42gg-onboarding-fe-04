@@ -1,0 +1,19 @@
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/build/\n.DS_Store\napplication.yml\n*.yml\n.gradle/\n/gradle/\nbuild.gradle
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	(revision 2278c663d34f810c930d52826a53c44f9d2eea15)
++++ b/.gitignore	(date 1733216500325)
+@@ -4,4 +4,6 @@
+ *.yml
+ .gradle/
+ /gradle/
+-build.gradle
+\ No newline at end of file
++build.gradle
++.idea/
++.build/
